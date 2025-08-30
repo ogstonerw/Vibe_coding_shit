@@ -1,0 +1,7 @@
+telethon
+python-dotenv
+pydantic
+httpx
+rapidfuzz
+aiogram==3.*  # для Telegram-бота управления
+requests

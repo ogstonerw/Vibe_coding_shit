@@ -1,0 +1,16 @@
+# BD
+*.db
+*.sqlite
+*.sqlite3
+logs/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+*.session
+demo_trades.json
+signals_history.json
