@@ -36,21 +36,25 @@ def build_order_plan(
     legs: str = "1/2",              # "1/2" или "1/3" и т.п. — сейчас используем "1/2"
     leverage_hint: Optional[int] = None
 ) -> OrderPlan:
-    assert settings.SYMBOL == "BTCUSDT", "Сейчас торгуем только BTCUSDT по ТЗ"
+    # Backwards-compatible: original code expected flat attributes on settings
+    # New config.settings exposes grouped dataclasses (bitget, risk, behavior).
+    # Map the required values here.
+    symbol = getattr(settings, 'SYMBOL', None) or getattr(settings, 'bitget', None) and settings.bitget.symbol
+    assert symbol == "BTCUSDT", "Сейчас торгуем только BTCUSDT по ТЗ"
 
     # Поддепозит по источнику
-    equity_total = settings.EQUITY_USDT  # можно заменить на runtime-значение, если ты берешь из API
+    equity_total = getattr(settings, 'EQUITY_USDT', None) or settings.risk.equity_usdt
     if source.upper() == "SCALPING":
-        equity_sub = equity_total * settings.SPLIT_SCALPING_PCT / 100.0
+        equity_sub = equity_total * settings.risk.split_scalping_pct / 100.0
     else:
-        equity_sub = equity_total * settings.SPLIT_INTRADAY_PCT / 100.0
+        equity_sub = equity_total * settings.risk.split_intraday_pct / 100.0
 
     # Риски
-    risk_total_usdt = risk_usdt(equity_sub, settings.RISK_TOTAL_CAP_PCT)  # 3% от поддепозита
-    risk_leg_pct = settings.RISK_LEG_PCT                                  # 1.5% на «ногу» при 1/2
+    risk_total_usdt = risk_usdt(equity_sub, settings.risk.risk_total_cap_pct)  # 3% от поддепозита
+    risk_leg_pct = settings.risk.risk_leg_pct                                  # 1.5% на «ногу» при 1/2
 
     # Плечо
-    L = leverage_hint or settings.LEVERAGE_MIN
+    L = leverage_hint or settings.risk.leverage_min
 
     # Выбираем вход (середина зоны)
     entry_price = choose_entry_price_from_zone(entry_zone)
@@ -86,7 +90,7 @@ def build_order_plan(
 
     return OrderPlan(
         side=side,
-        symbol=settings.SYMBOL,
+    symbol=symbol,
         entry_type="limit_zone",
         entry_price=entry_price,
         entry_zone=entry_zone,
@@ -95,7 +99,7 @@ def build_order_plan(
         tp_levels=tp_levels[:10],
         tp_shares=tp_shares[:10],
         sl_price=stop_loss,
-        move_sl_to_be_after_tp=settings.BREAKEVEN_AFTER_TP,
+    move_sl_to_be_after_tp=settings.risk.breakeven_after_tp,
         meta={
             "source": source,
             "equity_sub": equity_sub,

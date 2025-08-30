@@ -9,11 +9,19 @@ Usage:
 Reads input, runs ImprovedSignalParser.parse_signal and Executor.plan_from_signal(dry_run=True), prints JSON.
 """
 import sys, os, json
+# ensure project root is on sys.path when running from scripts/
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
 from dotenv import load_dotenv
 load_dotenv()
 
 from improved_signal_parser import ImprovedSignalParser, TradingSignal
 from trader.executor import Executor
+from nlp import parser_rules
+from types import SimpleNamespace
+import re
 
 parser = ImprovedSignalParser()
 
@@ -38,7 +46,89 @@ if __name__ == '__main__':
 
     execu = Executor(None, dry_run=True)
     try:
-        plan = execu.plan_from_signal(sig, context={'source':'OFFLINE'})
+        # Try project's nlp parser first (preferred). If it fails, synthesize a minimal parsed object
+        parsed = None
+        try:
+            parsed = parser_rules.parser.parse(text)
+        except Exception:
+            parsed = None
+
+        if not parsed:
+            # synthesize object expected by Executor when parse() returns None
+            # Executor will take attributes from the signal object in the fallback branch
+            # Map LONG->BUY, SHORT->SELL
+            side = 'BUY' if getattr(sig, 'position_type', '').upper().startswith('LONG') else 'SELL'
+            entry_low = entry_high = 0.0
+            ep = getattr(sig, 'entry_price', None)
+            if ep and isinstance(ep, str) and '-' in ep:
+                parts = ep.split('-')[:2]
+                try:
+                    entry_low = float(parts[0])
+                    entry_high = float(parts[1])
+                except Exception:
+                    entry_low = entry_high = 0.0
+            else:
+                try:
+                    entry_low = entry_high = float(ep)
+                except Exception:
+                    entry_low = entry_high = 0.0
+
+            # If we still don't have entry prices, try to regex-extract from raw text
+            if entry_low == 0.0 and entry_high == 0.0:
+                # look for range like 112300-111500 or 112300 - 111500
+                m = re.search(r"(\d+[\.,]?\d*)\s*[-–—]\s*(\d+[\.,]?\d*)", text)
+                if m:
+                    try:
+                        entry_low = float(m.group(1).replace(',', '.'))
+                        entry_high = float(m.group(2).replace(',', '.'))
+                    except Exception:
+                        entry_low = entry_high = 0.0
+
+            try:
+                stop_loss = float(getattr(sig, 'stop_loss', 0) or 0)
+            except Exception:
+                stop_loss = 0.0
+
+            # If stop_loss missing, try regex like SL 110800 or stop 110800
+            if not stop_loss:
+                m = re.search(r"(?:SL|STOP)[:\s]*([0-9]+(?:[\.,][0-9]+)?)", text, flags=re.IGNORECASE)
+                if m:
+                    try:
+                        stop_loss = float(m.group(1).replace(',', '.'))
+                    except Exception:
+                        stop_loss = 0.0
+
+            tp_list = []
+            for t in (getattr(sig, 'take_profits', []) or []):
+                try:
+                    tp_list.append(float(t))
+                except Exception:
+                    pass
+
+            # If no TPs, try to extract after TP or TP: pattern
+            if not tp_list:
+                m = re.search(r"TP[s]?[:\s]*([0-9,\s\.]+)", text, flags=re.IGNORECASE)
+                if m:
+                    raw = m.group(1)
+                    for part in re.split(r"[,\s]+", raw):
+                        try:
+                            if part.strip():
+                                tp_list.append(float(part.replace(',', '.')))
+                        except Exception:
+                            pass
+
+            fallback = SimpleNamespace(
+                direction=side,
+                entry_low=entry_low,
+                entry_high=entry_high,
+                stop_loss=stop_loss,
+                take_profit=(tp_list[0] if tp_list else None),
+                take_profit2=(tp_list[1] if len(tp_list)>1 else None)
+            )
+            plan = execu.plan_from_signal(fallback, context={'source':'OFFLINE'})
+        else:
+            # parsed is the nlp.parser_rules.ParsedSignal-like object
+            plan = execu.plan_from_signal(parsed, context={'source':'OFFLINE'})
         print('\n=== Plan ===')
         # Simplified plan representation
         pd = {
