@@ -18,6 +18,9 @@ from bitget_integration import BitgetTrader, load_bitget_config
 from trader.executor import Executor
 from market.watcher import Watcher
 from bot.tg_control import start_control_bot
+from core.signal_reader import start_signal_reader
+from bitget_integration import BitgetHTTP
+from aiogram import Bot as AiogramBot
 
 # 1) Загружаем .env (НЕ data.env)
 load_dotenv()
@@ -45,6 +48,21 @@ LEVERAGE_MIN = int(os.getenv('LEVERAGE_MIN', '10'))
 LEVERAGE_MAX = int(os.getenv('LEVERAGE_MAX', '25'))
 BREAKEVEN_AFTER_TP = int(os.getenv('BREAKEVEN_AFTER_TP', '2'))
 TIME_STOP_MIN = int(os.getenv('TIME_STOP_MIN', '240'))
+TGBOT_TOKEN = os.getenv('TGBOT_TOKEN', '')
+_owners_raw = os.getenv('TG_OWNER_IDS', os.getenv('TG_OWNER_ID', '')) or ''
+
+def _first_owner_id(raw: str):
+    for p in raw.split(','):
+        p = p.strip()
+        if not p:
+            continue
+        try:
+            return int(p)
+        except Exception:
+            continue
+    return None
+
+FIRST_OWNER_ID = _first_owner_id(_owners_raw)
 
 # Настройка кодировки консоли (безопасно)
 try:
@@ -384,12 +402,10 @@ class ImprovedTradingBot:
             print(f"\n💡 Режим: {'DRY_RUN (симуляция)' if DRY_RUN else 'РЕАЛЬНАЯ ТОРГОВЛЯ'}")
             print("   Для остановки: Ctrl+C")
 
-            # Запускаем обе корутины параллельно
-            tasks = [
-                self.client.run_until_disconnected(),   # Telethon listener
-                start_control_bot()                     # aiogram control bot
-            ]
-            await asyncio.gather(*tasks)
+            # Запускаем Telethon listener (this instance) and leave control bot
+            # to be started separately by main runner. Older run_simple/run_final
+            # call .initialize() + run_until_disconnected() as before.
+            await self.client.run_until_disconnected()
 
         except KeyboardInterrupt:
             print("\n⏹️ Остановка бота...")
@@ -459,10 +475,114 @@ class SignalManager:
 
 
 async def main():
-    print("🤖 Запуск улучшенного торгового бота")
+    print("🤖 Запуск signal_reader и control bot")
     print("=" * 60)
-    bot = ImprovedTradingBot()
-    await bot.run()
+    # Check systems before starting services
+    await check_systems()
+
+    # Start core signal reader (Telethon user-bot) and aiogram control bot in parallel
+    await asyncio.gather(
+        start_signal_reader(),
+        start_control_bot()
+    )
+
+
+async def check_systems():
+    """Run quick health checks for Bitget, Telethon session and Aiogram token.
+
+    - Bitget: if DRY_RUN -> print simulation message, else fetch contracts and print count.
+    - Telethon: try to connect with TG_SESSION and report authorization state.
+    - Aiogram: if TGBOT_TOKEN present and FIRST_OWNER_ID set -> send test message.
+    - Print SCALPING/INTRADAY channel names or ❌.
+    """
+    print("🔎 Running system checks...")
+
+    # Bitget
+    try:
+        if DRY_RUN:
+            print("🔧 Bitget: DRY_RUN is enabled — API calls are simulated.")
+        else:
+            try:
+                http = BitgetHTTP()
+                path = "/api/mix/v1/market/contracts"
+                r = http._request("GET", path, {"productType":"umcbl"}, auth=False)
+                if getattr(r, 'status_code', None) == 200:
+                    data = r.json().get('data', [])
+                    print(f"✅ Bitget: contracts fetched — count={len(data)}")
+                else:
+                    print(f"❌ Bitget: request failed {getattr(r,'status_code',None)} {getattr(r,'text', '')}")
+            except Exception as e:
+                print(f"❌ Bitget check error: {e}")
+    except Exception as e:
+        print(f"❌ Bitget check unexpected error: {e}")
+
+    # Telethon session check and channel listing
+    try:
+        from telethon import TelegramClient
+        tc = TelegramClient(TG_SESSION, API_ID, API_HASH)
+        await tc.connect()
+        try:
+            authorized = await tc.is_user_authorized()
+        except Exception:
+            authorized = False
+        if authorized:
+            print(f"✅ Telethon session '{TG_SESSION}' is authorized")
+            # Try to resolve channels
+            def _resolve_entity_sync(link_or_name: str):
+                return None
+
+            async def _resolve(link: str, name: str):
+                if link:
+                    try:
+                        ent = await tc.get_entity(link)
+                        title = getattr(ent, 'title', None) or str(ent)
+                        return title
+                    except Exception:
+                        pass
+                if name:
+                    async for dialog in tc.iter_dialogs():
+                        ent = dialog.entity
+                        title = getattr(ent, 'title', '')
+                        if name.lower() in (title or '').lower():
+                            return title
+                return None
+
+            scalping_name = await _resolve(SCALPING_LINK, SCALPING_NAME)
+            intraday_name = await _resolve(INTRADAY_LINK, INTRADAY_NAME)
+            print("Channels:")
+            print(f"  SCALPING: {scalping_name if scalping_name else '❌ not found'}")
+            print(f"  INTRADAY: {intraday_name if intraday_name else '❌ not found'}")
+        else:
+            print(f"❌ Telethon session '{TG_SESSION}' is NOT authorized — reader will not start to avoid login")
+        await tc.disconnect()
+    except Exception as e:
+        print(f"❌ Telethon check error: {e}")
+
+    # Aiogram bot token and test message
+    try:
+        if not TGBOT_TOKEN:
+            print("❌ TGBOT_TOKEN not set — control bot will not be able to send test message")
+        elif not FIRST_OWNER_ID:
+            print("❌ TG_OWNER_ID(S) not set — cannot send test message to owner")
+        else:
+            try:
+                bot = AiogramBot(token=TGBOT_TOKEN)
+                await bot.send_message(FIRST_OWNER_ID, "[healthcheck] Test message from control bot.")
+                print(f"✅ Aiogram: sent test message to owner {FIRST_OWNER_ID}")
+            except Exception as e:
+                print(f"❌ Aiogram test message failed: {e}")
+            finally:
+                try:
+                    await bot.session.close()
+                except Exception:
+                    try:
+                        await bot.close()
+                    except Exception:
+                        pass
+    except Exception as e:
+        print(f"❌ Aiogram check error: {e}")
+
+    print("🎉 Все ключевые системы инициализированы!")
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -49,7 +49,12 @@ async def start_telethon_reader(settings, on_message: OnMessage = None):
     scalping_name = getattr(settings, "TG_SOURCE_SCALPING_NAME", None)
     intraday_name = getattr(settings, "TG_SOURCE_INTRADAY_NAME", None)
 
-    await client.start()  # если .session существует — НЕ спросит код, иначе попросит один раз и сохранит
+    # Session-only mode: do not perform interactive login here.
+    await client.connect()
+    if not await client.is_user_authorized():
+        log.error("Telethon session '%s' is not authorized — aborting reader to avoid interactive login", session_name)
+        await client.disconnect()
+        return
 
     scalping = await _resolve_channel_by_link_or_name(client, scalping_link, scalping_name)
     intraday = await _resolve_channel_by_link_or_name(client, intraday_link, intraday_name)

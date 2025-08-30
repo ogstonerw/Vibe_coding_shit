@@ -6,33 +6,27 @@ from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKe
 from aiogram.enums import ParseMode
 from aiogram.filters import Command
 
-# Загружаем переменные окружения
 from dotenv import load_dotenv
 load_dotenv()
 
 TGBOT_TOKEN = os.getenv("TGBOT_TOKEN", "")
 
-# Обрабатываем TG_OWNER_ID - может быть числом или username
-_owner_id_raw = os.getenv("TG_OWNER_ID", "0")
-try:
-    TG_OWNER_ID = int(_owner_id_raw)
-except ValueError:
-    print(f"[tg_control] TG_OWNER_ID '{_owner_id_raw}' не является числом. Используйте числовой ID.")
-    TG_OWNER_ID = 0
+# Support TG_OWNER_IDS (comma separated) or single TG_OWNER_ID
+_owners_raw = os.getenv("TG_OWNER_IDS", os.getenv("TG_OWNER_ID", "")) or ""
+def _parse_owner_ids(raw: str):
+    ids = []
+    for p in raw.split(','):
+        p = p.strip()
+        if not p:
+            continue
+        try:
+            ids.append(int(p))
+        except ValueError:
+            # ignore non-integer entries
+            continue
+    return ids
 
-# Обрабатываем TG_OWNER_ID_2 - второй аккаунт
-_owner_id_2_raw = os.getenv("TG_OWNER_ID_2", "0")
-try:
-    TG_OWNER_ID_2 = int(_owner_id_2_raw)
-except ValueError:
-    print(f"[tg_control] TG_OWNER_ID_2 '{_owner_id_2_raw}' не является числом. Используйте числовой ID.")
-    TG_OWNER_ID_2 = 0
-
-# Список разрешенных пользователей
-ALLOWED_USERS = [TG_OWNER_ID, TG_OWNER_ID_2]
-ALLOWED_USERS = [uid for uid in ALLOWED_USERS if uid != 0]  # Убираем нулевые ID
-
-print(f"[tg_control] Загружены разрешенные пользователи: {ALLOWED_USERS}")
+ALLOWED_USERS = _parse_owner_ids(_owners_raw)
 
 
 
@@ -66,14 +60,18 @@ async def start_control_bot(settings=None):
     Требуются в .env: TGBOT_TOKEN, TG_OWNER_ID.
     Команды: /start, /help, /history, /equity, /stats, /dryrun_on, /dryrun_off
     """
-    if not TGBOT_TOKEN or not ALLOWED_USERS:
-        print("[tg_control] TGBOT_TOKEN или разрешенные пользователи не заданы — бот управления не будет запущен.")
-        print(f"   Разрешенные пользователи: {ALLOWED_USERS}")
+    if not TGBOT_TOKEN:
+        print("[tg_control] TGBOT_TOKEN не задан — бот управления не будет запущен.")
         return
+    if not ALLOWED_USERS:
+        print("[tg_control] TG_OWNER_IDS/TG_OWNER_ID не настроены — бот запустится, но команды будут закрыты для всех.")
 
     from aiogram.client.default import DefaultBotProperties
     bot = Bot(TGBOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
+
+    # debug toggle state
+    _debug_state = {'core_signal_reader_debug': False}
 
     # === Хранилище runtime-настроек (минимум) ===
     # Читаем DRY_RUN из env на старте; даём возможность переключать в рантайме
@@ -86,7 +84,7 @@ async def start_control_bot(settings=None):
 
     @dp.message(Command("start"))
     async def cmd_start(message: Message):
-        if message.from_user.id not in ALLOWED_USERS:
+        if ALLOWED_USERS and message.from_user.id not in ALLOWED_USERS:
             await message.answer("❌ У вас нет доступа")
             return
         await message.answer(
@@ -101,7 +99,7 @@ async def start_control_bot(settings=None):
 
     @dp.message(Command("help"))
     async def cmd_help(message: Message):
-        if message.from_user.id not in ALLOWED_USERS:
+        if ALLOWED_USERS and message.from_user.id not in ALLOWED_USERS:
             await message.answer("❌ У вас нет доступа")
             return
         users_info = f"Разрешенные пользователи: {len(ALLOWED_USERS)}"
@@ -116,7 +114,7 @@ async def start_control_bot(settings=None):
 
     @dp.message(Command("history"))
     async def cmd_history(message: Message):
-        if message.from_user.id not in ALLOWED_USERS:
+        if ALLOWED_USERS and message.from_user.id not in ALLOWED_USERS:
             await message.answer("❌ У вас нет доступа")
             return
         trades = _load_demo_trades()[-10:]
@@ -128,7 +126,7 @@ async def start_control_bot(settings=None):
 
     @dp.callback_query(F.data.startswith("hist:"))
     async def cb_history(cb: CallbackQuery):
-        if cb.from_user.id not in ALLOWED_USERS:
+        if ALLOWED_USERS and cb.from_user.id not in ALLOWED_USERS:
             await cb.answer("Нет доступа", show_alert=True)
             return
         trades = _load_demo_trades()[-10:]
@@ -141,7 +139,7 @@ async def start_control_bot(settings=None):
 
     @dp.callback_query(F.data == "help")
     async def cb_help(cb: CallbackQuery):
-        if cb.from_user.id not in ALLOWED_USERS:
+        if ALLOWED_USERS and cb.from_user.id not in ALLOWED_USERS:
             await cb.answer("Нет доступа", show_alert=True)
             return
         await cb.answer()
@@ -149,7 +147,7 @@ async def start_control_bot(settings=None):
 
     @dp.message(Command("equity"))
     async def cmd_equity(message: Message):
-        if message.from_user.id not in ALLOWED_USERS:
+        if ALLOWED_USERS and message.from_user.id not in ALLOWED_USERS:
             await message.answer("❌ У вас нет доступа")
             return
         eq = _state["EQUITY_USDT"]
@@ -163,7 +161,7 @@ async def start_control_bot(settings=None):
 
     @dp.message(Command("stats"))
     async def cmd_stats(message: Message):
-        if message.from_user.id not in ALLOWED_USERS:
+        if ALLOWED_USERS and message.from_user.id not in ALLOWED_USERS:
             await message.answer("❌ У вас нет доступа")
             return
         # Мини-версия: читаем размер demo_trades.json
@@ -176,7 +174,7 @@ async def start_control_bot(settings=None):
 
     @dp.message(Command("dryrun_on"))
     async def cmd_dryrun_on(message: Message):
-        if message.from_user.id not in ALLOWED_USERS:
+        if ALLOWED_USERS and message.from_user.id not in ALLOWED_USERS:
             await message.answer("❌ У вас нет доступа")
             return
         _state["DRY_RUN"] = True
@@ -184,11 +182,29 @@ async def start_control_bot(settings=None):
 
     @dp.message(Command("dryrun_off"))
     async def cmd_dryrun_off(message: Message):
-        if message.from_user.id not in ALLOWED_USERS:
+        if ALLOWED_USERS and message.from_user.id not in ALLOWED_USERS:
             await message.answer("❌ У вас нет доступа")
             return
         _state["DRY_RUN"] = False
         await message.answer("⚠️ DRY_RUN выключен. Реальные ордера будут отправляться, если включено в ядре.")
 
-    print("[tg_control] Бот управления запущен")
+    @dp.message(Command("debug"))
+    async def cmd_debug(message: Message):
+        # toggle core.signal_reader logger
+        if ALLOWED_USERS and message.from_user.id not in ALLOWED_USERS:
+            await message.answer("❌ У вас нет доступа")
+            return
+        import logging as _logging
+        lg = _logging.getLogger('core.signal_reader')
+        current = _debug_state['core_signal_reader_debug']
+        if current:
+            lg.setLevel(_logging.INFO)
+            _debug_state['core_signal_reader_debug'] = False
+            await message.answer('DEBUG=OFF')
+        else:
+            lg.setLevel(_logging.DEBUG)
+            _debug_state['core_signal_reader_debug'] = True
+            await message.answer('DEBUG=ON')
+
+    print("[tg_control] Bot control starting (aiogram). Allowed users:", ALLOWED_USERS)
     await dp.start_polling(bot)

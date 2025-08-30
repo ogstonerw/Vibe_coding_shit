@@ -49,12 +49,12 @@ async def resolve_by_link_or_name(client: TelegramClient, link: str, name: str) 
 async def check_telegram():
     print("▶️  TELEGRAM CHECK")
     client = TelegramClient(TG_SESSION, API_ID, API_HASH)
+    print("Session-only mode: interactive login is disabled. If session is not authorized, the check will fail.")
     await client.connect()
     if not await client.is_user_authorized():
-        if not TG_PHONE:
-            print("❌ Нет авторизации и TG_PHONE не задан. Укажи TG_PHONE в .env")
-            return False
-        await client.start(phone=TG_PHONE)
+        print(f"❌ Telethon session '{TG_SESSION}' is NOT authorized. To authorize, run scripts/auth_telethon.py once on a trusted machine.")
+        await client.disconnect()
+        return False
     me = await client.get_me()
     print(f"✅ Авторизован как: {me.first_name} (id={me.id})")
 

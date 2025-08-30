@@ -85,36 +85,46 @@ class ImprovedSignalParser:
             ]
         }
     
-    def is_trading_signal(self, text: str) -> bool:
-        """Определяет, является ли сообщение торговым сигналом"""
+    def is_trading_signal(self, text: str) -> tuple[bool, "Optional[str]"]:
+        """Определяет, является ли сообщение торговым сигналом.
+
+        Возвращает кортеж (is_signal, reason). reason — строка с причной отказа
+        или None.
+        """
         text_lower = text.lower()
-        
+
         # Проверяем наличие ключевых слов сигналов
         has_signal_keywords = any(
-            keyword in text_lower 
+            keyword in text_lower
             for keyword in self.long_keywords + self.short_keywords
         )
-        
+
         # Проверяем наличие цифр (цен) - более гибко
-        has_numbers = bool(re.search(r'\d{4,6}', text))
-        
-        # Проверяем длину сообщения - более гибко
-        is_long_enough = len(text) > 20
-        
+        has_numbers = bool(re.search(r'\d{3,6}', text))
+
+        # Проверяем длину сообщения
+        is_long_enough = len(text.strip()) > 20
+
         # Проверяем отсутствие явного шума
         has_noise = any(
-            keyword in text_lower 
+            keyword in text_lower
             for keyword in self.noise_keywords
         )
-        
-        # Основные критерии: ключевые слова + цифры + длина
-        basic_criteria = has_signal_keywords and has_numbers and is_long_enough
-        
-        # Если есть явный шум, отбрасываем
+
         if has_noise:
-            return False
-        
-        return basic_criteria
+            return False, "noise"
+
+        if not has_signal_keywords:
+            return False, "no keywords"
+
+        if not has_numbers:
+            return False, "no numbers"
+
+        if not is_long_enough:
+            return False, "too short"
+
+        # Passed basic checks
+        return True, None
     
     def extract_position_type(self, text: str) -> Optional[str]:
         """Извлекает тип позиции (LONG/SHORT)"""
@@ -149,9 +159,10 @@ class ImprovedSignalParser:
     
     def parse_signal(self, message_id: str, channel_name: str, text: str, timestamp: str = None) -> Optional[TradingSignal]:
         """Парсит торговый сигнал из текста сообщения"""
-        if not self.is_trading_signal(text):
+        is_sig, reason = self.is_trading_signal(text)
+        if not is_sig:
             return None
-        
+
         position_type = self.extract_position_type(text)
         if not position_type:
             return None
