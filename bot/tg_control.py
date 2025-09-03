@@ -70,6 +70,27 @@ async def start_control_bot(settings=None):
     bot = Bot(TGBOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
 
+    # Validate bot token early to avoid crashing the whole process on invalid token
+    from aiogram.exceptions import TelegramUnauthorizedError
+    try:
+        # call get_me() to validate token and warm-up bot info
+        await bot.get_me()
+    except TelegramUnauthorizedError:
+        print("[tg_control] TGBOT_TOKEN is invalid or unauthorized — bot control will not start.")
+        try:
+            await bot.session.close()
+        except Exception:
+            pass
+        return
+    except Exception as e:
+        # Network or other transient errors — report and do not start bot
+        print(f"[tg_control] Failed to validate bot token: {e}")
+        try:
+            await bot.session.close()
+        except Exception:
+            pass
+        return
+
     # debug toggle state
     _debug_state = {'core_signal_reader_debug': False}
 
@@ -207,4 +228,14 @@ async def start_control_bot(settings=None):
             await message.answer('DEBUG=ON')
 
     print("[tg_control] Bot control starting (aiogram). Allowed users:", ALLOWED_USERS)
-    await dp.start_polling(bot)
+    try:
+        await dp.start_polling(bot)
+    except TelegramUnauthorizedError:
+        print("[tg_control] Polling failed: Unauthorized (invalid bot token). Stopping bot control.")
+    except Exception as e:
+        print(f"[tg_control] Polling stopped with error: {e}")
+    finally:
+        try:
+            await bot.session.close()
+        except Exception:
+            pass
