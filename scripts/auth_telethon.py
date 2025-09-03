@@ -24,6 +24,7 @@ load_dotenv()
 API_ID = int(os.getenv('API_ID') or 0)
 API_HASH = os.getenv('API_HASH') or ''
 TG_SESSION = os.path.abspath(os.getenv('TG_SESSION', 'signal_trader'))
+TG_PHONE = os.getenv('TG_PHONE', '')
 
 if not API_ID or not API_HASH:
     print('API_ID/API_HASH not set in .env')
@@ -34,7 +35,18 @@ client = TelegramClient(TG_SESSION, API_ID, API_HASH)
 
 async def main():
     print('Starting interactive authorization...')
-    await client.start()
+    try:
+        # If TG_PHONE is set in .env, pass it to start() so Telethon won't ask for phone
+        if TG_PHONE:
+            print('Using TG_PHONE from .env to prefill phone prompt')
+            await client.start(phone=TG_PHONE)
+        else:
+            await client.start()
+    except EOFError:
+        # Happens when running in a non-interactive environment
+        print('\nInput not available: run this script in an interactive terminal (powerShell)')
+        print('or set TG_PHONE in your .env to prefill the phone and re-run.')
+        raise
     me = await client.get_me()
     print('Authorized as', getattr(me, 'username', None) or getattr(me, 'first_name', None), f"(id={me.id})")
     await client.disconnect()
