@@ -11,7 +11,8 @@ import logging
 from typing import List
 
 from dotenv import load_dotenv
-from telethon import TelegramClient, events
+from telethon import events
+from adapters.user_client import get_user_client
 from telethon.tl.types import Channel
 
 from improved_signal_parser import ImprovedSignalParser, TradingSignal
@@ -83,20 +84,9 @@ async def start_signal_reader():
     If API_ID/API_HASH or session is missing or unauthorized, the coroutine will
     exit cleanly (no interactive login).
     """
-    if not API_ID or not API_HASH:
-        log.error('API_ID/API_HASH not set — signal reader will not start')
-        return
-
-    client = TelegramClient(TG_SESSION, API_ID, API_HASH)
-
-    print(LOG_MSG_SESSION_ONLY)
-    log.info('Using Telethon session path: %s', TG_SESSION)
-    try:
-        await client.connect()
-    except Exception as e:
-        log.exception('Failed to connect Telethon client: %s', e)
-        return
-
+    # Используем user-клиент через адаптер (без start/sign_in/log_out)
+    client = await get_user_client()
+    log.info('Using Telethon user client (session-only)')
     try:
         authorized = await client.is_user_authorized()
     except Exception as e:
