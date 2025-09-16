@@ -12,5 +12,7 @@ __pycache__/
 # Secrets
 .env
 *.session
+data/
+data/sessions/
 demo_trades.json
 signals_history.json
