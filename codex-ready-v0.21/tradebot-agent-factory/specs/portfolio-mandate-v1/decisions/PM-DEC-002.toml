@@ -1,0 +1,62 @@
+decision_id = "PM-DEC-002"
+decision_version = 1
+status = "RESOLVED"
+selected_option = 3
+decided_by_ref = "OWNER"
+decision_evidence_ref = "conversation:2026-07-17:PM-DEC-002:answer-3"
+recorded_at = "2026-07-17T00:00:00Z"
+decision_type = "TWO_TIER_OWNER_APPROVAL_MODEL"
+
+[[artifact_hashes]]
+path = "specs/portfolio-mandate-v1/spec.md"
+sha256 = "97ccf038137240a700539cba11627d0e3b93d7bf8eee4dc9854497668d5bb69d"
+
+[[artifact_hashes]]
+path = "specs/portfolio-mandate-v1/acceptance.toml"
+sha256 = "f519581f5ab818e1c9586dd8280d76ce92587424727267c6a0092021a35b1600"
+
+[[artifact_hashes]]
+path = "governance/approval-policy.toml"
+sha256 = "9be5ef3804dd8a35681526e9b154d50c0162ba610101dcbabd00ce29996a8708"
+
+[[artifact_hashes]]
+path = "governance/risk-policy.toml"
+sha256 = "4f34d45ac058bec6d5ce1ecc05dc242572a917bd6e2f6769ff53b7115f4b72e8"
+
+[level_a_non_capital]
+applies_to = ["DEVELOPMENT", "RESEARCH", "REPLAY", "DRY_RUN", "PAPER"]
+approval_record = "VERSIONED_OWNER_DECISION_RECORD"
+authorization_effect = "DENY_REAL_ORDERS"
+real_capital_authority = false
+may_ratify_results_post_hoc = false
+may_override_preregistration_holdout_or_drift = false
+may_promote_stage_by_itself = false
+
+[level_b_real_capital]
+applies_to = ["REAL_ACCOUNT_OR_CREDENTIAL", "PILOT", "PRODUCTION", "REAL_SCOPE_EXPANSION", "HARD_LIMIT_INCREASE", "LEVERAGE_OR_MARGIN_CHANGE", "REAL_BOOK_TRANSFER", "DISTRIBUTION"]
+required_factors = ["CRYPTOGRAPHIC_SIGNATURE", "INDEPENDENT_SECOND_CONFIRMATION"]
+same_canonical_payload_required = true
+payload_hash_binding_required = true
+monotonic_sequence_required = true
+expiry_and_revocation_required = true
+independent_trust_root_required = true
+independent_failure_domain_required = true
+same_key_session_or_process_counts_as_independent = false
+eligible_for_authorization = false
+blocked_until_decision = "PM-DEC-007"
+
+[safety]
+one_factor_only_result = "DENY"
+mismatched_payload_result = "DENY"
+expired_or_revoked_result = "DENY"
+level_a_promotion_result = "DENY"
+post_hoc_evidence_ratification_result = "DENY"
+preregistration_holdout_or_drift_override_result = "DENY"
+approval_only_stage_promotion_result = "DENY"
+live_trading_enabled = false
+changes_governance_risk_policy = false
+ratified_real_capital_manifest = false
+
+[integrity]
+canonicalization = "SORTED_KEYS_COMPACT_UTF8_JSON_V1"
+decision_payload_sha256 = "39213de9274bac770b524fe35e24160ea3028a26d7d00923015c1828b7c0c59a"

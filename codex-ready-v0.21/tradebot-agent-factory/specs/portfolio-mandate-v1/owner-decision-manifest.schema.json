@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradebot.local/schemas/non-authorizing-owner-decision-manifest-draft-v1.json",
+  "title": "Non-authorizing Owner Decision Manifest Draft v1",
+  "description": "Draft contract only. Every conforming artifact is DENY and is ineligible for an authorization path.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_purpose",
+    "authorization_result",
+    "eligible_for_authorization",
+    "semantic_verifier_required",
+    "schema_version",
+    "manifest_id",
+    "manifest_version",
+    "decision",
+    "owner_identity_ref",
+    "trust_root_ref",
+    "signature_algorithm",
+    "canonicalization_algorithm",
+    "signed_payload_sha256",
+    "signature_evidence_ref",
+    "monotonic_sequence",
+    "issued_at",
+    "effective_from",
+    "review_due_at",
+    "expires_at",
+    "scope",
+    "limits",
+    "artifact_hashes",
+    "revocation_ref"
+  ],
+  "properties": {
+    "artifact_purpose": {"const": "NON_AUTHORIZING_DRAFT"},
+    "authorization_result": {"const": "DENY"},
+    "eligible_for_authorization": {"const": false},
+    "semantic_verifier_required": {"const": true},
+    "schema_version": {"const": 1},
+    "manifest_id": {"type": "string", "minLength": 1},
+    "manifest_version": {"type": "integer", "minimum": 1},
+    "decision": {"const": "DENY"},
+    "owner_identity_ref": {"type": "string", "minLength": 1},
+    "trust_root_ref": {"type": "string", "minLength": 1},
+    "signature_algorithm": {"type": "string", "minLength": 1},
+    "canonicalization_algorithm": {"type": "string", "minLength": 1},
+    "signed_payload_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "signature_evidence_ref": {"type": "string", "minLength": 1},
+    "monotonic_sequence": {"type": "integer", "minimum": 1},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "effective_from": {"type": "string", "format": "date-time"},
+    "review_due_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "account_ref", "capital_book", "venue", "market", "instruments", "strategy_refs", "bot_refs"],
+      "properties": {
+        "stage": {"enum": ["RESEARCH", "REPLAY", "DRY_RUN", "PAPER", "PILOT_LIMITED_LIVE", "PRODUCTION_LIVE"]},
+        "account_ref": {"type": "string", "minLength": 1},
+        "capital_book": {"enum": ["RESEARCH_PAPER", "PILOT", "PRODUCTION", "OPERATIONAL_MARGIN_RESERVE", "PROTECTED_RESERVE", "DISTRIBUTION_PAYABLE"]},
+        "venue": {"type": "string", "minLength": 1},
+        "market": {"type": "string", "minLength": 1},
+        "instruments": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+        "strategy_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "bot_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      }
+    },
+    "limits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["risk_metric", "scope", "horizon", "unit", "currency", "valuation_basis", "value"],
+        "properties": {
+          "risk_metric": {"type": "string", "minLength": 1},
+          "scope": {"type": "string", "minLength": 1},
+          "horizon": {"type": "string", "minLength": 1},
+          "unit": {"type": "string", "minLength": 1},
+          "currency": {"type": "string", "minLength": 1},
+          "valuation_basis": {"type": "string", "minLength": 1},
+          "value": {"type": "string", "pattern": "^-?[0-9]+(\\.[0-9]+)?$"}
+        }
+      }
+    },
+    "artifact_hashes": {
+      "type": "object",
+      "additionalProperties": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+      "required": ["approval_policy", "risk_policy", "mandate", "spec", "acceptance"]
+    },
+    "revocation_ref": {"type": "string", "minLength": 1},
+    "revoked_at": {"type": "string", "format": "date-time"},
+    "revocation_reason": {"type": "string"}
+  }
+}

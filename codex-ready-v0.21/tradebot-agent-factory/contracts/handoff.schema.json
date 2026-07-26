@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/tradebot/handoff.schema.json",
+  "title": "Agent handoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["work_item", "agent", "status", "facts", "assumptions", "findings", "evidence", "open_decisions", "next_action"],
+  "properties": {
+    "work_item": {"type": "string", "minLength": 1},
+    "agent": {"type": "string", "minLength": 1},
+    "status": {"enum": ["PASS", "FAIL", "BLOCKED", "READY"]},
+    "facts": {"type": "array", "items": {"type": "string"}},
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["severity", "summary", "evidence", "recommendation"],
+        "properties": {
+          "severity": {"enum": ["BLOCKER", "HIGH", "MEDIUM", "LOW", "INFO"]},
+          "summary": {"type": "string"},
+          "evidence": {"type": "string"},
+          "recommendation": {"type": "string"}
+        }
+      }
+    },
+    "evidence": {"type": "array", "items": {"type": "string"}},
+    "open_decisions": {"type": "array", "items": {"type": "string"}},
+    "next_action": {"type": "string"}
+  }
+}
+

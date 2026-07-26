@@ -1,0 +1,46 @@
+name: Trading bot work item
+description: Create a specification-driven bot feature or fix
+title: "[BOT] "
+labels: ["spec"]
+body:
+  - type: input
+    id: outcome
+    attributes:
+      label: Observable outcome
+      description: What should become observably true?
+    validations:
+      required: true
+  - type: textarea
+    id: scenarios
+    attributes:
+      label: Example scenarios
+      description: Include normal, rejection, restart, duplicate, and outage cases.
+    validations:
+      required: true
+  - type: dropdown
+    id: target_stage
+    attributes:
+      label: Maximum target stage
+      options:
+        - Development
+        - DRY_RUN
+        - Paper trading
+        - Limited live (owner approval required)
+    validations:
+      required: true
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Sensitive impact
+      options:
+        - label: Changes risk or sizing
+        - label: Changes exchange execution
+        - label: Changes credentials or permissions
+        - label: Changes live-stage behavior
+  - type: textarea
+    id: exclusions
+    attributes:
+      label: Explicitly out of scope
+    validations:
+      required: true
+

@@ -1,0 +1,9 @@
+faf45536b935d58ddd71d22b14c9a29ecb93d2951d5e58001d42c15640aa0ef5  specs/pm-dec-007-hybrid-trust-v1/spec.md
+04975d5c1c5fdfdbb2f11b087870bd1c6c27f1d433f510b88f213abfd01ff553  specs/pm-dec-007-hybrid-trust-v1/acceptance.toml
+9bff31c3786a259c9b84ccd45aaadc82feb0834f56bdb857ad1707a319cbea9b  specs/pm-dec-007-hybrid-trust-v1/plan.md
+6a6ce1d11a2fb1eff7f330bcad1b9dd50975737d96908af15018a9bbdadeb98f  specs/pm-dec-007-hybrid-trust-v1/tasks.md
+82307193a50fcb82100b57332ab7f98ba384e76ac0e12471d53105bdc20624f3  specs/pm-dec-007-hybrid-trust-v1/decisions/PM-DEC-007.toml
+33cdf4de1e45ac2032c8695878289f67ea40f7c9d48b637873d113fb0cf520cc  specs/pm-dec-007-hybrid-trust-v1/review.md
+004bf6617ca93e45bede5f338f3cf291d636e0c62815893b63d02b316a14e89e  scripts/check_pm_dec007_hybrid.py
+bdd597e6753eb4b2fa5f63eb54c77988374d3642b86f98a1c93f92da41852c5d  tests/test_pm_dec007_hybrid.py
+aae113a1fb7e734a70ebcec0d1dd6801d45f9fa20246c27b2d9b1df80bfb6abf  pm-dec-007-hybrid-trust-v0.1.zip

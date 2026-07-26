@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradebot.local/schemas/non-authorizing-validity-profile-draft-v1.json",
+  "x-schema-version": 1,
+  "title": "Strict non-authorizing venue/risk validity profile draft",
+  "description": "Defines a closed profile shape. Every instance validated by this draft schema remains DENY and cannot authorize real capital.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_purpose", "schema_id", "schema_version", "schema_sha256", "profile_id", "profile_version", "profile_sequence", "profile_status",
+    "canonicalization", "profile_payload_sha256", "supersedes_ref", "supersedes_sha256", "supersedes_sequence",
+    "authorization_result", "eligible_for_authorization", "live_trading_enabled",
+    "decision_ref", "decision_sha256", "capability_evidence_status", "valid_from", "review_due_at", "expires_at", "exact_key", "owner_hard_bounds",
+    "calibration_recommendation", "owner_selected_effective_values", "owner_authority", "evidence",
+    "lifecycle", "lookup_policy", "safety"
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "duration_values": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operating_ttl_ms": {"type": "integer", "minimum": 1, "maximum": 3155760000000},
+        "single_use_activation_window_ms": {"type": "integer", "minimum": 1, "maximum": 3155760000000},
+        "cancel_reconciliation_buffer_ms": {"type": "integer", "minimum": 1, "maximum": 3155760000000},
+        "dispatch_guard_ms": {"type": "integer", "minimum": 1, "maximum": 3155760000000},
+        "clock_skew_tolerance_ms": {"type": "integer", "minimum": 1, "maximum": 3155760000000},
+        "revocation_snapshot_max_age_ms": {"type": "integer", "minimum": 1, "maximum": 3155760000000},
+        "review_lead_time_ms": {"type": "integer", "minimum": 1, "maximum": 3155760000000},
+        "reconciliation_escalation_deadline_ms": {"type": "integer", "minimum": 1, "maximum": 3155760000000}
+      }
+    },
+    "numeric_layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "values"],
+      "properties": {
+        "status": {"enum": ["UNRESOLVED", "NON_AUTHORIZING_RECOMMENDATION"]},
+        "values": {"$ref": "#/$defs/duration_values"}
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "sha256", "issuer_ref", "as_of", "freshness_status"],
+      "properties": {
+        "ref": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "issuer_ref": {"type": "string", "minLength": 1},
+        "as_of": {"type": "string", "format": "date-time"},
+        "freshness_status": {"enum": ["VERIFIED_CURRENT", "STALE_DENY", "UNRESOLVED_DENY"]}
+      }
+    }
+  },
+  "properties": {
+    "artifact_purpose": {"const": "NON_AUTHORIZING_VALIDITY_PROFILE_DRAFT"},
+    "schema_id": {"const": "https://tradebot.local/schemas/non-authorizing-validity-profile-draft-v1.json"},
+    "schema_version": {"const": 1},
+    "schema_sha256": {"$ref": "#/$defs/sha256"},
+    "profile_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$"},
+    "profile_version": {"type": "integer", "minimum": 1},
+    "profile_sequence": {"type": "integer", "minimum": 1},
+    "profile_status": {"const": "DRAFT"},
+    "canonicalization": {"const": "SORTED_KEYS_COMPACT_UTF8_JSON_EXCLUDING_PROFILE_PAYLOAD_SHA256_AND_OWNER_AUTHORITY_V1"},
+    "profile_payload_sha256": {"$ref": "#/$defs/sha256"},
+    "supersedes_ref": {"const": "UNRESOLVED:NO_PRIOR_AUTHORIZING_PROFILE"},
+    "supersedes_sha256": {"const": "0000000000000000000000000000000000000000000000000000000000000000"},
+    "supersedes_sequence": {"const": 0},
+    "authorization_result": {"const": "DENY"},
+    "eligible_for_authorization": {"const": false},
+    "live_trading_enabled": {"const": false},
+    "decision_ref": {"const": "decisions/PM-DEC-003-v2.toml"},
+    "decision_sha256": {"$ref": "#/$defs/sha256"},
+    "capability_evidence_status": {"const": "ABSENT_DENY"},
+    "valid_from": {"type": "string", "format": "date-time"},
+    "review_due_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "exact_key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "venue_id", "venue_environment", "market_id", "capital_stage", "approval_tier",
+        "validity_mode", "action_class", "risk_class", "venue_capability_profile_id",
+        "venue_capability_profile_version", "venue_capability_profile_sha256",
+        "risk_policy_id", "risk_policy_version", "risk_policy_sha256",
+        "calibration_stratum_id", "calibration_stratum_sha256",
+        "api_or_protocol_version", "account_mode", "order_type", "time_in_force",
+        "session_id", "liquidity_regime", "volatility_regime", "degraded_state"
+      ],
+      "properties": {
+        "venue_id": {"enum": ["BITGET", "MOEX"]},
+        "venue_environment": {"enum": ["PAPER_SIMULATOR", "BITGET_TESTNET", "BITGET_PRODUCTION", "MOEX_BROKER_TEST", "MOEX_PRODUCTION"]},
+        "market_id": {"enum": ["BITGET_USDT_FUTURES", "MOEX_UNRESOLVED_BLOCKED"]},
+        "capital_stage": {"enum": ["DEVELOPMENT", "RESEARCH", "REPLAY", "DRY_RUN", "PAPER", "PILOT_LIMITED_LIVE", "PRODUCTION_LIVE"]},
+        "approval_tier": {"enum": ["LEVEL_A", "LEVEL_B"]},
+        "validity_mode": {"enum": ["LONG_LIVED_NON_CAPITAL", "TIME_BOXED_REAL_CAPITAL", "ONE_TIME_REAL_CAPITAL"]},
+        "action_class": {"enum": ["NON_CAPITAL", "PILOT_OPERATING_SCOPE", "PRODUCTION_OPERATING_SCOPE", "REAL_BOOK_TRANSFER", "DISTRIBUTION", "REAL_ACCOUNT_OR_CREDENTIAL_CHANGE", "REAL_SCOPE_EXPANSION", "HARD_LIMIT_INCREASE", "LEVERAGE_OR_MARGIN_CHANGE", "VALIDITY_PROFILE_AUTHORITY_CHANGE"]},
+        "risk_class": {"enum": ["A0_NON_CAPITAL", "B1_LIMITED_PILOT", "B2_EXISTING_PRODUCTION", "B3_CASH_ACTION", "B4_AUTHORITY_MUTATION"]},
+        "venue_capability_profile_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+        "venue_capability_profile_version": {"type": "integer", "minimum": 1},
+        "venue_capability_profile_sha256": {"$ref": "#/$defs/sha256"},
+        "risk_policy_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+        "risk_policy_version": {"type": "integer", "minimum": 1},
+        "risk_policy_sha256": {"$ref": "#/$defs/sha256"},
+        "calibration_stratum_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+        "calibration_stratum_sha256": {"$ref": "#/$defs/sha256"},
+        "api_or_protocol_version": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+        "account_mode": {"enum": ["ONE_WAY_MODE", "HEDGE_MODE", "CASH", "UNRESOLVED_DENY"]},
+        "order_type": {"enum": ["LIMIT", "MARKET"]},
+        "time_in_force": {"enum": ["GTC", "IOC", "FOK", "POST_ONLY"]},
+        "session_id": {"enum": ["BITGET_24X7", "MOEX_SESSION_UNRESOLVED_DENY"]},
+        "liquidity_regime": {"enum": ["NORMAL", "THIN", "STRESSED", "UNRESOLVED_DENY"]},
+        "volatility_regime": {"enum": ["NORMAL", "HIGH", "EXTREME", "UNRESOLVED_DENY"]},
+        "degraded_state": {"enum": ["NORMAL", "DEGRADED_READ_ONLY", "UNRESOLVED_DENY"]}
+      }
+    },
+    "owner_hard_bounds": {"$ref": "#/$defs/numeric_layer"},
+    "calibration_recommendation": {"$ref": "#/$defs/numeric_layer"},
+    "owner_selected_effective_values": {"$ref": "#/$defs/numeric_layer"},
+    "owner_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "manifest_ref", "manifest_sha256", "manifest_version", "manifest_sequence", "canonical_owner_payload_sha256", "canonical_payload_required_fields", "calibration_is_owner_authority", "missing_mismatch_or_replay_result"],
+      "properties": {
+        "status": {"const": "ABSENT_DENY"},
+        "manifest_ref": {"const": "UNRESOLVED:OWNER_AUTHORITY_MANIFEST"},
+        "manifest_sha256": {"const": "0000000000000000000000000000000000000000000000000000000000000000"},
+        "manifest_version": {"const": 0},
+        "manifest_sequence": {"const": 0},
+        "canonical_owner_payload_sha256": {"const": "0000000000000000000000000000000000000000000000000000000000000000"},
+        "canonical_payload_required_fields": {"const": ["profile_id", "profile_version", "profile_payload_sha256", "owner_hard_bounds", "owner_selected_effective_values"]},
+        "calibration_is_owner_authority": {"const": false},
+        "missing_mismatch_or_replay_result": {"const": "DENY"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "authorization_effect", "manifest_ref", "manifest_sha256", "issuer_ref", "as_of", "freshness_status", "stratified", "censored_outcomes_retained", "tail_uncertainty_method", "holdout_tuning_allowed", "evidence_refs"],
+      "properties": {
+        "status": {"const": "ABSENT"},
+        "authorization_effect": {"const": "NONE"},
+        "manifest_ref": {"const": "UNRESOLVED:EVIDENCE_MANIFEST"},
+        "manifest_sha256": {"const": "0000000000000000000000000000000000000000000000000000000000000000"},
+        "issuer_ref": {"const": "UNRESOLVED:EVIDENCE_ISSUER"},
+        "as_of": {"const": "1970-01-01T00:00:00Z"},
+        "freshness_status": {"const": "UNRESOLVED_DENY"},
+        "stratified": {"const": true},
+        "censored_outcomes_retained": {"const": true},
+        "tail_uncertainty_method": {"const": "PREREGISTERED_ONE_SIDED_BOUND"},
+        "holdout_tuning_allowed": {"const": false},
+        "evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/evidence_ref"}, "maxItems": 0}
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "terminal_reactivation_allowed"],
+      "properties": {"state": {"const": "DRAFT"}, "terminal_reactivation_allowed": {"const": false}}
+    },
+    "lookup_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exactly_one_active_match_required", "wildcards_allowed", "cross_venue_risk_stage_fallback_allowed", "zero_or_multiple_match_result"],
+      "properties": {
+        "exactly_one_active_match_required": {"const": true},
+        "wildcards_allowed": {"const": false},
+        "cross_venue_risk_stage_fallback_allowed": {"const": false},
+        "zero_or_multiple_match_result": {"const": "DENY"}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recommendation_can_authorize", "automatic_relaxation_allowed", "automatic_rebound_allowed", "missing_owner_values_result", "infeasible_ttl_buffer_guard_result", "moex_without_dedicated_profile_result"],
+      "properties": {
+        "recommendation_can_authorize": {"const": false},
+        "automatic_relaxation_allowed": {"const": false},
+        "automatic_rebound_allowed": {"const": false},
+        "missing_owner_values_result": {"const": "DENY"},
+        "infeasible_ttl_buffer_guard_result": {"const": "DENY"},
+        "moex_without_dedicated_profile_result": {"const": "DENY"}
+      }
+    }
+  }
+}

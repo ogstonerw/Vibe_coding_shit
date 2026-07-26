@@ -1,0 +1,56 @@
+policy_id = "bitget-btc-v1"
+version = 1
+status = "owner_locked"
+change_control = "explicit_human_approval_required"
+
+[scope]
+exchange = "Bitget"
+market = "USDT-margined futures"
+allowed_symbols = ["BTCUSDT"]
+margin_mode = "cross"
+
+[allocation]
+scalping_pct = 15.0
+intraday_pct = 85.0
+
+[position_risk]
+risk_total_cap_pct = 3.0
+risk_legs_pct = [1.5, 1.5]
+max_simultaneous_positions = 5
+leverage_min = 10
+leverage_max = 25
+stop_required = true
+martingale_allowed = false
+
+[entry]
+order_type = "limit_only"
+max_orders_per_setup = 3
+description = "First 1.5% risk leg may enter near current price; the second 1.5% leg may be split across up to two lower/higher limit orders without increasing total setup risk."
+
+[stop_interpretation]
+mode = "technical_offset_from_signal_level"
+long_example_signal_level = 93050
+long_example_stop = 92900
+short_rule = "A stop above X must be strictly above X by a spec-defined technical offset."
+ambiguity_policy = "reject_signal"
+
+[management]
+breakeven_after_take_profit = 2
+time_stop_minutes = 240
+reentry_requires_explicit_active_signal = true
+ignore_risk_values_from_signal_text = true
+
+[safety]
+stale_price_policy = "reject"
+missing_stop_policy = "reject"
+malformed_signal_policy = "reject"
+duplicate_signal_policy = "idempotent_no_new_order"
+unknown_exchange_state_policy = "halt_and_reconcile"
+kill_switch_required = true
+
+[live_trading]
+enabled = false
+owner_approval_required = true
+paper_evidence_required = true
+limited_live_stage_required = true
+
