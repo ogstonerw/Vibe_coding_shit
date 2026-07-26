@@ -3,6 +3,41 @@
 Небольшой self-hosted бот: читает сигналы из Telegram (Telethon user-bot),
 управляется через Bot API (Aiogram) и формирует торговые планы для Bitget.
 
+## Offline MVP v0.21 и Agent Factory
+
+В проект встроен проверяемый каркас разработки торгового бота: требования,
+риск-политики, приемочные контракты, независимые ревью и автоматические
+quality gates теперь хранятся рядом с существующим кодом. Live trading остаётся
+выключенным до отдельного ручного подтверждения.
+
+Offline Slice 01 выполняет безопасный локальный путь:
+`Telegram-like JSONL → parser → first-leg risk → simulated LIMIT intent →
+SQLite journal`. Он не обращается к реальным Telegram или Bitget API и не
+создаёт биржевые ордера.
+
+Проверка фабрики и тестов:
+
+```bash
+python3 scripts/install_codex_config.py
+python3 scripts/self_check.py
+python3 -m unittest discover -s tests -v
+```
+
+Запуск offline replay:
+
+```bash
+MVP_DB="$(mktemp -d)/state.sqlite3"
+python3 -m tradebot_mvp replay \
+  --input tests/fixtures/mvp_signals.jsonl \
+  --config config/mvp-offline-demo.toml \
+  --db "$MVP_DB"
+```
+
+Основные материалы находятся в `AGENTS.md`, `governance/`, `specs/`,
+`contracts/`, `evals/` и `docs/`. Подробности архитектуры и процесса:
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) и
+[`docs/OPERATING_MODEL.md`](docs/OPERATING_MODEL.md).
+
 Коротко:
 - Telethon (user session) — чтение каналов/сообщений (session-only, без интерактивного логина)
 - Aiogram — бот управления для владельцев (команды: /start /help /history /dryrun_on /dryrun_off и т.д.)

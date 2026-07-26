@@ -7,12 +7,22 @@ logs/
 # Python
 .venv/
 __pycache__/
-*.pyc
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+coverage.xml
+htmlcov/
+dist/
+build/
 
 # Secrets
 .env
+.env.*
+!.env.example
 *.session
+*.session-journal
 data/
 data/sessions/
 demo_trades.json
 signals_history.json
+*.log
