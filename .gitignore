@@ -26,3 +26,6 @@ data/sessions/
 demo_trades.json
 signals_history.json
 *.log
+
+# Private local Telegram Desktop exports
+/private/telegram_exports/

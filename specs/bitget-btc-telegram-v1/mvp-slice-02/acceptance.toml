@@ -1,0 +1,39 @@
+work_item = "TB-001-MVP-SLICE-02"
+parent_work_item = "TB-001"
+target_stage = "OFFLINE_SIMULATION"
+live_trading = false
+
+[[criteria]]
+id = "MVP-02-AC-001"
+title = "Actual Telegram Desktop JSON shapes are bounded and supported"
+evidence = "Tests cover single-chat/full-export roots, string/entity-array text, rich_message, the official timeless unsupported shape, duplicate keys, bounded numbers/files/records, malformed input, and deterministic status-2 errors."
+
+[[criteria]]
+id = "MVP-02-AC-002"
+title = "Historical metadata is preserved without changing the frozen envelope"
+evidence = "The exact six Slice 01 fields are produced; replayable and skipped records round-trip available ID/time/edit/reply metadata through STRICT pseudonymous tables without storing raw channel ID or text."
+
+[[criteria]]
+id = "MVP-02-AC-003"
+title = "Replay follows strict deterministic event time"
+evidence = "Shuffled same-second records use deterministic tie-breakers; two fixed configured channels merge into one global batch; edited snapshots appear only at edit time; a pseudonymous watermark rejects unseen backfill."
+
+[[criteria]]
+id = "MVP-02-AC-004"
+title = "Repeated imports and conflicting revisions are deterministic"
+evidence = "An exact second run is duplicate-only with unchanged row counts; text or reply mutation under one revision returns TELEGRAM_REVISION_CONFLICT; a later edit timestamp is a distinct observed revision."
+
+[[criteria]]
+id = "MVP-02-AC-005"
+title = "Invalid input and write failures cannot partially replay"
+evidence = "Malformed exports fail before SQLite open; event-time/provenance failures precede decisions; an injected mid-batch error leaves zero event, setup, intent, journal, replayable/skipped import and watermark rows."
+
+[[criteria]]
+id = "MVP-02-AC-006"
+title = "The existing offline pipeline and financial policy remain unchanged"
+evidence = "Frozen Slice 01 modules are byte-unchanged; the importer calls OfflineSignalService and tests prove two fixture signals create the same simulated LIMIT intent path without network, exchange, fill, paper or live code."
+
+[[criteria]]
+id = "MVP-02-AC-007"
+title = "Privacy and unavailable-history limits are explicit"
+evidence = "The private export directory is Git-ignored; fixtures are anonymized; tests scan persisted values, summary and database files for raw markers and owner-only modes; unavailable edits/deletions are documented and never invented."
