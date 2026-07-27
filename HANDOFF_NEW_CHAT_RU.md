@@ -16,9 +16,11 @@ Slice 02 также реализован в ветке `feature/offline-mvp-v0.2
 `local Telegram Desktop JSON → bounded normalization → deterministic global
 event-time replay → unchanged Slice 01 offline pipeline`.
 
-Статус Slice 02: `IMPLEMENTED`, но до release остаются CI, независимый review
-и release gate. Исправление `quality-gates` устанавливает `requirements.txt`
-перед unittest; реальные credentials в workflow не добавляются.
+Статус Slice 02: `IMPLEMENTED`; GitHub Actions, независимые
+test/code/security/risk reviews и release verifier прошли для
+`OFFLINE_SIMULATION`. Отдельный owner merge gate остаётся открытым.
+Исправление `quality-gates` устанавливает `requirements.txt` перед unittest;
+реальные credentials в workflow не добавляются.
 
 Это только `OFFLINE_SIMULATION`. Реальные Telegram/Bitget API, exchange
 orders, fills, полноценный backtest, paper trading, live и real capital
@@ -45,8 +47,9 @@ orders, fills, полноценный backtest, paper trading, live и real capi
 Результаты Slice 02 и текущего CI-fix:
 `specs/bitget-btc-telegram-v1/mvp-slice-02/review.md`.
 
-До зелёного GitHub Actions и закрытия review/release gate Slice 02 не имеет
-release verdict.
+GitHub Actions: self-check `PASS`, unittest `130/130 PASS`. Release verifier:
+`PASS` только для `OFFLINE_SIMULATION`. Merge всё ещё требует отдельного
+подтверждения владельца.
 
 Завершённые результаты Slice 01:
 
@@ -89,9 +92,7 @@ historical replay или live-stream paper этапов.
 
 ## Следующий шаг
 
-Довести draft PR #2 через зелёный GitHub Actions, независимые test,
-code/security/risk reviews и release verifier. Merge выполняется только после
-отдельного подтверждения владельца.
+Сохранить draft PR #2 без merge до отдельного подтверждения владельца.
 
 Не возвращаться к `PM-DEC-007` и не повторять тяжёлое исследование стратегии.
 Paper/live trading, Telegram API, Bitget API, fills, exchange submission и

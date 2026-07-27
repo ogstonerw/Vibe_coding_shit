@@ -2,7 +2,7 @@
 
 Дата: 27.07.2026
 Stage: `OFFLINE_SIMULATION`
-Статус: `IMPLEMENTED — CI/REVIEW/RELEASE GATE PENDING`
+Статус: `OFFLINE GATES PASS — OWNER MERGE GATE PENDING`
 Draft PR: `#2 feat: add historical Telegram replay slice`
 
 ## Проверенный baseline
@@ -50,6 +50,20 @@ dependencies: focused discovery для `test_env.py`, `test_control_bot.py` и
 фиктивной test-конфигурации падает до discovery. `unittest discover` не
 исполняет свободные pytest-style network functions; реальные Telegram/Bitget
 credentials и сетевые тесты не добавлены.
+
+## GitHub Actions candidate
+
+Исправленный draft PR candidate:
+
+- head: `af1575408eb011bf553c0985be888ea1df480f31`;
+- merge ref: `99b4459e4c934ed4fd21fb856faea42c96a0e168`;
+- run ID: `30267689130`;
+- job ID: `89982242620`;
+- runner: Ubuntu 24.04, Python 3.12.13;
+- `Install dependencies`: `PASS`;
+- `Validate factory configuration`: `PASS`;
+- `Run tests`: `Ran 130 tests in 1.074s`, `OK`;
+- итог job/run: `SUCCESS`.
 
 ## Локальная verification evidence
 
@@ -104,6 +118,8 @@ PASS — All checks passed
 - Security review: `PASS`; blocking findings отсутствуют.
 - Risk review: `PASS`; order/capital paths и financial invariants не
   изменены.
+- Release verifier: `PASS` только для `OFFLINE_SIMULATION`; verdict не
+  авторизует merge или следующий capital stage.
 
 Security reviewer зафиксировал один non-blocking `MEDIUM`: новый CI step
 исполняет существующий `requirements.txt`, где большинство direct и
@@ -125,11 +141,11 @@ Unresolved `BLOCKER/HIGH`: `NONE`.
 
 | Gate | Verdict |
 |---|---|
-| GitHub Actions candidate | PENDING |
+| GitHub Actions candidate | PASS |
 | Test engineer | PASS |
 | Code review | PASS |
 | Security review | PASS — one non-blocking MEDIUM follow-up |
 | Risk review | PASS |
-| Release verifier | PENDING |
+| Release verifier | PASS — OFFLINE_SIMULATION only |
 
 Merge и любой переход к paper/live/real-capital stage не авторизованы.

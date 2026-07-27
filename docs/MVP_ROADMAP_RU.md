@@ -1,8 +1,9 @@
 # Практический MVP фабрики торговых ботов
 
 Текущий статус: этап 1 `Offline signal-to-intent` реализован и прошёл
-независимые проверки. Этап 2 `Исторический replay` реализован в draft PR #2,
-но ожидает зелёный CI, независимый review и release gate.
+независимые проверки. Этап 2 `Исторический replay` реализован в draft PR #2;
+GitHub Actions, независимые reviews и offline release verifier прошли. Owner
+merge gate ещё не закрыт.
 
 ## Текущая цель
 
@@ -14,9 +15,10 @@
 
 1. **Offline signal-to-intent.** Строгая fixture-грамматика, parser, первая
    risk-leg, simulated LIMIT intent, SQLite idempotency и replay.
-2. **Исторический replay — IMPLEMENTED, GATE PENDING.** Локальные Telegram
-   Desktop exports двух configured channels, связи сообщений и строгий
-   event-time replay. Market-data timeline остаётся отдельной будущей работой.
+2. **Исторический replay — OFFLINE GATES PASS, OWNER MERGE PENDING.**
+   Локальные Telegram Desktop exports двух configured channels, связи
+   сообщений и строгий event-time replay. Market-data timeline остаётся
+   отдельной будущей работой.
 3. **Paper execution.** Локальная модель заявок/fills, комиссии, funding,
    slippage, TP, breakeven и time stop — без биржевых ордеров.
 4. **Live-stream paper.** Telethon reader и рыночные данные Bitget, но
@@ -45,9 +47,10 @@ stop или конфигурация дают отказ; риск не прев
 
 ## Текущий release gate Slice 02
 
-Slice 02 не переводит проект на следующий capital stage. До завершения
-GitHub Actions, test/code/security/risk review и release verification он
-остаётся реализованным, но не выпущенным offline-срезом.
+Slice 02 не переводит проект на следующий capital stage. GitHub Actions и
+test/code/security/risk reviews прошли; release verifier вернул `PASS` только
+для `OFFLINE_SIMULATION`. До owner merge gate срез не считается merged
+release.
 
 Paper/live trading, Telegram API, Bitget API, fills, exchange submission и
 реальные деньги остаются `BLOCKED`. Merge draft PR #2 требует отдельного
