@@ -1,7 +1,8 @@
 # Практический MVP фабрики торговых ботов
 
 Текущий статус: этап 1 `Offline signal-to-intent` реализован и прошёл
-независимые проверки. Следующий рабочий этап — исторический Telegram replay.
+независимые проверки. Этап 2 `Исторический replay` реализован в draft PR #2,
+но ожидает зелёный CI, независимый review и release gate.
 
 ## Текущая цель
 
@@ -13,8 +14,9 @@
 
 1. **Offline signal-to-intent.** Строгая fixture-грамматика, parser, первая
    risk-leg, simulated LIMIT intent, SQLite idempotency и replay.
-2. **Исторический replay.** Реальные выгрузки двух Telegram-каналов, связи
-   сообщений и market-data timeline без future leakage.
+2. **Исторический replay — IMPLEMENTED, GATE PENDING.** Локальные Telegram
+   Desktop exports двух configured channels, связи сообщений и строгий
+   event-time replay. Market-data timeline остаётся отдельной будущей работой.
 3. **Paper execution.** Локальная модель заявок/fills, комиссии, funding,
    slippage, TP, breakeven и time stop — без биржевых ордеров.
 4. **Live-stream paper.** Telethon reader и рыночные данные Bitget, но
@@ -40,3 +42,13 @@
 Python 3.12. Результат детерминирован; дубликаты не создаются; неверный символ,
 stop или конфигурация дают отказ; риск не превышает локальный cap; сетевого
 пути и реальных ордеров в коде нет.
+
+## Текущий release gate Slice 02
+
+Slice 02 не переводит проект на следующий capital stage. До завершения
+GitHub Actions, test/code/security/risk review и release verification он
+остаётся реализованным, но не выпущенным offline-срезом.
+
+Paper/live trading, Telegram API, Bitget API, fills, exchange submission и
+реальные деньги остаются `BLOCKED`. Merge draft PR #2 требует отдельного
+подтверждения владельца.

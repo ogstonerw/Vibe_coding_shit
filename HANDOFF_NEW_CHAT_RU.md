@@ -1,6 +1,6 @@
 # Handoff в новый диалог — практический MVP фабрики торговых ботов
 
-Дата состояния: 24.07.2026  
+Дата состояния: 27.07.2026
 Release candidate: `tradebot-agent-factory-v0.21.zip`
 
 ## Главное изменение
@@ -10,6 +10,15 @@ Release candidate: `tradebot-agent-factory-v0.21.zip`
 
 `Telegram-like JSONL → strict parser → first-leg risk → simulated LIMIT
 intent → SQLite journal → replay`.
+
+Slice 02 также реализован в ветке `feature/offline-mvp-v0.21` и draft PR #2:
+
+`local Telegram Desktop JSON → bounded normalization → deterministic global
+event-time replay → unchanged Slice 01 offline pipeline`.
+
+Статус Slice 02: `IMPLEMENTED`, но до release остаются CI, независимый review
+и release gate. Исправление `quality-gates` устанавливает `requirements.txt`
+перед unittest; реальные credentials в workflow не добавляются.
 
 Это только `OFFLINE_SIMULATION`. Реальные Telegram/Bitget API, exchange
 orders, fills, полноценный backtest, paper trading, live и real capital
@@ -32,6 +41,14 @@ orders, fills, полноценный backtest, paper trading, live и real capi
 - сетевой/exchange submission path отсутствует.
 
 ## Проверки
+
+Результаты Slice 02 и текущего CI-fix:
+`specs/bitget-btc-telegram-v1/mvp-slice-02/review.md`.
+
+До зелёного GitHub Actions и закрытия review/release gate Slice 02 не имеет
+release verdict.
+
+Завершённые результаты Slice 01:
 
 - focused MVP: `29/29 PASS`;
 - full repository: `105/105 PASS`;
@@ -72,10 +89,10 @@ historical replay или live-stream paper этапов.
 
 ## Следующий шаг
 
-Slice 02: принять локальную выгрузку реальных сообщений Telegram и привести её
-к текущему JSONL envelope. Реализовать historical replay с edits/replies и
-строгим event-time порядком. Не подключать сеть или Bitget и не менять
-финансовые лимиты.
+Довести draft PR #2 через зелёный GitHub Actions, независимые test,
+code/security/risk reviews и release verifier. Merge выполняется только после
+отдельного подтверждения владельца.
 
-Перед продолжением проверить новый MVP manifest. Если hashes совпадают, не
-повторять старые reviews и не возвращаться к `PM-DEC-007`.
+Не возвращаться к `PM-DEC-007` и не повторять тяжёлое исследование стратегии.
+Paper/live trading, Telegram API, Bitget API, fills, exchange submission и
+реальные деньги остаются `BLOCKED`.
