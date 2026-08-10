@@ -38,6 +38,24 @@ python3 -m tradebot_mvp replay \
 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) и
 [`docs/OPERATING_MODEL.md`](docs/OPERATING_MODEL.md).
 
+## Bot Farm UI
+
+В `apps/bot-farm-ui/` находится отдельный React/TypeScript/Vite-интерфейс
+«ИИагент — Ферма ботов». Сейчас он работает только с типизированными mock-данными
+и не обращается к Telegram, Bitget, SQLite или реальному капиталу.
+
+```powershell
+cd apps/bot-farm-ui
+npm install
+npm run dev
+```
+
+Подробности, маршруты и команды проверки: [`apps/bot-farm-ui/README.md`](apps/bot-farm-ui/README.md).
+
+Аудит продукта и draft IA: [`docs/ui/PRODUCT_UX_ARCHITECTURE.md`](docs/ui/PRODUCT_UX_ARCHITECTURE.md).
+Решения Designer/Pro Trader и вопросы Owner:
+[`docs/ui/DESIGN_AND_OPERATIONS_REVIEW.md`](docs/ui/DESIGN_AND_OPERATIONS_REVIEW.md).
+
 Коротко:
 - Telethon (user session) — чтение каналов/сообщений (session-only, без интерактивного логина)
 - Aiogram — бот управления для владельцев (команды: /start /help /history /dryrun_on /dryrun_off и т.д.)

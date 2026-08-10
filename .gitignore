@@ -14,6 +14,9 @@ coverage.xml
 htmlcov/
 dist/
 build/
+node_modules/
+.vite/
+coverage/
 
 # Secrets
 .env
@@ -22,6 +25,8 @@ build/
 *.session
 *.session-journal
 data/
+!apps/bot-farm-ui/src/data/
+!apps/bot-farm-ui/src/data/**
 data/sessions/
 demo_trades.json
 signals_history.json
