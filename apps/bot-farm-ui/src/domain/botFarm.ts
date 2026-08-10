@@ -8,6 +8,17 @@ export const BOT_IDS = [
 ] as const;
 
 export type BotId = (typeof BOT_IDS)[number];
+export const FARM_BUILDING_IDS = [
+  "crypto-coop",
+  "moex-barn",
+  "safety-tower",
+  "review-workshop",
+] as const;
+
+export type FarmBuildingId = (typeof FARM_BUILDING_IDS)[number];
+export type FarmDirection = "left" | "right" | "up" | "down";
+export type FarmBuildingKind = "coop" | "barn" | "tower" | "workshop";
+export type AgentKind = "trading" | "research" | "service" | "review";
 export type BotStage =
   | "DEVELOPMENT"
   | "OFFLINE_SIMULATION"
@@ -16,11 +27,10 @@ export type BotStage =
   | "GUARDING"
   | "REVIEW";
 export type GateVerdict = "PASS" | "PENDING" | "BLOCKED" | "LOCKED" | "DEMO";
-export type HealthState = "healthy" | "attention" | "training" | "guarded";
+export type EvidenceTone = "verified" | "attention" | "demo" | "guarded";
 export type ReviewVerdict = "PASS" | "PASS_WITH_FOLLOW_UP" | "WAITING";
-export type RiskState = "NORMAL" | "WATCH" | "DE_RISK" | "PROTECT" | "EMERGENCY";
-export type SpriteKind = "courier" | "merchant" | "trainee" | "guardian" | "mechanic" | "reviewer";
-export type EnvironmentKind = "field" | "market" | "training" | "tower" | "mill" | "desk";
+export type RiskState = "NOT_EVALUATED" | "NORMAL" | "WATCH" | "DE_RISK" | "PROTECT" | "EMERGENCY";
+export type SpriteKind = "courier" | "merchant" | "trainee" | "guardian" | "mechanic" | "reviewer" | "owner";
 export type PlaqueTone = "success" | "pending" | "locked" | "clear";
 
 export interface BotGate {
@@ -58,16 +68,46 @@ export interface Bot {
   stageLabel: string;
   status: string;
   statusDetail: string;
-  readiness: number;
-  health: HealthState;
+  evidenceLabel: string;
+  evidenceTone: EvidenceTone;
+  agentKind: AgentKind;
+  buildingId: FarmBuildingId;
   sprite: SpriteKind;
-  environment: EnvironmentKind;
   gates: readonly BotGate[];
   reviews: readonly BotReview[];
   progression: readonly StageStep[];
   pipeline?: readonly PipelineStation[];
   lastRun: string;
   isDemo: boolean;
+}
+
+export interface FarmBuilding {
+  id: FarmBuildingId;
+  name: string;
+  shortName: string;
+  kind: FarmBuildingKind;
+  botIds: readonly BotId[];
+  capacity: number;
+  status: string;
+  statusDetail: string;
+}
+
+export interface FarmConnection {
+  from: FarmBuildingId;
+  to: FarmBuildingId;
+  direction: FarmDirection;
+}
+
+export interface FarmNavigation {
+  initialBuildingId: FarmBuildingId;
+  connections: readonly FarmConnection[];
+}
+
+export interface OperatorContext {
+  displayName: string;
+  roleLabel: "Owner";
+  mode: "SOLO_OWNER";
+  authorizationBoundary: "SERVER_REQUIRED";
 }
 
 export interface StatusPlaque {
@@ -107,7 +147,9 @@ export interface ReleaseRecord {
   slice: string;
   stage: string;
   offline: GateVerdict;
-  ownerGate: GateVerdict;
+  ownerMerge: GateVerdict;
+  ownerPilot: GateVerdict;
+  ownerLive: GateVerdict;
   paper: GateVerdict;
   live: GateVerdict;
 }
@@ -120,6 +162,9 @@ export interface QualitySnapshot {
   mediumFollowUps: number;
   environment: "OFFLINE";
   sourceLabel: string;
+  sourceCommit: string;
+  sourceRun: string;
+  capturedAt: string;
 }
 
 export interface RiskSnapshot {
@@ -132,7 +177,10 @@ export interface RiskSnapshot {
 export interface FarmSnapshot {
   farmName: string;
   subtitle: string;
+  operator: OperatorContext;
   plaques: readonly StatusPlaque[];
+  buildings: readonly FarmBuilding[];
+  navigation: FarmNavigation;
   bots: readonly Bot[];
   news: readonly FarmNewsItem[];
   farmDay: number;

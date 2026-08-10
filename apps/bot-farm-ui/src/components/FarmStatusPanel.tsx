@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import type { Bot } from "../domain/botFarm";
+import type { Bot, FarmBuilding } from "../domain/botFarm";
 import { PixelSprite } from "./PixelSprite";
 
-export function FarmStatusPanel({ bots }: { bots: readonly Bot[] }) {
+export function FarmStatusPanel({ bots, buildings }: { bots: readonly Bot[]; buildings: readonly FarmBuilding[] }) {
   return (
     <aside className="farm-status wood-panel" aria-labelledby="farm-status-title">
       <div className="panel-title">
@@ -11,15 +11,13 @@ export function FarmStatusPanel({ bots }: { bots: readonly Bot[] }) {
       </div>
       <div className="farm-status__list">
         {bots.map((bot) => (
-          <Link className="bot-health-card" to={`/bots/${bot.id}`} key={bot.id} aria-label={`${bot.name}, готовность ${bot.readiness}%, ${bot.status}`}>
+          <Link className="bot-health-card" to={`/bots/${bot.id}`} key={bot.id} aria-label={`${bot.name}, ${bot.evidenceLabel}, ${bot.status}`}>
             <PixelSprite kind={bot.sprite} size="small" label={`Портрет ${bot.name}`} />
             <span className="bot-health-card__body">
               <strong>{bot.name}</strong>
-              <span className="health-row"><span>Готовность</span><b>{bot.readiness}%</b></span>
-              <span className="readiness-track" role="progressbar" aria-label={`Готовность ${bot.name}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={bot.readiness}>
-                <span style={{ width: `${bot.readiness}%` }} />
-              </span>
-              <span className={`health-status health-status--${bot.health}`}><i aria-hidden="true" />{bot.status}</span>
+              <span className="bot-building-label">{buildings.find((building) => building.id === bot.buildingId)?.name}</span>
+              <span className={`evidence-label evidence-label--${bot.evidenceTone}`}>{bot.evidenceLabel}</span>
+              <span className={`evidence-status evidence-status--${bot.evidenceTone}`}><i aria-hidden="true" />{bot.status}</span>
             </span>
           </Link>
         ))}

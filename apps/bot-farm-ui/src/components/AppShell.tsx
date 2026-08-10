@@ -79,7 +79,7 @@ export function AppShell() {
 
         <div className="operator-card" aria-label="Текущий оператор">
           <span className="operator-avatar" aria-hidden="true"><i /></span>
-          <span><strong>Добрый фермер</strong><small>Роль: Owner</small></span>
+          <span><strong>{snapshot.operator.displayName}</strong><small>Роль: {snapshot.operator.roleLabel} · {snapshot.operator.mode}</small></span>
           <span className="operator-caret" aria-hidden="true">⌄</span>
         </div>
       </header>
@@ -118,6 +118,13 @@ export function AppShell() {
         </aside>
 
         <main className="main-stage" id="main-content" ref={mainStage} tabIndex={-1}>
+          <aside className="evidence-provenance" aria-label="Источник и свежесть evidence snapshot">
+            <strong>EVIDENCE SNAPSHOT</strong>
+            <span>{snapshot.quality.sourceLabel}</span>
+            <span>commit {snapshot.quality.sourceCommit}</span>
+            <span>{snapshot.quality.sourceRun}</span>
+            <time dateTime={snapshot.quality.capturedAt}>{snapshot.quality.capturedAt}</time>
+          </aside>
           <Outlet />
         </main>
       </div>

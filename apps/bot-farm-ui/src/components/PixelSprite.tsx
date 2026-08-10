@@ -10,6 +10,7 @@ const palettes: Record<
   guardian: { skin: "#c98d62", hair: "#211a1a", shirt: "#34475b", accent: "#8ba3af", trousers: "#252f3b" },
   mechanic: { skin: "#e5aa78", hair: "#6c3e8c", shirt: "#536f89", accent: "#ddb35c", trousers: "#303d4c" },
   reviewer: { skin: "#edb77d", hair: "#b15a2e", shirt: "#507b46", accent: "#f0d58b", trousers: "#384d32" },
+  owner: { skin: "#efb97f", hair: "#6b3b24", shirt: "#6f9142", accent: "#f0c75f", trousers: "#3c4f31" },
 };
 
 interface PixelSpriteProps {
@@ -35,6 +36,9 @@ function Headwear({ kind }: { kind: SpriteKind }) {
   if (kind === "reviewer") {
     return <><path d="M7 6h5V3h7v2h5v7H7z" fill="#b45c30" /><path d="M9 13h6v3H9zM18 13h6v3h-6z" fill="none" stroke="#30221c" strokeWidth="2" /></>;
   }
+  if (kind === "owner") {
+    return <><path d="M7 6h18v5H7z" fill="#d6a13b" /><path d="M10 3h12v5H10z" fill="#edc960" /></>;
+  }
   return <path d="M7 5h18v8H7zM5 9h4v5H5z" fill="#2b211e" />;
 }
 
@@ -52,6 +56,8 @@ function Tool({ kind, accent }: { kind: SpriteKind; accent: string }) {
       return <><path d="M24 19h3v15h-3z" fill="#aab9bd" /><path d="M21 18h9v4h-3v3h-3v-3h-3z" fill="#d6b35f" /></>;
     case "reviewer":
       return <><rect x="22" y="21" width="8" height="11" fill="#f0ddb1" /><path d="M24 24h4M24 27h4" stroke="#7b5938" strokeWidth="1" /></>;
+    case "owner":
+      return <><path d="M23 22h7v8h-7z" fill="#a8b86b" /><path d="M25 20h3v4h-3zM21 27h4" stroke="#5e7838" strokeWidth="2" /></>;
   }
 }
 

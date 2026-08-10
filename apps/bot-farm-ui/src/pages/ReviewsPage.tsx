@@ -20,7 +20,7 @@ export function ReviewsPage() {
           ))}
         </div>
       </section>
-      <section className="findings-board" aria-label="Сводка замечаний"><div><small>UNRESOLVED BLOCKER</small><strong>{snapshot.quality.unresolvedBlockers}</strong></div><div><small>UNRESOLVED HIGH</small><strong>{snapshot.quality.unresolvedHigh}</strong></div><div><small>FOLLOW-UP</small><strong>{snapshot.quality.mediumFollowUps} MEDIUM</strong><span>Dependency lockfile</span></div><p>Owner merge — <b>{snapshot.release.ownerGate}</b>. Paper — <b>{snapshot.release.paper}</b>. Live — <b>{snapshot.release.live}</b>.</p></section>
+      <section className="findings-board" aria-label="Сводка замечаний"><div><small>UNRESOLVED BLOCKER</small><strong>{snapshot.quality.unresolvedBlockers}</strong></div><div><small>UNRESOLVED HIGH</small><strong>{snapshot.quality.unresolvedHigh}</strong></div><div><small>FOLLOW-UP</small><strong>{snapshot.quality.mediumFollowUps} MEDIUM</strong><span>Dependency lockfile</span></div><p>Owner Merge — <b>{snapshot.release.ownerMerge}</b>. Owner Pilot — <b>{snapshot.release.ownerPilot}</b>. Owner Live — <b>{snapshot.release.ownerLive}</b>.</p></section>
     </div>
   );
 }

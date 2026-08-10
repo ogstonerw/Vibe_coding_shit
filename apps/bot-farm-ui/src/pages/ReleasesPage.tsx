@@ -16,11 +16,11 @@ export function ReleasesPage() {
         <p className="release-summary">{release.slice}: {release.stage}. Следующий переход требует отдельного решения владельца.</p>
         <div className="release-gates">
           <div className="release-gate release-gate--pass"><span aria-hidden="true">✓</span><div><small>Offline gates</small><strong>{release.stage}</strong></div><VerdictBadge verdict={release.offline} /></div>
-          <div className="release-gate release-gate--pending"><span aria-hidden="true">⌛</span><div><small>Owner merge gate</small><strong>Решение не принято</strong></div><VerdictBadge verdict={release.ownerGate} /></div>
-          <div className="release-gate release-gate--blocked"><span aria-hidden="true">×</span><div><small>Paper trading</small><strong>Вне текущего допуска</strong></div><VerdictBadge verdict={release.paper} /></div>
-          <div className="release-gate release-gate--locked"><span aria-hidden="true">▣</span><div><small>Live trading</small><strong>Реальный капитал закрыт</strong></div><VerdictBadge verdict={release.live} /></div>
+          <div className="release-gate release-gate--pending"><span aria-hidden="true">⌛</span><div><small>Owner Merge</small><strong>Только merge/release кода</strong></div><VerdictBadge verdict={release.ownerMerge} /></div>
+          <div className="release-gate release-gate--blocked"><span aria-hidden="true">×</span><div><small>Owner Pilot</small><strong>Paper evidence отсутствует</strong></div><VerdictBadge verdict={release.ownerPilot} /></div>
+          <div className="release-gate release-gate--locked"><span aria-hidden="true">▣</span><div><small>Owner Live</small><strong>Реальный капитал закрыт</strong></div><VerdictBadge verdict={release.ownerLive} /></div>
         </div>
-        <div className="release-actions"><Link className="pixel-button" to={`/bots/${release.botId}`}>Открыть паспорт TB-001</Link><span>MERGE НЕ ВЫПОЛНЕН</span></div>
+        <div className="release-actions"><Link className="pixel-button" to={`/bots/${release.botId}`}>Открыть паспорт TB-001</Link><span>MERGE ≠ PILOT ≠ LIVE</span></div>
       </section>
     </div>
   );

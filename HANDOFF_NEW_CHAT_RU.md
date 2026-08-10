@@ -1,6 +1,6 @@
 # Handoff в новый диалог — практический MVP фабрики торговых ботов
 
-Дата состояния: 27.07.2026
+Дата состояния: 10.08.2026
 Release candidate: `tradebot-agent-factory-v0.21.zip`
 
 ## Главное изменение
@@ -25,6 +25,14 @@ test/code/security/risk reviews и release verifier прошли для
 Это только `OFFLINE_SIMULATION`. Реальные Telegram/Bitget API, exchange
 orders, fills, полноценный backtest, paper trading, live и real capital
 отсутствуют.
+
+Параллельный read-only Bot Farm prototype теперь строится из расширяемых
+market-зданий: каждый NPC связан с конкретным ботом/агентом, а персонаж Owner
+ходит между зданиями стрелками только для навигации. Необоснованный readiness
+удалён, offline risk без telemetry показывает `NOT_EVALUATED`, Owner
+Merge/Pilot/Live разделены. Решения Owner зафиксированы в
+`docs/ui/OWNER_DECISIONS.md`; долгосрочная составная state-модель ещё ожидает
+отдельного подтверждения.
 
 ## Что работает
 
@@ -93,6 +101,10 @@ historical replay или live-stream paper этапов.
 ## Следующий шаг
 
 Сохранить draft PR #2 без merge до отдельного подтверждения владельца.
+
+Для UI продолжать безопасные read-only slices: расширение Farm View и будущий
+Operations View. Backend начинать только с versioned read-only API; legacy
+execution не подключать.
 
 Не возвращаться к `PM-DEC-007` и не повторять тяжёлое исследование стратегии.
 Paper/live trading, Telegram API, Bitget API, fills, exchange submission и

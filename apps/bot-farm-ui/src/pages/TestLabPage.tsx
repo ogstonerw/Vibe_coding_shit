@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFarmData } from "../app/FarmDataContext";
 import { VerdictBadge } from "../components/VerdictBadge";
 
-type DemoRunState = { suiteId: string; status: "RUNNING" | "PASS" } | null;
+type DemoRunState = { suiteId: string; status: "RUNNING" | "DEMO_COMPLETED" } | null;
 
 export function TestLabPage() {
   const { snapshot } = useFarmData();
@@ -15,7 +15,7 @@ export function TestLabPage() {
   function runDemo(suiteId: string) {
     window.clearTimeout(timer.current);
     setDemoRun({ suiteId, status: "RUNNING" });
-    timer.current = window.setTimeout(() => setDemoRun({ suiteId, status: "PASS" }), 900);
+    timer.current = window.setTimeout(() => setDemoRun({ suiteId, status: "DEMO_COMPLETED" }), 900);
   }
 
   return (
@@ -29,18 +29,18 @@ export function TestLabPage() {
           const activeState = demoRun?.suiteId === suite.id ? demoRun.status : null;
           return (
             <article className="suite-card" key={suite.id}>
-              <div className="suite-card__top"><span className="suite-flask" aria-hidden="true"><i /></span><VerdictBadge verdict={activeState === "PASS" ? "PASS" : suite.status === "READY" ? "DEMO" : suite.status} /></div>
+              <div className="suite-card__top"><span className="suite-flask" aria-hidden="true"><i /></span><VerdictBadge verdict={activeState === "DEMO_COMPLETED" ? "DEMO" : suite.status === "READY" ? "DEMO" : suite.status} /></div>
               <h2>{suite.name}</h2><p>{suite.detail}</p>
               <dl><div><dt>Последний результат</dt><dd>{suite.lastRun}</dd></div><div><dt>Контур</dt><dd>{suite.demoRunnable ? "LOCAL MOCK" : "NOT IMPLEMENTED"}</dd></div></dl>
               <button className="pixel-button" type="button" disabled={!suite.demoRunnable || activeState === "RUNNING"} onClick={() => runDemo(suite.id)}>
-                {activeState === "RUNNING" ? "Анимация прогона…" : activeState === "PASS" ? "Demo PASS · повторить" : suite.demoRunnable ? "Запустить demo" : "Заблокировано"}
+                {activeState === "RUNNING" ? "Анимация прогона…" : activeState === "DEMO_COMPLETED" ? "UI demo завершено · повторить" : suite.demoRunnable ? "Запустить demo" : "Заблокировано"}
               </button>
               {activeState === "RUNNING" && <span className="lab-progress" aria-label="Mock-прогон выполняется"><i /></span>}
             </article>
           );
         })}
       </section>
-      <p className="demo-footnote" aria-live="polite">{demoRun?.status === "PASS" ? "Mock-анимация завершена: PASS. Команды, subprocess и сеть не вызывались." : "Demo-кнопки меняют только локальное состояние React."}</p>
+      <p className="demo-footnote" aria-live="polite">{demoRun?.status === "DEMO_COMPLETED" ? "Mock-анимация завершена: UI DEMO ONLY. Evidence, subprocess и сеть не затронуты." : "Demo-кнопки меняют только локальное состояние React."}</p>
     </div>
   );
 }

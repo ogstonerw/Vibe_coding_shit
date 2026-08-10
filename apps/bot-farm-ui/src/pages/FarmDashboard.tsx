@@ -8,8 +8,8 @@ export function FarmDashboard() {
 
   return (
     <div className="dashboard-layout">
-      <FarmMap bots={snapshot.bots} />
-      <FarmStatusPanel bots={snapshot.bots} />
+      <FarmMap bots={snapshot.bots} buildings={snapshot.buildings} navigation={snapshot.navigation} />
+      <FarmStatusPanel bots={snapshot.bots} buildings={snapshot.buildings} />
     </div>
   );
 }

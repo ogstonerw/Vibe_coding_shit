@@ -1,6 +1,6 @@
 # Product UX Architecture — Bot Farm
 
-Статус: **PROPOSED — AWAITING OWNER REVIEW**
+Статус: **OWNER DIRECTION RECORDED — DECISION 3 OPEN**
 
 Область: repository audit, product map и черновая Information Architecture
 
@@ -42,7 +42,7 @@ Mock, анимация, персонаж или legacy runtime никогда н
 | Historical Telegram replay | Локальный Telegram Desktop JSON, bounded normalization, глобальная event-time сортировка, dedup/conflict handling и atomic batch. |
 | Тестовый контур | Python self-check/tests в Ubuntu CI; frontend typecheck, Vitest и production build локально. |
 | Risk/governance | Limit-only policy, fail-closed проверки, owner-only gates; `live.enabled = false`. |
-| Frontend | Farm Dashboard, Bot Detail, Test Lab, Risk Center, Releases, Reviews, events, notifications, builds и docs на typed mock repository. |
+| Frontend | Расширяемая Farm View со зданиями, NPC-ботами и навигацией Owner; Bot Detail, Test Lab, Risk Center, Releases, Reviews и utility pages на typed mock repository. |
 | UI data boundary | `BotFarmRepository` позволяет позже заменить mock адаптером API без переноса торговой логики в React. |
 
 ### 1.3 Что присутствует, но не является проверенным продуктом
@@ -77,7 +77,7 @@ Slice 02 и не получает новую authority от этого доку�
 - TB-001 Offline Signal-to-Intent.
 - Historical Telegram Replay Slice 02.
 - Governance, evidence, review и release gates.
-- Bot Farm visual prototype с шестью зонами и read-only mock pages.
+- Bot Farm visual prototype с market-зданиями, шестью NPC-агентами и read-only mock pages.
 
 ### PLANNED PRODUCT
 
@@ -186,6 +186,11 @@ PRODUCT
 сопровождаются текстовым badge. Декор не кодирует единственный критический
 сигнал.
 
+Здание — отдельная market/module-зона с вместимостью и связями на карте. Каждый
+NPC представляет ровно одного `BotAgent`; `agentKind` различает trading,
+replay, risk и review-агентов. Персонаж Owner ходит между зданиями стрелками,
+но его движение только меняет фокус и никогда не запускает side effect.
+
 ### Operations View
 
 Основной профессиональный режим при 20–100+ ботах: виртуализированный список
@@ -199,8 +204,8 @@ strategy, lifecycle, run state, health, risk, release, owner и data freshness.
 ## 5. Предлагаемый lifecycle
 
 Линейная шкала недостаточна: development/release stage нельзя смешивать с
-runtime health, connectivity, risk и gate verdict. Предлагается составное
-состояние:
+runtime health, connectivity, risk и gate verdict. Составное состояние остаётся
+рекомендуемым контрактом и ожидает отдельного подтверждения Owner:
 
 - `lifecycle_stage` — где находится версия бота;
 - `gate_verdicts` — какие независимые проверки пройдены;
@@ -348,6 +353,6 @@ motion и small-window behavior проектируются после решен
 
 ## 10. Граница текущей итерации
 
-На этом этапе архитектура вынесена на Owner review. Массовая переработка UI,
-backend-интеграция и торговые изменения не начинаются. Paper/Live trading,
-Telegram API, Bitget API, fills и реальные деньги остаются **BLOCKED**.
+Направление Farm View подтверждено Owner и реализуется безопасными read-only
+slices. Backend-интеграция и торговые изменения не начинаются. Paper/Live
+trading, Telegram API, Bitget API, fills и реальные деньги остаются **BLOCKED**.

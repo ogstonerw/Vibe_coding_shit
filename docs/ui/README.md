@@ -1,6 +1,6 @@
 # UI/UX architecture
 
-Статус: **PROPOSED — AWAITING OWNER REVIEW**.
+Статус: **OWNER DIRECTION RECORDED — DECISION 3 OPEN**.
 
 Этот каталог фиксирует аудит и черновую архитектуру интерфейса «ИИагент —
 Ферма ботов». Документы не дают разрешения на Paper/Live и не меняют
@@ -10,6 +10,9 @@
   product map, draft IA, lifecycle, каталог экранов и порядок проектирования.
 - [DESIGN_AND_OPERATIONS_REVIEW.md](DESIGN_AND_OPERATIONS_REVIEW.md) —
   независимые позиции Designer и Pro Trader, спорные решения и вопросы Owner.
+- [OWNER_DECISIONS.md](OWNER_DECISIONS.md) — принятые решения Owner, простое
+  объяснение составного состояния и неизменяемые safety boundaries.
 
-Подробные `NAVIGATION`, `DESIGN_SYSTEM`, `MOTION_SYSTEM`, screen specs и план
-реализации создаются после решения Owner по архитектурным развилкам.
+Текущий implementation slice реализует расширяемые здания, NPC-ботов и
+навигацию Owner. Детальные Operations View, design system и backend integration
+остаются отдельными будущими этапами.

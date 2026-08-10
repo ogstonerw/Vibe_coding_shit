@@ -36,7 +36,7 @@ export function UtilityPage({ kind }: { kind: UtilityKind }) {
       {kind === "builds" ? (
         <section className="page-section utility-release" aria-labelledby="utility-build-title">
           <div className="section-heading"><span className="section-icon" aria-hidden="true">▣</span><div><span>{snapshot.release.slice}</span><h2 id="utility-build-title">{snapshot.release.botId} · {snapshot.release.stage}</h2></div><VerdictBadge verdict={snapshot.release.offline} /></div>
-          <dl className="utility-facts"><div><dt>Owner gate</dt><dd>{snapshot.release.ownerGate}</dd></div><div><dt>Paper</dt><dd>{snapshot.release.paper}</dd></div><div><dt>Live</dt><dd>{snapshot.release.live}</dd></div></dl>
+          <dl className="utility-facts"><div><dt>Owner Merge</dt><dd>{snapshot.release.ownerMerge}</dd></div><div><dt>Owner Pilot</dt><dd>{snapshot.release.ownerPilot}</dd></div><div><dt>Owner Live</dt><dd>{snapshot.release.ownerLive}</dd></div></dl>
           <Link className="pixel-button" to="/releases">Открыть доску релиза</Link>
         </section>
       ) : (

@@ -46,8 +46,7 @@ export function BotDetailPage() {
           </dl>
         </div>
         <div className="passport-score">
-          <small>Готовность</small><strong>{bot.readiness}%</strong>
-          <span className="readiness-track" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={bot.readiness}><i style={{ width: `${bot.readiness}%` }} /></span>
+          <small>Evidence</small><strong className={`passport-evidence passport-evidence--${bot.evidenceTone}`}>{bot.evidenceLabel}</strong>
           <em>{bot.stageLabel}</em>
         </div>
       </section>

@@ -1,7 +1,8 @@
 import { useFarmData } from "../app/FarmDataContext";
 
 const riskNotes = {
-  NORMAL: "Штатный offline-контур",
+  NOT_EVALUATED: "Нет authoritative telemetry",
+  NORMAL: "Подтверждённая работа в лимитах",
   WATCH: "Наблюдение без исполнения",
   DE_RISK: "Снижение допуска",
   PROTECT: "Защитная остановка",
@@ -15,6 +16,7 @@ export function RiskCenterPage() {
   return (
     <div className="content-page">
       <header className="page-banner page-banner--risk"><span className="banner-art" aria-hidden="true">◆</span><div><span className="eyebrow">Read-only sentinel</span><h1>Risk Center</h1><p>Наглядная лестница защитных состояний без рыночных данных и элементов исполнения.</p></div><strong>{snapshot.risk.current}</strong></header>
+      <div className="risk-evaluation-note" role="note"><strong>NOT_EVALUATED</strong><span>Live telemetry отсутствует. Зелёный NORMAL не вычислялся; ниже показана только policy ladder.</span></div>
       <div className="risk-layout">
         <section className="page-section risk-ladder-card" aria-labelledby="risk-ladder-title">
           <div className="section-heading"><span className="section-icon" aria-hidden="true">↥</span><div><span>Policy ladder</span><h2 id="risk-ladder-title">Контуры защиты</h2></div></div>
@@ -33,7 +35,7 @@ export function RiskCenterPage() {
           <ul><li>Нет API-ключей</li><li>Нет позиций и PnL</li><li>Нет fills и ордеров</li><li>Paper / Live blocked</li></ul>
         </aside>
       </div>
-      <div className="risk-readonly-note" role="note"><strong>Только чтение.</strong> Страница визуализирует mock-политику и не предоставляет controls для изменения риска.</div>
+      <div className="risk-readonly-note" role="note"><strong>Только чтение.</strong> Страница визуализирует mock-политику, не заявляет runtime health и не предоставляет controls для изменения риска.</div>
     </div>
   );
 }

@@ -27,6 +27,18 @@ merge gate ещё не закрыт.
    владельца и подтверждённой защитной семантики.
 6. **Реальный капитал.** Отдельный будущий проект допуска.
 
+## Параллельный UI-трек без торговой authority
+
+Bot Farm prototype остаётся read-only и не меняет очередность capital stages.
+Farm View расширяется через market-здания; каждый NPC представляет конкретного
+бота/агента, а Owner перемещается между зданиями только как средство навигации.
+При росте парка добавляется Operations View над той же query model.
+
+UI не показывает общий readiness `%`; без свежей authoritative telemetry risk
+имеет состояние `NOT_EVALUATED`. Owner Merge, Pilot и Live остаются независимыми
+gates. Первый допустимый backend seam — versioned read-only API, legacy
+execution остаётся в карантине.
+
 ## Что не блокирует первые четыре этапа
 
 - `PM-DEC-007`;
