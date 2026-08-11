@@ -1,6 +1,6 @@
 # Design and Operations Review
 
-Статус: **OWNER DIRECTION RECORDED — DECISION 3 OPEN**
+Статус: **OWNER DIRECTION ACCEPTED — DECISIONS 1–7 RECORDED**
 
 Режим: независимые read-only аудиты; торговая логика и gates не изменялись
 
@@ -127,8 +127,8 @@ idempotency и audit trail.
 - v1 — solo Owner с будущими seams для teams/permissions.
 - Legacy execution остаётся в карантине; сначала допускается только versioned
   read-only API.
-- Составная state-модель пока **OPEN**: Owner получил упрощённое объяснение и
-  должен отдельно подтвердить её как долгосрочный source-of-truth contract.
+- Составная state-модель **ACCEPTED**: development, runtime, gates и risk
+  остаются независимыми source-of-truth axes, а Farm показывает краткую сводку.
 
 ## 6. Оценка текущего прототипа
 

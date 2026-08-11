@@ -31,8 +31,8 @@ market-зданий: каждый NPC связан с конкретным бо�
 ходит между зданиями стрелками только для навигации. Необоснованный readiness
 удалён, offline risk без telemetry показывает `NOT_EVALUATED`, Owner
 Merge/Pilot/Live разделены. Решения Owner зафиксированы в
-`docs/ui/OWNER_DECISIONS.md`; долгосрочная составная state-модель ещё ожидает
-отдельного подтверждения.
+`docs/ui/OWNER_DECISIONS.md`; составная state-модель подтверждена Owner
+11.08.2026.
 
 ## Что работает
 

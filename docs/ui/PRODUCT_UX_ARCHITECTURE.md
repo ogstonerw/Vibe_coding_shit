@@ -1,6 +1,6 @@
 # Product UX Architecture — Bot Farm
 
-Статус: **OWNER DIRECTION RECORDED — DECISION 3 OPEN**
+Статус: **OWNER DIRECTION ACCEPTED — DECISIONS 1–7 RECORDED**
 
 Область: repository audit, product map и черновая Information Architecture
 
@@ -204,8 +204,8 @@ strategy, lifecycle, run state, health, risk, release, owner и data freshness.
 ## 5. Предлагаемый lifecycle
 
 Линейная шкала недостаточна: development/release stage нельзя смешивать с
-runtime health, connectivity, risk и gate verdict. Составное состояние остаётся
-рекомендуемым контрактом и ожидает отдельного подтверждения Owner:
+runtime health, connectivity, risk и gate verdict. Составное состояние принято
+Owner как долгосрочный source-of-truth contract:
 
 - `lifecycle_stage` — где находится версия бота;
 - `gate_verdicts` — какие независимые проверки пройдены;

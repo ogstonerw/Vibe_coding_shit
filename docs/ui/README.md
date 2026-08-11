@@ -1,6 +1,6 @@
 # UI/UX architecture
 
-Статус: **OWNER DIRECTION RECORDED — DECISION 3 OPEN**.
+Статус: **OWNER DIRECTION ACCEPTED — DECISIONS 1–7 RECORDED**.
 
 Этот каталог фиксирует аудит и черновую архитектуру интерфейса «ИИагент —
 Ферма ботов». Документы не дают разрешения на Paper/Live и не меняют
