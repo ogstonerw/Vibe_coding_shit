@@ -1,0 +1,64 @@
+work_item = "FACTORY-001A"
+target_stage = "DETERMINISTIC_DRY_RUN"
+financial_semantics_changed = false
+live_trading = false
+
+[[criteria]]
+id = "FACTORY-AC-001"
+title = "Controlled core re-freeze is versioned"
+evidence = "V11 is preserved, active V12 contains the same ten paths with only the approved self_check hash changed, and PM-DEC-007 remains 9/9."
+
+[[criteria]]
+id = "FACTORY-AC-002"
+title = "Registry validates all required entity types and statuses"
+evidence = "Tests reject unknown status, duplicate ID, missing reference, path escape, dependency cycle, and multiple active runs."
+
+[[criteria]]
+id = "FACTORY-AC-003"
+title = "Daily run transitions are deterministic"
+evidence = "Tests cover the success path and reject invalid or post-terminal transitions."
+
+[[criteria]]
+id = "FACTORY-AC-004"
+title = "Only READY tasks are selectable"
+evidence = "Selection is stable by priority then ID and ignores every non-READY status."
+
+[[criteria]]
+id = "FACTORY-AC-005"
+title = "Dependencies and active runs fail closed"
+evidence = "Tests block incomplete dependencies and any existing active run."
+
+[[criteria]]
+id = "FACTORY-AC-006"
+title = "Contracts, repository state, and evidence are required"
+evidence = "Missing spec/acceptance, disallowed repository changes, manifest mismatch, governance mismatch, or uncertain Git state blocks selection."
+
+[[criteria]]
+id = "FACTORY-AC-007"
+title = "Runtime and daily task limits are enforced"
+evidence = "Tests block estimates above 90 minutes and a second selected task on the same Moscow date."
+
+[[criteria]]
+id = "FACTORY-AC-008"
+title = "Only an OWNER_APPROVED Epic can be decomposed"
+evidence = "Tests reject unapproved Epics, capability expansion, and invalid child dependencies."
+
+[[criteria]]
+id = "FACTORY-AC-009"
+title = "Owner decision categories stop planning"
+evidence = "A gated task becomes effectively NEEDS_OWNER and no execution plan is authorized."
+
+[[criteria]]
+id = "FACTORY-AC-010"
+title = "Dry-run emits a plan and complete Owner Report without coding"
+evidence = "Tests verify every required report field, atomic artifacts, AI_USAGE=0, and absence of agent/network/trading calls."
+
+[[criteria]]
+id = "FACTORY-AC-011"
+title = "Scheduler and limits are immutable and safe"
+evidence = "Workflow has manual trigger, 07:00 UTC cron, read-only contents, dry-run only, no LLM secrets, and configured limits/authorities."
+
+[[criteria]]
+id = "FACTORY-AC-012"
+title = "Context and routing remain cost-aware guidance"
+evidence = "Plan separates MANDATORY, RELEVANT, FROZEN, and SKIP context and recommends HIGH/MEDIUM/LOW routes without implementing an LLM router."
