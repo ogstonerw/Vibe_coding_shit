@@ -35,6 +35,17 @@ Maximum nesting depth is one. Subagents do not spawn subagents.
 
 Deep reviewers are independent second-line functions. They read raw artifacts before author conclusions, do not edit the object under review, and do not close their own findings. Agreement among agents never substitutes for deterministic evidence or owner authorization.
 
+## UI/product workflow
+
+For UI/product changes, run `game_ux_designer` and `pro_trader_ux` in parallel,
+read-only, before the implementer. A material disagreement stops implementation
+and requires an Owner decision. After implementation, both agents perform
+independent read-only reviews.
+
+The Designer cannot sacrifice operational clarity for beauty. The Pro Trader
+cannot turn the whole product into a faceless terminal. Owner is the final
+arbiter.
+
 ## Safety invariants
 
 - Never enable live trading, submit a real exchange order, or use production credentials.

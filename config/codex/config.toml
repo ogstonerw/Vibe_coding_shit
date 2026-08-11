@@ -19,6 +19,14 @@ config_file = "./agents/quant_researcher.toml"
 description = "Designs deterministic boundaries, state machines, data contracts, and failure handling."
 config_file = "./agents/system_architect.toml"
 
+[agents.game_ux_designer]
+description = "Designs and reviews scalable, accessible, non-generic game UI/UX and visual systems."
+config_file = "./agents/game_ux_designer.toml"
+
+[agents.pro_trader_ux]
+description = "Reviews bot-operator UX for decision speed, evidence, risk clarity, and multi-bot scale."
+config_file = "./agents/pro_trader_ux.toml"
+
 [agents.implementer]
 description = "Implements one bounded task from an approved plan and adds focused tests."
 config_file = "./agents/implementer.toml"

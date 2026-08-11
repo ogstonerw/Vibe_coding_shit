@@ -381,6 +381,32 @@ FROZEN_CORE_V11_PATHS = (
     "portfolio-mandate-v0.6.zip",
 )
 
+FROZEN_CORE_V12_PATHS = FROZEN_CORE_V11_PATHS
+FROZEN_PM_DEC007_PATHS = (
+    "specs/pm-dec-007-hybrid-trust-v1/spec.md",
+    "specs/pm-dec-007-hybrid-trust-v1/acceptance.toml",
+    "specs/pm-dec-007-hybrid-trust-v1/plan.md",
+    "specs/pm-dec-007-hybrid-trust-v1/tasks.md",
+    "specs/pm-dec-007-hybrid-trust-v1/decisions/PM-DEC-007.toml",
+    "specs/pm-dec-007-hybrid-trust-v1/review.md",
+    "scripts/check_pm_dec007_hybrid.py",
+    "tests/test_pm_dec007_hybrid.py",
+    "pm-dec-007-hybrid-trust-v0.1.zip",
+)
+HISTORICAL_CORE_MANIFEST = "docs/FROZEN_CORE_V11.sha256"
+HISTORICAL_CORE_MANIFEST_SHA256 = (
+    "46f20183230d84f6fdaba9ccc63e8e504afcd2be77c4447c66a14f5a9be5390f"
+)
+ACTIVE_CORE_MANIFEST = "docs/FROZEN_CORE_V12.sha256"
+ACTIVE_CORE_MANIFEST_SHA256 = (
+    "c58ce36af3d0b993cb45650f8ba7ff7392cc5a23fe50e72c42733c40ef800233"
+)
+HISTORICAL_PM_MANIFEST = "docs/FROZEN_PM_DEC_007_HYBRID_V1.sha256"
+HISTORICAL_PM_MANIFEST_SHA256 = (
+    "f6b8e859365bc00335b7a5b5b1a577c7784ebc75661f4f573839c98abcafcd53"
+)
+ACTIVE_PM_MANIFEST = "docs/FROZEN_PM_DEC_007_HYBRID_V2.sha256"
+
 TRACEABILITY = {
     "PM-AC-059": ("PM-REQ-094",),
     "PM-AC-060": ("PM-REQ-094", "PM-REQ-095"),
@@ -727,33 +753,116 @@ def _mentions_acceptance_id(text: str, criterion_id: str) -> bool:
     return False
 
 
-def _check_frozen_core(root: Path) -> list[str]:
+def _read_frozen_manifest(
+    root: Path,
+    relative: str,
+    label: str,
+) -> tuple[list[tuple[str, str]], list[str]]:
     errors: list[str] = []
-    manifest = root / "docs/FROZEN_CORE_V11.sha256"
+    manifest = root / relative
     try:
         raw_lines = manifest.read_text(encoding="utf-8").splitlines()
     except (OSError, UnicodeDecodeError):
-        return ["frozen v11 manifest unavailable or malformed"]
+        return [], [f"{label} manifest unavailable or malformed"]
 
     entries: list[tuple[str, str]] = []
     for line in raw_lines:
         match = re.fullmatch(r"([0-9a-f]{64})  ([^\r\n]+)", line)
         if match is None:
-            errors.append("frozen v11 manifest has a malformed entry")
+            errors.append(f"{label} manifest has a malformed entry")
             continue
         entries.append((match.group(2), match.group(1)))
-    paths = [path for path, _ in entries]
-    if tuple(paths) != FROZEN_CORE_V11_PATHS or len(set(paths)) != 10:
-        errors.append("frozen v11 manifest must retain its exact 10 paths")
+    return entries, errors
+
+
+def _check_manifest_identity(
+    root: Path,
+    relative: str,
+    label: str,
+    expected_sha256: str,
+    expected_paths: tuple[str, ...],
+) -> list[str]:
+    entries, errors = _read_frozen_manifest(root, relative, label)
+    if errors:
         return errors
+    try:
+        actual_manifest_sha256 = hashlib.sha256((root / relative).read_bytes()).hexdigest()
+    except OSError:
+        return [f"{label} manifest unavailable or malformed"]
+    if actual_manifest_sha256 != expected_sha256:
+        errors.append(f"{label} manifest bytes changed")
+    paths = [path for path, _ in entries]
+    if tuple(paths) != expected_paths or len(set(paths)) != len(expected_paths):
+        errors.append(f"{label} manifest path set changed")
+    return errors
+
+
+def _check_active_manifest(
+    root: Path,
+    relative: str,
+    label: str,
+    expected_paths: tuple[str, ...],
+    expected_sha256: str | None = None,
+) -> list[str]:
+    entries, errors = _read_frozen_manifest(root, relative, label)
+    if errors:
+        return errors
+    paths = [path for path, _ in entries]
+    if tuple(paths) != expected_paths or len(set(paths)) != len(expected_paths):
+        errors.append(f"{label} manifest path set changed")
+        return errors
+    if expected_sha256 is not None:
+        try:
+            actual_manifest_sha256 = hashlib.sha256((root / relative).read_bytes()).hexdigest()
+        except OSError:
+            return errors + [f"{label} manifest unavailable or malformed"]
+        if actual_manifest_sha256 != expected_sha256:
+            errors.append(f"{label} manifest bytes changed")
     for relative, expected_digest in entries:
         try:
             actual_digest = hashlib.sha256((root / relative).read_bytes()).hexdigest()
         except OSError as exc:
-            errors.append(f"frozen v11 artifact unavailable: {relative}: {exc}")
+            errors.append(f"{label} artifact unavailable: {relative}: {exc}")
             continue
         if actual_digest != expected_digest:
-            errors.append(f"frozen v11 artifact hash mismatch: {relative}")
+            errors.append(f"{label} artifact hash mismatch: {relative}")
+    return errors
+
+
+def _check_frozen_evidence_versions(root: Path) -> list[str]:
+    errors = _check_manifest_identity(
+        root,
+        HISTORICAL_CORE_MANIFEST,
+        "historical v11",
+        HISTORICAL_CORE_MANIFEST_SHA256,
+        FROZEN_CORE_V11_PATHS,
+    )
+    errors.extend(
+        _check_active_manifest(
+            root,
+            ACTIVE_CORE_MANIFEST,
+            "active v12",
+            FROZEN_CORE_V12_PATHS,
+            ACTIVE_CORE_MANIFEST_SHA256,
+        )
+    )
+    errors.extend(
+        _check_manifest_identity(
+            root,
+            HISTORICAL_PM_MANIFEST,
+            "historical PM V1",
+            HISTORICAL_PM_MANIFEST_SHA256,
+            FROZEN_PM_DEC007_PATHS,
+        )
+    )
+    errors.extend(
+        _check_active_manifest(
+            root,
+            ACTIVE_PM_MANIFEST,
+            "active PM V2",
+            FROZEN_PM_DEC007_PATHS,
+        )
+    )
     return errors
 
 
@@ -836,7 +945,7 @@ def run_checks(root: Path = ROOT) -> list[str]:
         return ["PM-DEC-007 decision record unavailable or malformed"]
     errors.extend(validate_pm_dec007_record(decision, root_path))
     errors.extend(_check_traceability(root_path))
-    errors.extend(_check_frozen_core(root_path))
+    errors.extend(_check_frozen_evidence_versions(root_path))
     return errors
 
 
@@ -849,7 +958,7 @@ def main(root: Path = ROOT) -> int:
         return 1
     print(
         "PM-DEC-007 HYBRID CHECK: PASS "
-        "(non-authorizing record, factor contract, traceability, frozen v11)"
+        "(semantics unchanged, historical V11/PM V1, active V12/PM V2)"
     )
     return 0
 

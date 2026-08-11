@@ -78,8 +78,10 @@ GitHub Actions: self-check `PASS`, unittest `130/130 PASS`. Release verifier:
 Frozen parent core v11 и frozen PM-DEC-007 hybrid addendum v1 не изменены.
 Их завершённые reviews не повторять при совпадении:
 
-- `docs/FROZEN_CORE_V11.sha256` — `10/10`;
-- `docs/FROZEN_PM_DEC_007_HYBRID_V1.sha256` — `9/9`.
+- `docs/FROZEN_CORE_V12.sha256` — active core freeze, `10/10`;
+- `docs/FROZEN_CORE_V11.sha256` — preserved historical baseline;
+- `docs/FROZEN_PM_DEC_007_HYBRID_V2.sha256` — active PM bundle, `9/9`;
+- `docs/FROZEN_PM_DEC_007_HYBRID_V1.sha256` — preserved historical PM baseline.
 
 `PM-DEC-007`, hardware keys и криптографические подписи сохранены как будущая
 работа перед реальным капиталом, но не являются зависимостями offline,

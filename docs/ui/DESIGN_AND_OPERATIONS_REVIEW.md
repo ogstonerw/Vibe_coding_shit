@@ -173,3 +173,128 @@ Pro Trader verdict: архитектура концептуально готов
 Разрешено развивать только безопасный read-only visual prototype в границах
 зафиксированных решений. Backend integration, control plane, Paper/Live и
 реальные торговые действия не начинаются без отдельного Owner-approved проекта.
+
+## 9. UI-022-001 — Designer + Pro Trader foundation review
+
+Дата: **2026-08-11**
+
+Статус: **PASS — FOUNDATION ONLY**
+
+Scope review ограничен текущим `apps/bot-farm-ui/` и четырьмя foundation docs.
+Торговая стратегия, frozen portfolio mandate и PM-DEC-007 не переоценивались;
+Owner decisions 1–7 не переоткрывались.
+
+### 9.1 Независимый аудит текущего frontend
+
+Designer verdict: `CONDITIONAL PASS — strong prototype identity; BLOCKED for
+scalable product UI`.
+
+| Designer area | Score |
+|---|---:|
+| Visual quality | 8.4/10 |
+| Hierarchy | 7.0/10 |
+| Character | 9.3/10 |
+| Consistency | 7.1/10 |
+| Motion | 6.6/10 |
+| Accessibility | 6.0/10 |
+| Responsive | 5.8/10 |
+| Scalability | 2.8/10 |
+
+Pro Trader verdict: `PASS as Farm orientation/safety prototype; NOT ACCEPTABLE
+as daily operator surface`.
+
+| Pro Trader area | Score |
+|---|---:|
+| Decision speed | 4/10 |
+| Risk clarity | 7/10 |
+| Data density | 3/10 |
+| Daily usability | 4/10 |
+| Workflow completeness | 3/10 |
+| Safety | 8/10 |
+| Scalability | 2/10 |
+
+Общие material findings:
+
+- `AppShell`, routes, documentation links и bottom dock — расходящиеся
+  hardcoded sources; Operations View нельзя подключить системно;
+- literal `BotId`/`FarmBuildingId`, fixed 2×2 map, Owner coordinates и рендер
+  всех bots/free slots не масштабируются до 20–50 modules и 100+ bots;
+- текущие SVG sprites и ~1968-line CSS — сильный prototype direction, но не
+  versioned asset/design system;
+- Farm имеет узнаваемый bespoke cozy character, тогда как внутренние страницы
+  местами дрейфуют к generic SaaS card grids;
+- professional surfaces требуют крупнее auxiliary text, устойчивого contrast,
+  provenance/freshness и отдельных lifecycle/runtime/risk/evidence/gate axes;
+- Test Lab progress, farm news и decorative badges не являются runner evidence,
+  alerts или monitoring telemetry.
+
+### 9.2 Foundation и закрытые findings
+
+Совместно подготовлены `MENU_ARCHITECTURE.md`, `DESIGN_SYSTEM.md`,
+`MOTION_SYSTEM.md` и `SCREEN_CATALOG.md`. Первый независимый docs review нашёл
+четыре contract gaps; до финального verdict они закрыты:
+
+1. canonical domains/routes и 37 screen registrations;
+2. axis-qualified vocabulary и обязательные `SafetyStrip`/`CompositeState`;
+3. canonical Operations roster anatomy, triage order и adaptive precedence;
+4. bounded World Canvas для 5/20/50 modules, 5/20/100/500-bot evidence и
+   injected read-only cursor/partial/direct-get repository seam.
+
+Дополнительно разделены `LOCAL_SEEN` и authoritative `ACKNOWLEDGED`, Evidence
+FAIL оставлен static/no-shake, а Operations имеет zero ambient loops.
+
+### 9.3 Финальные независимые оценки foundation
+
+Designer final verdict: **PASS**, remaining blockers: **NONE**.
+
+| Designer area | Score |
+|---|---:|
+| Requirements coverage | 9.8/10 |
+| IA clarity | 9.6/10 |
+| Design system | 9.6/10 |
+| Motion system | 9.7/10 |
+| Screen catalog | 9.5/10 |
+| Accessibility | 9.5/10 |
+| Operational truth | 9.8/10 |
+| Scalability | 9.6/10 |
+| **Overall foundation** | **9.6/10** |
+
+Pro Trader final verdict: **PASS**, remaining blockers: **NONE**.
+
+| Pro Trader area | Score |
+|---|---:|
+| Decision speed | 9/10 |
+| Risk/state clarity | 10/10 |
+| Data density contract | 9/10 |
+| Daily operator usability | 9/10 |
+| Workflow completeness | 9/10 |
+| Safety / no trading authority | 10/10 |
+| Scalability and testability | 10/10 |
+| Cross-document coherence | 9/10 |
+
+### 9.4 Disagreements
+
+**Material disagreements: NONE.** Owner escalation не требуется.
+
+Рабочие tensions разрешены нормативно:
+
+- Farm сохраняется как identity/orientation layer; Operations становится daily
+  control surface и adaptive default при 21+ bots без отмены explicit choice;
+- Operations остаётся плотным и спокойным, но сохраняет compact NPC/role marker
+  и contextual inspector, поэтому не превращается в безликий терминал;
+- ambience/watering живут только на Farm; risk/evidence/alerts получают
+  статические профессиональные surfaces;
+- Evidence PASS, Risk NOT_EVALUATED и Merge/Pilot/Live остаются независимыми
+  qualified facets.
+
+### 9.5 Proposed UI-022-002
+
+Следующий bounded slice: typed screen/module registry + route/menu parity,
+`/operations` read-only virtualized BotAgent roster, shared SafetyStrip/
+CompositeState/provenance primitives, explicit mobile `More`, injected mock read
+repository и scale/a11y/performance fixtures. Farm shell сохраняется; массовый
+redesign, backend connection и mutation endpoints в slice не входят.
+
+Paper/Live, Telegram/Bitget API, exchange connections, orders/fills, credentials
+и реальные деньги остаются **BLOCKED/LOCKED**. UI-022-002 начинается только
+после отдельного Owner подтверждения.

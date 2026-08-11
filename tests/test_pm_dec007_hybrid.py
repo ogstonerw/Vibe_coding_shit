@@ -13,11 +13,20 @@ from pathlib import Path
 from unittest import mock
 
 from scripts.check_pm_dec007_hybrid import (
+    ACTIVE_CORE_MANIFEST,
+    ACTIVE_CORE_MANIFEST_SHA256,
+    ACTIVE_PM_MANIFEST,
     DIGEST_FIELDS,
     DISTINCT_FIELDS,
     EQUAL_BINDING_FIELDS,
     FACTOR_FIELDS,
     FROZEN_CORE_V11_PATHS,
+    FROZEN_CORE_V12_PATHS,
+    FROZEN_PM_DEC007_PATHS,
+    HISTORICAL_CORE_MANIFEST,
+    HISTORICAL_CORE_MANIFEST_SHA256,
+    HISTORICAL_PM_MANIFEST,
+    HISTORICAL_PM_MANIFEST_SHA256,
     PM_DEC007_BINDING_VALID,
     PM_DEC007_CALLER_AUTHORITY_CLAIM,
     PM_DEC007_CHECKPOINT_UNAVAILABLE,
@@ -44,10 +53,6 @@ from scripts.check_pm_dec007_hybrid import (
 ROOT = Path(__file__).resolve().parents[1]
 ADDENDUM = ROOT / "specs/pm-dec-007-hybrid-trust-v1"
 DECISION = ADDENDUM / "decisions/PM-DEC-007.toml"
-FROZEN_MANIFEST_SHA256 = (
-    "46f20183230d84f6fdaba9ccc63e8e504afcd2be77c4447c66a14f5a9be5390f"
-)
-
 # Written as adjacent exact fragments to make accidental substitution visible.
 PM_DEC003_V1_SHA256 = (
     "618dd1da08fb6a8f7f0631fa6824bea1"
@@ -58,6 +63,14 @@ PM_DEC003_V1_SHA256 = (
 def _load_decision() -> dict:
     with DECISION.open("rb") as handle:
         return tomllib.load(handle)
+
+
+def _manifest_entries(relative: str) -> list[tuple[str, str]]:
+    entries = []
+    for line in (ROOT / relative).read_text(encoding="utf-8").splitlines():
+        digest, path = line.split("  ", 1)
+        entries.append((path, digest))
+    return entries
 
 
 def _redigest(record: dict) -> dict:
@@ -799,20 +812,54 @@ class PMDec007CheckpointAndReadinessTests(unittest.TestCase):
 
 
 class PMDec007RepositoryEvidenceTests(unittest.TestCase):
-    def test_parent_frozen_manifest_remains_exact_and_passes_10_of_10(self) -> None:
-        manifest = ROOT / "docs/FROZEN_CORE_V11.sha256"
+    def test_historical_v11_is_immutable_and_active_v12_passes_10_of_10(self) -> None:
+        historical = ROOT / HISTORICAL_CORE_MANIFEST
         self.assertEqual(
-            FROZEN_MANIFEST_SHA256,
-            hashlib.sha256(manifest.read_bytes()).hexdigest(),
+            HISTORICAL_CORE_MANIFEST_SHA256,
+            hashlib.sha256(historical.read_bytes()).hexdigest(),
         )
-        entries = []
-        for line in manifest.read_text(encoding="utf-8").splitlines():
-            digest, relative = line.split("  ", 1)
-            entries.append((relative, digest))
-        self.assertEqual(FROZEN_CORE_V11_PATHS, tuple(path for path, _ in entries))
-        self.assertEqual(10, len(entries))
-        self.assertEqual(10, len({path for path, _ in entries}))
-        for relative, expected_digest in entries:
+        historical_entries = _manifest_entries(HISTORICAL_CORE_MANIFEST)
+        self.assertEqual(
+            FROZEN_CORE_V11_PATHS,
+            tuple(path for path, _ in historical_entries),
+        )
+        self.assertNotEqual(
+            dict(historical_entries)["scripts/self_check.py"],
+            hashlib.sha256((ROOT / "scripts/self_check.py").read_bytes()).hexdigest(),
+        )
+
+        active = ROOT / ACTIVE_CORE_MANIFEST
+        self.assertEqual(
+            ACTIVE_CORE_MANIFEST_SHA256,
+            hashlib.sha256(active.read_bytes()).hexdigest(),
+        )
+        active_entries = _manifest_entries(ACTIVE_CORE_MANIFEST)
+        self.assertEqual(FROZEN_CORE_V12_PATHS, tuple(path for path, _ in active_entries))
+        self.assertEqual(10, len(active_entries))
+        for relative, expected_digest in active_entries:
+            with self.subTest(relative=relative):
+                self.assertEqual(
+                    expected_digest,
+                    hashlib.sha256((ROOT / relative).read_bytes()).hexdigest(),
+                )
+
+    def test_historical_pm_v1_is_immutable_and_active_pm_v2_passes(self) -> None:
+        historical = ROOT / HISTORICAL_PM_MANIFEST
+        self.assertEqual(
+            HISTORICAL_PM_MANIFEST_SHA256,
+            hashlib.sha256(historical.read_bytes()).hexdigest(),
+        )
+        v1_entries = _manifest_entries(HISTORICAL_PM_MANIFEST)
+        v2_entries = _manifest_entries(ACTIVE_PM_MANIFEST)
+        self.assertEqual(FROZEN_PM_DEC007_PATHS, tuple(path for path, _ in v1_entries))
+        self.assertEqual(FROZEN_PM_DEC007_PATHS, tuple(path for path, _ in v2_entries))
+        v1 = dict(v1_entries)
+        v2 = dict(v2_entries)
+        self.assertEqual(
+            {"scripts/check_pm_dec007_hybrid.py", "tests/test_pm_dec007_hybrid.py"},
+            {path for path in v1 if v1[path] != v2[path]},
+        )
+        for relative, expected_digest in v2_entries:
             with self.subTest(relative=relative):
                 self.assertEqual(
                     expected_digest,
@@ -911,13 +958,18 @@ class PMDec007RepositoryEvidenceTests(unittest.TestCase):
                 "specs/pm-dec-007-hybrid-trust-v1/decisions/PM-DEC-007.toml",
                 "specs/pm-dec-007-hybrid-trust-v1/tasks.md",
                 *[path for path, _ in REQUIRED_ARTIFACT_HASHES],
+                ACTIVE_CORE_MANIFEST,
+                HISTORICAL_PM_MANIFEST,
+                ACTIVE_PM_MANIFEST,
+                *FROZEN_CORE_V12_PATHS,
+                *FROZEN_PM_DEC007_PATHS,
             }
             for relative in copied_paths:
                 destination = temporary_root / relative
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 destination.write_bytes((ROOT / relative).read_bytes())
 
-            frozen_manifest = temporary_root / "docs/FROZEN_CORE_V11.sha256"
+            frozen_manifest = temporary_root / HISTORICAL_CORE_MANIFEST
             frozen_manifest.write_bytes(b"\xff")
 
             errors = run_checks(temporary_root)
@@ -925,7 +977,7 @@ class PMDec007RepositoryEvidenceTests(unittest.TestCase):
                 [
                     "PM-DEC-007 bound artifact hash mismatch: "
                     "docs/FROZEN_CORE_V11.sha256",
-                    "frozen v11 manifest unavailable or malformed",
+                    "historical v11 manifest unavailable or malformed",
                 ],
                 errors,
             )
@@ -935,7 +987,7 @@ class PMDec007RepositoryEvidenceTests(unittest.TestCase):
             self.assertEqual(1, result)
             self.assertIn("PM-DEC-007 HYBRID CHECK: FAIL", output.getvalue())
             self.assertIn(
-                "- frozen v11 manifest unavailable or malformed",
+                "- historical v11 manifest unavailable or malformed",
                 output.getvalue(),
             )
             self.assertNotIn("Traceback", output.getvalue())

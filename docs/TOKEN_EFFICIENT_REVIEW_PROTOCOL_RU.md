@@ -8,23 +8,23 @@
 1. Прочитать только:
    - `AGENTS.md`;
    - `HANDOFF_NEW_CHAT_RU.md`;
-   - `docs/FROZEN_CORE_V11.sha256`;
-   - `docs/FROZEN_PM_DEC_007_HYBRID_V1.sha256`.
+   - `docs/FROZEN_CORE_V12.sha256`;
+   - `docs/FROZEN_PM_DEC_007_HYBRID_V2.sha256`.
 2. Проверить оба manifest:
 
    ```bash
-   sha256sum docs/FROZEN_CORE_V11.sha256
-   sha256sum -c docs/FROZEN_CORE_V11.sha256
-   sha256sum docs/FROZEN_PM_DEC_007_HYBRID_V1.sha256
-   sha256sum -c docs/FROZEN_PM_DEC_007_HYBRID_V1.sha256
+   sha256sum docs/FROZEN_CORE_V12.sha256
+   sha256sum -c docs/FROZEN_CORE_V12.sha256
+   sha256sum docs/FROZEN_PM_DEC_007_HYBRID_V2.sha256
+   sha256sum -c docs/FROZEN_PM_DEC_007_HYBRID_V2.sha256
    ```
 
    Ожидаемые SHA:
 
    - core:
-     `46f20183230d84f6fdaba9ccc63e8e504afcd2be77c4447c66a14f5a9be5390f`;
+     `c58ce36af3d0b993cb45650f8ba7ff7392cc5a23fe50e72c42733c40ef800233`;
    - PM-DEC-007 addendum:
-     `f6b8e859365bc00335b7a5b5b1a577c7784ebc75661f4f573839c98abcafcd53`.
+     `5ab164a66278816dfc849c1117f2ec41f0f6642faef78049deaa368e9597fe7a`.
 3. Если manifests и все `10 + 9` entries совпадают, не читать старый полный
    chat, прежние handoff-архивы или прошлые reviewer narratives.
 4. ZIP-файлы проверять по hash и штатным snapshot tests; не распаковывать их
@@ -68,8 +68,8 @@ python3 -m py_compile \
   scripts/check_pm_dec007_hybrid.py \
   tests/test_portfolio_mandate.py \
   tests/test_pm_dec007_hybrid.py
-sha256sum -c docs/FROZEN_CORE_V11.sha256
-sha256sum -c docs/FROZEN_PM_DEC_007_HYBRID_V1.sha256
+sha256sum -c docs/FROZEN_CORE_V12.sha256
+sha256sum -c docs/FROZEN_PM_DEC_007_HYBRID_V2.sha256
 ```
 
 Завершённые scopes не переоткрывать без manifest mismatch или изменения их

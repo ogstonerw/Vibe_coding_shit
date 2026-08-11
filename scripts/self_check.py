@@ -54,6 +54,8 @@ REQUIRED_AGENTS = {
     "requirements_analyst",
     "quant_researcher",
     "system_architect",
+    "game_ux_designer",
+    "pro_trader_ux",
     "implementer",
     "test_engineer",
     "code_reviewer",
@@ -63,6 +65,19 @@ REQUIRED_AGENTS = {
     "institutional_portfolio_reviewer",
     "quant_methodology_reviewer",
     "market_microstructure_reviewer",
+}
+
+UI_AGENT_EXPECTATIONS = {
+    "game_ux_designer": {
+        "model": "gpt-5.6",
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only",
+    },
+    "pro_trader_ux": {
+        "model": "gpt-5.6",
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only",
+    },
 }
 
 REQUIRED_SPEC_HEADINGS = {
@@ -4389,7 +4404,9 @@ def check_parseable_files(errors: list[str]) -> None:
 
 
 def check_agents(errors: list[str]) -> None:
-    config = load_toml(ROOT / "config/codex/config.toml")
+    source_config_path = ROOT / "config/codex/config.toml"
+    installed_config_path = ROOT / ".codex/config.toml"
+    config = load_toml(source_config_path)
     agents = config.get("agents", {})
     reserved = {"max_threads", "max_depth", "job_max_runtime_seconds", "interrupt_message"}
     configured = set(agents) - reserved
@@ -4409,6 +4426,30 @@ def check_agents(errors: list[str]) -> None:
             errors.append(f"agent name mismatch in {path.relative_to(ROOT)}")
         if not data.get("developer_instructions", "").strip():
             errors.append(f"empty developer_instructions in {path.relative_to(ROOT)}")
+    if not installed_config_path.is_file():
+        errors.append("missing installed Codex config: .codex/config.toml")
+        return
+    installed_config = load_toml(installed_config_path)
+    installed_agents = installed_config.get("agents", {})
+    for name, expected in UI_AGENT_EXPECTATIONS.items():
+        source_entry = agents.get(name, {})
+        installed_entry = installed_agents.get(name, {})
+        expected_ref = f"./agents/{name}.toml"
+        if source_entry.get("config_file") != expected_ref:
+            errors.append(f"source config must register {name} at {expected_ref}")
+        if installed_entry.get("config_file") != expected_ref:
+            errors.append(f"installed config must register {name} at {expected_ref}")
+        source_path = ROOT / "config/codex/agents" / f"{name}.toml"
+        installed_path = ROOT / ".codex/agents" / f"{name}.toml"
+        if not installed_path.is_file():
+            errors.append(f"missing installed UI agent file: {installed_path.relative_to(ROOT)}")
+            continue
+        if source_path.read_bytes() != installed_path.read_bytes():
+            errors.append(f"UI agent source/install mismatch: {name}")
+        data = load_toml(source_path)
+        for field, value in expected.items():
+            if data.get(field) != value:
+                errors.append(f"{name}.{field} must be {value!r}")
 
 
 def check_risk_policy(errors: list[str]) -> None:
