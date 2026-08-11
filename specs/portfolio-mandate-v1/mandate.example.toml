@@ -1,0 +1,214 @@
+artifact_purpose = "NON_AUTHORIZING_DRAFT_EXAMPLE"
+schema_version = 1
+mandate_id = "PM-001"
+mandate_version = 1
+status = "BLOCKED"
+authorization_result = "DENY"
+semantic_validator_required = true
+normative_overlay_status = "ACTIVE_NON_CAPITAL"
+permitted_non_capital_lifecycle = ["DEVELOPMENT", "RESEARCH", "REPLAY", "DRY_RUN", "PAPER"]
+owner_approval_model = "TWO_TIER"
+non_capital_approval = "VERSIONED_OWNER_DECISION_RECORD"
+real_capital_approval = "CRYPTOGRAPHIC_SIGNATURE_PLUS_INDEPENDENT_SECOND_CONFIRMATION"
+real_capital_approval_eligible = false
+real_capital_approval_blocked_until = "PM-DEC-007"
+resolved_decision_refs = ["decisions/PM-DEC-001.toml", "decisions/PM-DEC-002.toml"]
+partially_resolved_decision_refs = ["decisions/PM-DEC-003-v2.toml"]
+historical_decision_refs = ["decisions/PM-DEC-003.toml"]
+validity_model = "EXACT_VENUE_RISK_STAGE_PROFILE"
+validity_profile_schema_ref = "validity-profiles/validity-profile.schema.json"
+validity_profile_instance_refs = ["validity-profiles/bitget-pilot-draft-v1.toml"]
+validity_profile_lookup = "EXACTLY_ONE_ACTIVE_MATCH_NO_CROSS_VENUE_RISK_STAGE_FALLBACK"
+calibration_authorization_effect = "NONE"
+level_a_validity_mode = "LONG_LIVED_NON_CAPITAL"
+level_b_allowed_validity_modes = ["TIME_BOXED_REAL_CAPITAL", "ONE_TIME_REAL_CAPITAL"]
+numeric_validity_profile_status = "OWNER_INPUT_REQUIRED"
+real_capital_validity_eligible = false
+approval_lifecycle_model = "CLOSED_SEPARATE_APPROVAL_STATE_MACHINE"
+single_use_action_lifecycle_model = "CLOSED_SEPARATE_ACTION_STATE_MACHINE"
+dispatch_linearization_state = "DISPATCH_CLAIMED"
+transactional_epoch_reservation_outbox_binding_required = true
+post_configuration_mutation_state = "PENDING_OPERATING_AUTHORIZATION_OR_BLOCKED_NO_NEW_RISK"
+separate_operating_manifest_for_new_configuration_required = true
+reconciliation_default = "READ_CANCEL_LEDGER_REPAIR_ONLY"
+trusted_clock_model = "UTC_WALL_PLUS_MONOTONIC_PLUS_PERSISTENT_LAST_SEEN"
+owner_identity_ref = "OWNER_REF:PENDING_PM-DEC-007"
+issued_at = "2026-07-17T00:00:00Z"
+effective_from = "UNRESOLVED:PM-DEC-003"
+review_due_at = "UNRESOLVED:PM-DEC-003"
+expires_at = "UNRESOLVED:PM-DEC-003"
+supersedes = ""
+base_currency = "RUB"
+live_trading_enabled = false
+goal_order = [
+  "POLICY_INTEGRITY",
+  "SURVIVAL",
+  "LIQUIDITY_RESERVES",
+  "RUB_GEOMETRIC_GROWTH",
+  "SETTLED_DISTRIBUTABLE_CASH",
+  "EVIDENCE_QUALITY",
+]
+approval_manifest_ref = "UNRESOLVED:PM-DEC-007"
+revocation_state = "NOT_APPROVED"
+risk_hierarchy = [
+  "OWNER_HARD_CAP",
+  "PROTECTION_STATE",
+  "ADAPTIVE_ONLY_DOWN",
+  "PORTFOLIO_ALLOCATOR",
+  "STRATEGY_BOT_CAP",
+  "ORDER_INTENT",
+]
+non_waivable_invariants = [
+  "UNKNOWN_STATE",
+  "INCOMPLETE_RECONCILIATION",
+  "STALE_MANDATORY_DATA",
+  "AUTH_FAILURE",
+  "MISSING_IDEMPOTENCY",
+  "POLICY_HASH_MISMATCH",
+]
+
+[[policy_refs]]
+path = "governance/approval-policy.toml"
+policy_id = "tradebot-factory-approvals-v1"
+version = 1
+sha256 = "9be5ef3804dd8a35681526e9b154d50c0162ba610101dcbabd00ce29996a8708"
+
+[[policy_refs]]
+path = "governance/risk-policy.toml"
+policy_id = "bitget-btc-v1"
+version = 1
+sha256 = "4f34d45ac058bec6d5ce1ecc05dc242572a917bd6e2f6769ff53b7115f4b72e8"
+
+[[scopes]]
+scope_id = "phase-1-bitget-btc-paper"
+status = "ACTIVE"
+stage = "PAPER"
+venue = "Bitget"
+market = "USDT-margined futures"
+instruments = ["BTCUSDT"]
+horizons = ["scalping", "intraday"]
+authorization_effect = "DENY_REAL_ORDERS"
+execution_boundary = "PAPER_SIMULATOR"
+capital_book = "RESEARCH_PAPER"
+credential_profile_ref = "NO_REAL_ORDER_CREDENTIAL"
+trading_endpoint_access = false
+real_capital_authority = false
+activation_gate = "Only within governance/risk-policy.toml; this example does not grant authorization"
+
+[[scopes]]
+scope_id = "target-moex"
+status = "FUTURE"
+stage = "RESEARCH"
+venue = "MOEX"
+market = "UNRESOLVED"
+instruments = []
+horizons = ["intraday", "swing", "medium-term"]
+authorization_effect = "DENY_REAL_ORDERS"
+execution_boundary = "RESEARCH"
+capital_book = "RESEARCH_PAPER"
+credential_profile_ref = "NO_REAL_ORDER_CREDENTIAL"
+trading_endpoint_access = false
+real_capital_authority = false
+activation_gate = "New owner-approved policy, dedicated spec, evidence, and manifest"
+
+[[capital_books]]
+name = "RESEARCH_PAPER"
+status = "ACTIVE"
+real_trading_authority = false
+
+[[capital_books]]
+name = "PILOT"
+status = "BLOCKED"
+real_trading_authority = false
+
+[[capital_books]]
+name = "PRODUCTION"
+status = "BLOCKED"
+real_trading_authority = false
+
+[[capital_books]]
+name = "OPERATIONAL_MARGIN_RESERVE"
+status = "TARGET"
+real_trading_authority = false
+
+[[capital_books]]
+name = "PROTECTED_RESERVE"
+status = "TARGET"
+real_trading_authority = false
+
+[[capital_books]]
+name = "DISTRIBUTION_PAYABLE"
+status = "BLOCKED"
+real_trading_authority = false
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-004"
+owner = "OWNER"
+gate = "Consolidated NAV"
+fail_closed_default = "NAV is indicative only"
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-005"
+owner = "OWNER"
+gate = "Pilot"
+fail_closed_default = "Pilot and Production BLOCKED"
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-006"
+owner = "OWNER"
+gate = "Authority expansion"
+fail_closed_default = "Manual owner-only"
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-007"
+owner = "OWNER"
+gate = "Manifest trust"
+fail_closed_default = "Manifest DENY"
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-008"
+owner = "OWNER"
+gate = "Stage and scope resolution"
+fail_closed_default = "Most restrictive state"
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-009"
+owner = "OWNER"
+gate = "Comparative benchmark admission"
+fail_closed_default = "Comparative admission BLOCKED"
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-010"
+owner = "OWNER"
+gate = "Distribution waterfall"
+fail_closed_default = "Distributions BLOCKED and payable amount zero"
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-011"
+owner = "OWNER"
+gate = "Accounting evidence"
+fail_closed_default = "Financial evidence cannot promote"
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-012"
+owner = "OWNER"
+gate = "TWR MWR XIRR reporting"
+fail_closed_default = "Metrics UNRATIFIED"
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-013"
+owner = "OWNER"
+gate = "Consolidated valuation"
+fail_closed_default = "Consolidated NAV INDICATIVE"
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-014"
+owner = "OWNER"
+gate = "Comparative strategy evidence"
+fail_closed_default = "Strategy admission BLOCKED"
+
+[[unresolved_decisions]]
+decision_id = "PM-DEC-015"
+owner = "OWNER"
+gate = "Capacity tier admission"
+fail_closed_default = "No real size tier"

@@ -1,0 +1,64 @@
+work_item = "TB-001-MVP-SLICE-01"
+parent_work_item = "TB-001"
+target_stage = "OFFLINE_SIMULATION"
+live_trading = false
+
+[[criteria]]
+id = "MVP-AC-001"
+title = "Configuration is closed and test-only"
+parent_ac = ["AC-002", "AC-006", "AC-011"]
+evidence = "Unknown fields, non-decimal values, nested/oversized TOML, a non-offline mode, duplicate or invalid source-channel allowlists, policy mismatches and leverage outside 10..25 fail before replay; an existing DB rejects a different canonical config fingerprint without writes."
+
+[[criteria]]
+id = "MVP-AC-002"
+title = "Strict grammar creates one normalized signal"
+parent_ac = ["AC-001"]
+evidence = "Table-driven tests cover the closed JSON envelope, signed-64-bit identity bounds, Unicode-scalar and documented string limits, exact allowlisted source-channel pairing, exact Russian and English single-entry grammar, decimal grammar and LONG/SHORT stop geometry; an invalid identity returns INVALID_EVENT_ENVELOPE with journaled=false, increments rejected once and creates no row."
+
+[[criteria]]
+id = "MVP-AC-003"
+title = "Only BTCUSDT is accepted"
+parent_ac = ["AC-001"]
+evidence = "Non-BTC symbols are rejected before setup or intent creation."
+
+[[criteria]]
+id = "MVP-AC-004"
+title = "Signal text cannot override local risk"
+parent_ac = ["AC-003"]
+evidence = "0.5%, 1%, 1/2 and 1/3 text variants produce identical normalized signals and quantities."
+
+[[criteria]]
+id = "MVP-AC-005"
+title = "First risk leg is conservatively capped"
+parent_ac = ["AC-002"]
+evidence = "A fixed local Decimal context and integer-step algorithm are tested for both channel buckets, LONG and SHORT, risk-limited and margin-limited sizing, exact-step and just-below-step boundaries, zero quantity, off-tick rejection, risk <= 1.5% and margin <= bucket leverage."
+
+[[criteria]]
+id = "MVP-AC-006"
+title = "Execution is simulated and networkless"
+parent_ac = ["AC-006"]
+evidence = "Exactly one simulated LIMIT intent is stored; import and source scans prove no exchange, HTTP or socket submission path exists; output contains neither raw channel ID nor message text."
+
+[[criteria]]
+id = "MVP-AC-007"
+title = "Event processing is atomic and idempotent"
+parent_ac = ["AC-004", "AC-008"]
+evidence = "Exact replay returns a duplicate envelope and creates no rows; payload mutation under the same identity returns a conflict envelope and creates no rows; injected write failure rolls back; SQLite mode is 0600 on a regular non-symlink target and stores only pseudonymous identity plus payload hash, never raw channel ID or text."
+
+[[criteria]]
+id = "MVP-AC-008"
+title = "Maximum active setup count is enforced"
+parent_ac = ["AC-011"]
+evidence = "Every accepted setup remains journal-locally ACTIVE in this lifecycle-free slice; the sixth such setup is rejected before any intent is inserted, without consulting venue order, fill or position state."
+
+[[criteria]]
+id = "MVP-AC-009"
+title = "Replay is deterministic"
+parent_ac = ["AC-010"]
+evidence = "The same ordered input and config produce byte-identical stdout against two fresh databases; same-DB envelope-valid replay is all duplicates; mixed replay repeats unjournaled INVALID_EVENT_ENVELOPE rejections and duplicates valid events; config mismatch precedes input access; byte, record, line and UTF-8 preflight limits fail before partial replay."
+
+[[criteria]]
+id = "MVP-AC-010"
+title = "Deferred scope is not claimed"
+parent_ac = ["AC-005", "AC-007", "AC-009", "AC-010", "AC-012"]
+evidence = "Tests and documentation contain no paper/live/submitted/filled outcome and explicitly list network, fills, UI, backtest and security work as deferred."

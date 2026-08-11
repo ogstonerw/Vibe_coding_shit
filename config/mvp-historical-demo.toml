@@ -1,0 +1,14 @@
+config_version = "mvp-slice-02-demo-v1"
+classification = "TEST_FIXTURE_ONLY"
+mode = "OFFLINE_SIMULATION"
+account_equity = "10000"
+leverage = 10
+quantity_step = "0.001"
+price_tick = "0.1"
+adverse_cost_per_unit = "50"
+scalping_allocation = "0.15"
+intraday_allocation = "0.85"
+scalping_channel_id = "2000000001"
+intraday_channel_id = "2000000002"
+first_leg_risk = "0.015"
+max_active_setups = 5

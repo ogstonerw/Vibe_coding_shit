@@ -7,12 +7,30 @@ logs/
 # Python
 .venv/
 __pycache__/
-*.pyc
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+coverage.xml
+htmlcov/
+dist/
+build/
+node_modules/
+.vite/
+coverage/
 
 # Secrets
 .env
+.env.*
+!.env.example
 *.session
+*.session-journal
 data/
+!apps/bot-farm-ui/src/data/
+!apps/bot-farm-ui/src/data/**
 data/sessions/
 demo_trades.json
 signals_history.json
+*.log
+
+# Private local Telegram Desktop exports
+/private/telegram_exports/

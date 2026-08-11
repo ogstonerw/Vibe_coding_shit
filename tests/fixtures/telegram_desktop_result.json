@@ -1,0 +1,80 @@
+{
+  "name": "ANONYMIZED TEST CHANNEL",
+  "type": "public_channel",
+  "id": 2000000001,
+  "messages": [
+    {
+      "id": 102,
+      "type": "message",
+      "date": "2026-07-25T12:01:00",
+      "date_unixtime": "1784980860",
+      "edited": "2026-07-25T12:05:00",
+      "edited_unixtime": "1784981100",
+      "from": "ANONYMIZED AUTHOR",
+      "from_id": "channel2000000001",
+      "reply_to_message_id": 101,
+      "reply_to_peer_id": "channel2000000001",
+      "text": "ANONYMIZED NON-SIGNAL UPDATE",
+      "text_entities": [
+        {
+          "type": "plain",
+          "text": "ANONYMIZED NON-SIGNAL UPDATE"
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "type": "service",
+      "date": "2026-07-25T12:02:00",
+      "date_unixtime": "1784980920",
+      "actor": "ANONYMIZED ADMIN",
+      "action": "edit_group_title",
+      "title": "ANONYMIZED TEST CHANNEL"
+    },
+    {
+      "id": 103,
+      "type": "message",
+      "date": "2026-07-25T12:00:00",
+      "date_unixtime": "1784980800",
+      "from": "ANONYMIZED AUTHOR",
+      "from_id": "channel2000000001",
+      "text": [
+        "BTCUSDT ",
+        {
+          "type": "bold",
+          "text": "SHORT"
+        },
+        "\nENTRY 94700\nSTOP 95500"
+      ],
+      "text_entities": [
+        {
+          "type": "plain",
+          "text": "BTCUSDT "
+        },
+        {
+          "type": "bold",
+          "text": "SHORT"
+        },
+        {
+          "type": "plain",
+          "text": "\nENTRY 94700\nSTOP 95500"
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "type": "message",
+      "date": "2026-07-25T12:00:00",
+      "date_unixtime": "1784980800",
+      "from": "ANONYMIZED AUTHOR",
+      "from_id": "channel2000000001",
+      "text": "BTCUSDT LONG\nENTRY 94700\nSTOP 92900",
+      "text_entities": [
+        {
+          "type": "plain",
+          "text": "BTCUSDT LONG\nENTRY 94700\nSTOP 92900"
+        }
+      ]
+    }
+  ]
+}

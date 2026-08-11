@@ -1,0 +1,696 @@
+decision_id = "PM-DEC-003"
+decision_version = 2
+status = "PARTIALLY_RESOLVED_NUMERIC_PROFILE_PENDING"
+selected_option = 3
+decided_by_ref = "OWNER"
+decision_evidence_ref = "conversation:2026-07-17:PM-DEC-003-profile-method:answer-3"
+recorded_at = "2026-07-17T00:00:00Z"
+decision_type = "VENUE_AND_RISK_SPECIFIC_VALIDITY_PROFILE_MODEL"
+supersedes_ref = "decisions/PM-DEC-003.toml"
+supersedes_sha256 = "618dd1da08fb6a8f7f0631fa6824bea1cc527d071e035b20b9250bcd374789ce"
+numeric_validity_profile_status = "OWNER_INPUT_REQUIRED"
+eligible_for_real_capital_authorization = false
+live_trading_enabled = false
+baseline_snapshot_archive = "portfolio-mandate-v0.6.zip"
+baseline_snapshot_authoritative = false
+baseline_snapshot_trust_anchor_status = "PENDING_PM-DEC-007"
+artifact_ratification_eligible = false
+
+[[artifact_hashes]]
+path = "specs/portfolio-mandate-v1/spec.md"
+sha256 = "03bcfc3723b456871e2a76e5bdbfc01fd681ccf7e93cced9c63f489e299d6440"
+
+[[artifact_hashes]]
+path = "specs/portfolio-mandate-v1/acceptance.toml"
+sha256 = "092084cf3e74e07bc297a20b5976fb3b63dfe1df760aa3dcf1e897777ccfcbf5"
+
+[[artifact_hashes]]
+path = "governance/approval-policy.toml"
+sha256 = "9be5ef3804dd8a35681526e9b154d50c0162ba610101dcbabd00ce29996a8708"
+
+[[artifact_hashes]]
+path = "governance/risk-policy.toml"
+sha256 = "4f34d45ac058bec6d5ce1ecc05dc242572a917bd6e2f6769ff53b7115f4b72e8"
+
+[level_a_non_capital]
+validity_mode = "LONG_LIVED_NON_CAPITAL"
+applies_to = ["DEVELOPMENT", "RESEARCH", "REPLAY", "DRY_RUN", "PAPER"]
+exact_version_hash_scope_binding_required = true
+calendar_review_interval = "OWNER_INPUT_REQUIRED"
+real_capital_authority = false
+automatic_renewal_allowed = false
+review_refreshes_evidence_or_holdout = false
+
+[level_b_real_capital]
+allowed_validity_modes = ["TIME_BOXED_REAL_CAPITAL", "ONE_TIME_REAL_CAPITAL"]
+numeric_ttl_profile = "OWNER_INPUT_REQUIRED"
+automatic_or_retroactive_renewal_allowed = false
+commit_time_recheck_required = true
+algorithmic_orders_inside_active_scope_require_new_owner_signature = false
+algorithmic_orders_still_require_all_runtime_gates = true
+eligible_for_authorization = false
+
+time_boxed_scope_types = ["PILOT_OPERATING_SCOPE", "PRODUCTION_OPERATING_SCOPE"]
+cash_single_use_action_types = ["REAL_BOOK_TRANSFER", "DISTRIBUTION"]
+configuration_single_use_action_types = [
+  "REAL_ACCOUNT_OR_CREDENTIAL_CHANGE",
+  "REAL_SCOPE_EXPANSION",
+  "HARD_LIMIT_INCREASE",
+  "LEVERAGE_OR_MARGIN_CHANGE",
+]
+
+[temporal_contract]
+timezone = "UTC"
+valid_interval = "effective_from <= evaluation_time < expires_at"
+review_due_boundary_result_level_a = "REVIEW_REQUIRED_NO_NEW_BASELINE_OR_EVIDENCE_ADMISSION"
+review_due_boundary_result_level_b = "DENY_NEW_OR_INCREASE_RISK"
+expiry_boundary_result = "EXPIRED_DENY"
+untrusted_or_unavailable_clock_result = "DENY"
+timestamp_ordering_required = "issued_at <= effective_from <= review_due_at < expires_at"
+
+[trusted_clock]
+required_sources = ["UTC_WALL_CLOCK", "MONOTONIC_ELAPSED_CLOCK", "PERSISTENT_LAST_SEEN_CHECKPOINT"]
+wall_clock_rollback_result = "DENY"
+boot_or_reboot_ambiguity_result = "DENY"
+missing_or_conflicting_checkpoint_result = "DENY"
+excessive_skew_result = "DENY"
+skew_tolerance = "OWNER_INPUT_REQUIRED"
+
+[approval_lifecycle]
+states = [
+  "DRAFT",
+  "PENDING_EFFECTIVE",
+  "ACTIVE",
+  "REVIEW_REQUIRED",
+  "SUSPENDED",
+  "EXPIRED",
+  "REVOKED",
+  "SUPERSEDED",
+  "INVALIDATED",
+]
+allowed_transitions = [
+  "DRAFT->PENDING_EFFECTIVE",
+  "DRAFT->SUSPENDED",
+  "DRAFT->REVOKED",
+  "DRAFT->INVALIDATED",
+  "PENDING_EFFECTIVE->ACTIVE",
+  "PENDING_EFFECTIVE->SUSPENDED",
+  "PENDING_EFFECTIVE->EXPIRED",
+  "PENDING_EFFECTIVE->REVOKED",
+  "PENDING_EFFECTIVE->SUPERSEDED",
+  "PENDING_EFFECTIVE->INVALIDATED",
+  "ACTIVE->REVIEW_REQUIRED",
+  "ACTIVE->SUSPENDED",
+  "ACTIVE->EXPIRED",
+  "ACTIVE->REVOKED",
+  "ACTIVE->SUPERSEDED",
+  "ACTIVE->INVALIDATED",
+  "REVIEW_REQUIRED->SUSPENDED",
+  "REVIEW_REQUIRED->EXPIRED",
+  "REVIEW_REQUIRED->REVOKED",
+  "REVIEW_REQUIRED->SUPERSEDED",
+  "REVIEW_REQUIRED->INVALIDATED",
+  "SUSPENDED->EXPIRED",
+  "SUSPENDED->REVOKED",
+  "SUSPENDED->SUPERSEDED",
+  "SUSPENDED->INVALIDATED",
+]
+terminal_states = ["EXPIRED", "REVOKED", "SUPERSEDED", "INVALIDATED"]
+unknown_or_conflicting_state_result = "DENY"
+unlisted_transition_result = "DENY"
+action_state_in_approval_lifecycle_result = "DENY"
+terminal_reactivation_allowed = false
+
+[action_lifecycle]
+states = [
+  "PENDING",
+  "RESERVED",
+  "DISPATCH_CLAIMED",
+  "IN_FLIGHT",
+  "RECONCILIATION_REQUIRED",
+  "CONSUMED",
+  "CANCELLED_NO_EFFECT",
+  "BLOCKED_NO_NEW_RISK",
+]
+allowed_transitions = [
+  "PENDING->RESERVED",
+  "PENDING->BLOCKED_NO_NEW_RISK",
+  "RESERVED->DISPATCH_CLAIMED",
+  "RESERVED->CANCELLED_NO_EFFECT",
+  "RESERVED->BLOCKED_NO_NEW_RISK",
+  "DISPATCH_CLAIMED->IN_FLIGHT",
+  "DISPATCH_CLAIMED->RECONCILIATION_REQUIRED",
+  "IN_FLIGHT->CONSUMED",
+  "IN_FLIGHT->CANCELLED_NO_EFFECT",
+  "IN_FLIGHT->RECONCILIATION_REQUIRED",
+  "RECONCILIATION_REQUIRED->CONSUMED",
+  "RECONCILIATION_REQUIRED->CANCELLED_NO_EFFECT",
+]
+terminal_states = ["CONSUMED", "CANCELLED_NO_EFFECT"]
+unknown_or_conflicting_state_result = "DENY"
+unlisted_transition_result = "DENY"
+approval_state_in_action_lifecycle_result = "DENY"
+reconciliation_may_remain_without_transition = true
+
+[single_use]
+required_bindings = [
+  "action_id",
+  "canonical_action_payload_sha256",
+  "idempotency_key_ref",
+  "account_ref",
+  "capital_book",
+  "typed_amount_or_limits",
+  "expires_at",
+  "approval_version_sequence",
+  "revocation_version_epoch",
+  "reservation_generation",
+  "fencing_token",
+]
+durable_atomic_reservation_required = true
+reservation_generation_strictly_monotonic = true
+dispatch_linearization_state = "DISPATCH_CLAIMED"
+claim_transaction_bindings = [
+  "REVOCATION_VERSION_EPOCH",
+  "APPROVAL_VERSION_SEQUENCE",
+  "RESERVATION_GENERATION",
+  "FENCING_TOKEN",
+  "TRANSACTIONAL_OUTBOX_DISPATCH_CLAIM",
+]
+durable_transaction_or_cas_required = true
+stale_fencing_token_result = "DENY"
+revocation_before_claim_result = "NO_ADAPTER_CALL_BLOCKED_NO_NEW_RISK"
+unknown_after_claim_state = "RECONCILIATION_REQUIRED"
+zero_external_side_effect_promised_after_claim = false
+safe_release_requires_durable_no_dispatch_proof = true
+successful_commit_state = "CONSUMED"
+duplicate_success_result = "RETURN_STORED_OUTCOME_NO_NEW_SIDE_EFFECT"
+unknown_or_lost_ack_state = "RECONCILIATION_REQUIRED"
+allowed_reconciliation_outcomes = ["CONSUMED", "CANCELLED_NO_EFFECT", "RECONCILIATION_REQUIRED"]
+blind_retry_allowed = false
+
+[configuration_mutation]
+consumed_action_types = [
+  "REAL_ACCOUNT_OR_CREDENTIAL_CHANGE",
+  "REAL_SCOPE_EXPANSION",
+  "HARD_LIMIT_INCREASE",
+  "LEVERAGE_OR_MARGIN_CHANGE",
+]
+resulting_configuration_states = ["PENDING_OPERATING_AUTHORIZATION", "BLOCKED_NO_NEW_RISK"]
+new_configuration_hash_and_version_required = true
+inherits_old_operating_approval = false
+separate_time_boxed_operating_manifest_required = true
+new_manifest_bound_to_new_configuration_hash_required = true
+orders_before_new_manifest_result = "DENY"
+
+[reconciliation]
+default_allowed_operations = ["READ", "CANCEL_ATTEMPT", "LEDGER_AUDIT_REPAIR"]
+trading_side_effect_default = "DENY"
+protective_trade_requirements = [
+  "PREAPPROVED_PROTECTIVE_POLICY",
+  "TYPED_PRE_AND_POST_EXPOSURE_PROOF",
+  "DIMENSION_SPECIFIC_NON_INCREASE_COMPARISON",
+  "NO_SIGN_FLIP",
+  "VENUE_CAPABILITY_CONFIRMED",
+]
+owner_approved_exposure_dimensions = [
+  "ABSOLUTE_EXPOSURE",
+  "NET_EXPOSURE",
+  "GROSS_EXPOSURE",
+  "CONTINGENT_EXPOSURE",
+  "MARGIN_EXPOSURE",
+  "STRESS_EXPOSURE",
+]
+pre_and_post_values_required_for_every_applicable_dimension = true
+required_metric_bindings = [
+  "METRIC_ID",
+  "UNIT",
+  "CURRENCY",
+  "VALUATION_TIMESTAMP",
+  "HORIZON",
+  "NETTING_SET",
+  "CONVENTION",
+]
+scalar_risk_magnitudes_nonnegative = true
+signed_net_comparison = "ABS_POST_LE_ABS_PRE"
+signed_net_sign_crossing_result = "DENY_EXCEPT_EXACT_ZERO"
+nonnegative_scalar_dimensions = [
+  "ABSOLUTE_EXPOSURE",
+  "GROSS_EXPOSURE",
+  "CONTINGENT_EXPOSURE",
+  "MARGIN_EXPOSURE",
+]
+nonnegative_scalar_comparison = "POST_LE_PRE"
+stress_scenario_set_and_hash_exact_match_required = true
+stress_comparison = "COMPONENTWISE_POST_LE_PRE_OR_OWNER_APPROVED_CONSERVATIVE_SCALAR_FUNCTIONAL"
+missing_scenario_or_dimension_result = "DENY"
+unknown_ambiguous_or_incomparable_exposure_result = "DENY"
+sign_flip_result = "DENY"
+missing_venue_capability_result = "DENY"
+
+[working_order_sunset]
+applies_to = ["RISK_INCREASING_RESTING_ORDER", "RISK_INCREASING_OPEN_ORDER", "RISK_INCREASING_CONDITIONAL_ORDER"]
+venue_enforced_tif_or_expiry_required = true
+latest_expiry = "APPROVAL_EXPIRES_AT_MINUS_OWNER_APPROVED_CANCEL_RECONCILIATION_BUFFER"
+gtc_without_bounded_venue_expiry_result = "DENY"
+deadline_state = "NO_NEW_RISK"
+deadline_actions = ["CANCEL_ALL_OPENING_AND_CONDITIONAL_ORDERS", "RECONCILE_VENUE_STATE"]
+revocation_action = "IMMEDIATE_CANCEL_ALL_OPENING_AND_CONDITIONAL_ORDERS"
+cancel_pending_unknown_lost_ack_halt_or_restart_state = "RECONCILIATION_REQUIRED"
+contingent_exposure_and_reservation_retained_until_verified_terminal_outcome = true
+zero_external_side_effect_promised_after_cancel_request = false
+verified_protective_reduce_only_path_may_continue = true
+new_or_increasing_risk_during_sunset_result = "DENY"
+completion_requires_zero_remaining_opening_or_conditional_orders = true
+
+[automatic_invalidation]
+triggers = [
+  "ACCOUNT_OR_CREDENTIAL_IDENTITY_REF_CHANGE",
+  "STAGE_OR_CAPITAL_BOOK_CHANGE",
+  "VENUE_MARKET_OR_INSTRUMENT_CHANGE",
+  "STRATEGY_OR_BOT_CHANGE",
+  "LIMIT_OR_PAYLOAD_CHANGE",
+  "OWNER_TRUST_OR_SECOND_FACTOR_BINDING_CHANGE",
+  "POLICY_SPEC_ACCEPTANCE_MANDATE_BUILD_OR_DATASET_HASH_CHANGE",
+  "PARAMETER_BENCHMARK_DATA_COST_OR_FILL_MODEL_CHANGE",
+  "CAPACITY_VENUE_API_MECHANICS_CHANGE",
+  "EVIDENCE_DRIFT_THRESHOLD_BREACH",
+]
+result = "INVALIDATED_DENY"
+new_approval_refreshes_evidence_or_viewed_holdout = false
+
+[revocation]
+append_only = true
+terminal = true
+unavailable_stale_or_conflicting_lookup_result = "DENY"
+restoration_requires_new_version_and_higher_sequence = true
+freshness_limit = "OWNER_INPUT_REQUIRED"
+
+[supersession]
+new_immutable_version_required = true
+higher_monotonic_sequence_required = true
+supersedes_ref_required = true
+old_version_terminal = true
+rollback_reactivates_old_version = false
+expansion_requires_full_activation = true
+emergency_restriction_applies_immediately = true
+
+[open_exposure]
+expiry_revocation_suspension_or_invalidation_result = "NO_NEW_OR_INCREASE_RISK"
+uncontrolled_market_exit_authorized = false
+verified_reduce_only_protection_and_reconciliation_may_continue = true
+protective_trade_requires_dimension_specific_typed_pre_post_proof_and_venue_capability = true
+unknown_ambiguous_missing_or_incomparable_exposure_proof_result = "DENY"
+restoring_new_risk_requires_new_version_and_full_gate = true
+
+[independent_validity]
+objects = ["MANDATE", "OWNER_APPROVAL", "EVIDENCE", "VENUE_CAPABILITY", "RUNTIME_PROTECTION"]
+one_object_renews_another = false
+effective_result = "MOST_RESTRICTIVE_INTERSECTION"
+
+[pending_owner_values]
+level_a_review_interval = "UNRESOLVED"
+pilot_operating_ttl = "UNRESOLVED"
+production_operating_ttl = "UNRESOLVED"
+real_account_or_credential_change_window = "UNRESOLVED"
+hard_limit_leverage_or_margin_change_window = "UNRESOLVED"
+transfer_or_distribution_window = "UNRESOLVED"
+single_use_activation_window = "UNRESOLVED"
+clock_skew_tolerance = "UNRESOLVED"
+revocation_snapshot_max_age = "UNRESOLVED"
+review_lead_time = "UNRESOLVED"
+reconciliation_timeout = "UNRESOLVED"
+working_order_cancel_reconciliation_buffer = "UNRESOLVED"
+
+[safety]
+missing_numeric_profile_result = "DENY_REAL_CAPITAL"
+expired_result = "DENY_NEW_OR_INCREASE_RISK"
+revoked_result = "DENY_NEW_OR_INCREASE_RISK"
+superseded_result = "DENY_NEW_OR_INCREASE_RISK"
+consumed_replay_result = "DENY_NEW_SIDE_EFFECT"
+unknown_state_result = "DENY"
+preclaim_revocation_adapter_call_result = "DENY_NO_ADAPTER_CALL"
+postclaim_unknown_result = "RECONCILIATION_REQUIRED_NO_ZERO_EFFECT_CLAIM"
+configuration_consumed_operating_authority_result = "DENY_PENDING_SEPARATE_TIME_BOXED_MANIFEST"
+changes_governance_risk_policy = false
+ratified_real_capital_manifest = false
+
+[validity_profile_model]
+model = "EXACT_VENUE_RISK_STAGE_PROFILE"
+profile_artifact_family = "validity-profiles/<venue>/<profile-id>-vN.toml"
+schema_ref = "validity-profiles/validity-profile.schema.json"
+numeric_profile_instances_status = "OWNER_INPUT_REQUIRED"
+profile_can_authorize = false
+mutable_current_alias_allowed_in_authorization = false
+zero_match_result = "DENY"
+multiple_match_result = "DENY"
+wildcard_or_default_result = "DENY"
+cross_venue_risk_stage_fallback_allowed = false
+capital_stage_enum = ["DEVELOPMENT", "RESEARCH", "REPLAY", "DRY_RUN", "PAPER", "PILOT_LIMITED_LIVE", "PRODUCTION_LIVE"]
+
+[profile_exact_key]
+fields = [
+  "venue_id",
+  "venue_environment",
+  "market_id",
+  "capital_stage",
+  "approval_tier",
+  "validity_mode",
+  "action_class",
+  "risk_class",
+  "venue_capability_profile_id",
+  "venue_capability_profile_version",
+  "venue_capability_profile_sha256",
+  "risk_policy_id",
+  "risk_policy_version",
+  "risk_policy_sha256",
+  "calibration_stratum_id",
+  "calibration_stratum_sha256",
+  "api_or_protocol_version",
+  "account_mode",
+  "order_type",
+  "time_in_force",
+  "session_id",
+  "liquidity_regime",
+  "volatility_regime",
+  "degraded_state",
+]
+wildcards_nulls_or_empty_values_allowed = false
+exactly_one_active_match_required = true
+account_book_instrument_and_scope_bindings_required_in_manifest = true
+
+[risk_taxonomy]
+classes = ["A0_NON_CAPITAL", "B1_LIMITED_PILOT", "B2_EXISTING_PRODUCTION", "B3_CASH_ACTION", "B4_AUTHORITY_MUTATION"]
+higher_class_may_be_less_conservative = false
+unknown_or_incomparable_class_result = "DENY"
+
+[owner_authority_separation]
+required_layers = ["OWNER_HARD_BOUNDS", "CALIBRATION_RECOMMENDATION", "OWNER_SELECTED_EFFECTIVE_VALUES"]
+calibration_recommendation_can_authorize = false
+owner_hard_bounds_required_for_real_capital = true
+owner_selected_effective_values_required_for_real_capital = true
+missing_numeric_owner_value_result = "DENY_REAL_CAPITAL"
+recommendation_outside_owner_bounds_result = "DENY"
+
+[adaptive_monotonicity]
+safety_directions = ["SAFER_DECREASE", "SAFER_INCREASE", "NON_MONOTONE_OWNER_ONLY"]
+automatic_change_requires_authorized_action_subset = true
+allowed_automatic_results = ["SHORTER_VALIDITY", "LARGER_PROTECTIVE_BUFFER", "SUSPENDED", "INVALIDATED", "DENY"]
+automatic_relaxation_allowed = false
+automatic_rebound_allowed = false
+unknown_or_incomparable_change_result = "DENY"
+
+[calibration_method]
+authorization_effect = "NONE"
+separate_clocks = ["OPERATING_APPROVAL_TTL", "ONE_TIME_ACTIVATION_WINDOW", "ORDER_TIF", "CANCEL_RECONCILIATION_BUFFER", "REVOCATION_AGE", "RECONCILIATION_ESCALATION_DEADLINE", "EVIDENCE_AGE"]
+required_strata = ["VENUE", "API_OR_PROTOCOL_VERSION", "ACCOUNT_MODE", "MARKET", "ORDER_TYPE", "TIF", "SESSION", "LIQUIDITY_REGIME", "VOLATILITY_REGIME", "DEGRADED_STATE"]
+censored_unknown_timeout_and_lost_ack_retained = true
+cancel_and_late_fill_method = "TIME_TO_EVENT_WITH_CENSORING_AND_COMPETING_RISKS"
+tail_estimate = "PREREGISTERED_TAIL_QUANTILE_WITH_ONE_SIDED_UNCERTAINTY"
+cluster_aware_effective_sample_required = true
+windows = ["ROLLING_RECENT", "STRESS_ARCHIVE", "FORWARD_CONFIRMATION"]
+holdout_parameter_tuning_allowed = false
+sparse_or_unobserved_stratum_result = "DENY_OR_OWNER_BOUND_FALLBACK_WITHIN_SAME_EXACT_KEY"
+deterministic_generation_and_canonical_hash_required = true
+
+[profile_lifecycle]
+states = ["DRAFT", "EVIDENCE_READY", "OWNER_APPROVAL_PENDING", "ACTIVE", "SUSPENDED", "EXPIRED", "REVOKED", "SUPERSEDED", "INVALIDATED"]
+allowed_transitions = [
+  "DRAFT->EVIDENCE_READY",
+  "DRAFT->SUSPENDED",
+  "DRAFT->INVALIDATED",
+  "EVIDENCE_READY->OWNER_APPROVAL_PENDING",
+  "EVIDENCE_READY->SUSPENDED",
+  "EVIDENCE_READY->INVALIDATED",
+  "OWNER_APPROVAL_PENDING->ACTIVE",
+  "OWNER_APPROVAL_PENDING->SUSPENDED",
+  "OWNER_APPROVAL_PENDING->REVOKED",
+  "OWNER_APPROVAL_PENDING->INVALIDATED",
+  "ACTIVE->SUSPENDED",
+  "ACTIVE->EXPIRED",
+  "ACTIVE->REVOKED",
+  "ACTIVE->SUPERSEDED",
+  "ACTIVE->INVALIDATED",
+  "SUSPENDED->EXPIRED",
+  "SUSPENDED->REVOKED",
+  "SUSPENDED->SUPERSEDED",
+  "SUSPENDED->INVALIDATED",
+]
+terminal_states = ["EXPIRED", "REVOKED", "SUPERSEDED", "INVALIDATED"]
+terminal_reactivation_allowed = false
+unlisted_transition_result = "DENY"
+
+[venue_profile_families]
+bitget_profile_family = "BITGET_EXACT_API_ACCOUNT_MARKET_PROFILE"
+bitget_capability_policy_binding = "bitget-btc-v1"
+moex_profile_family = "MOEX_EXACT_BROKER_API_MARKET_BOARD_SESSION_INSTRUMENT_CLASS_PROFILE"
+moex_status = "FUTURE_BLOCKED"
+cross_family_pooling_allowed = false
+cross_family_fallback_allowed = false
+
+[numeric_feasibility]
+duration_unit = "INTEGER_MILLISECONDS"
+technical_representation_max_ms = 3155760000000
+technical_max_is_owner_approved_ttl = false
+boolean_float_or_string_coercion_allowed = false
+operating_ttl_constraint = "OPERATING_TTL_MS > CANCEL_RECONCILIATION_BUFFER_MS + DISPATCH_GUARD_MS"
+risk_increasing_order_constraint = "ORDER_EXPIRY_AT <= MIN(APPROVAL,EVIDENCE,CAPABILITY,RISK_POLICY,RUNTIME_PROTECTION)_CUTOFF - CANCEL_RECONCILIATION_BUFFER_MS"
+exact_order_identity_and_expiry_required = true
+shared_feasibility_and_sunset_deadline_helper_required = true
+incompatible_unit_direction_or_horizon_result = "DENY"
+unresolved_numeric_values_result = "DENY_REAL_CAPITAL"
+
+[owner_authority_binding]
+required_for_layers = ["OWNER_HARD_BOUNDS", "OWNER_SELECTED_EFFECTIVE_VALUES"]
+manifest_bindings = ["MANIFEST_REF", "MANIFEST_SHA256", "MANIFEST_VERSION", "MONOTONIC_SEQUENCE", "CANONICAL_OWNER_PAYLOAD_SHA256"]
+canonical_owner_payload_required_fields = ["PROFILE_ID", "PROFILE_VERSION", "PROFILE_PAYLOAD_SHA256", "OWNER_HARD_BOUNDS", "OWNER_SELECTED_EFFECTIVE_VALUES"]
+calibration_is_owner_authority = false
+draft_status = "ABSENT_DENY"
+missing_mismatch_or_replay_result = "DENY"
+
+[owner_numeric_bound_semantics]
+required_active_status_owner_hard_bounds = "VERIFIED"
+required_active_status_owner_selected_effective_values = "VERIFIED"
+required_calibration_status = "NON_AUTHORIZING_RECOMMENDATION"
+safer_decrease_fields = ["operating_ttl_ms", "single_use_activation_window_ms", "clock_skew_tolerance_ms", "revocation_snapshot_max_age_ms", "reconciliation_escalation_deadline_ms"]
+safer_decrease_comparison = "EFFECTIVE_LE_OWNER_HARD_BOUND"
+safer_increase_fields = ["cancel_reconciliation_buffer_ms", "dispatch_guard_ms", "review_lead_time_ms"]
+safer_increase_comparison = "EFFECTIVE_GE_OWNER_HARD_BOUND"
+non_monotone_owner_only_comparison = "EFFECTIVE_EQ_EXACT_OWNER_SELECTED_VALUE"
+signed_but_unresolved_result = "DENY"
+missing_incomparable_or_outside_bound_result = "DENY"
+
+[action_numeric_matrix]
+operating_actions = ["PILOT_OPERATING_SCOPE", "PRODUCTION_OPERATING_SCOPE"]
+operating_validity_mode = "TIME_BOXED_REAL_CAPITAL"
+operating_required_fields = ["operating_ttl_ms", "cancel_reconciliation_buffer_ms", "dispatch_guard_ms", "clock_skew_tolerance_ms", "revocation_snapshot_max_age_ms", "review_lead_time_ms", "reconciliation_escalation_deadline_ms"]
+operating_forbidden_fields = ["single_use_activation_window_ms"]
+single_use_actions = ["REAL_BOOK_TRANSFER", "DISTRIBUTION", "REAL_ACCOUNT_OR_CREDENTIAL_CHANGE", "REAL_SCOPE_EXPANSION", "HARD_LIMIT_INCREASE", "LEVERAGE_OR_MARGIN_CHANGE", "VALIDITY_PROFILE_AUTHORITY_CHANGE"]
+single_use_validity_mode = "ONE_TIME_REAL_CAPITAL"
+single_use_required_fields = ["single_use_activation_window_ms", "dispatch_guard_ms", "clock_skew_tolerance_ms", "revocation_snapshot_max_age_ms", "reconciliation_escalation_deadline_ms"]
+single_use_forbidden_fields = ["operating_ttl_ms", "cancel_reconciliation_buffer_ms", "review_lead_time_ms"]
+noncapital_action = "NON_CAPITAL"
+noncapital_validity_mode = "LONG_LIVED_NON_CAPITAL"
+noncapital_forbidden_real_capital_fields = true
+missing_extra_or_inapplicable_result = "DENY"
+
+[reconciliation_escalation]
+field = "reconciliation_escalation_deadline_ms"
+safety_direction = "SAFER_DECREASE"
+deadline_effect = "ESCALATE_ONLY"
+deadline_proves_no_fill = false
+deadline_releases_exposure_or_reservation = false
+deadline_clears_no_new_risk_or_reconciliation_required = false
+clearance_requires = "VERIFIED_TERMINAL_VENUE_OUTCOME"
+
+[profile_artifact_security]
+schema_exact_id_version_hash_required = true
+profile_canonical_payload_hash_required = true
+supersedes_ref_hash_and_monotonic_sequence_required = true
+future_active_evidence_bindings = ["EVIDENCE_REF", "EVIDENCE_SHA256", "ISSUER_REF", "AS_OF", "FRESHNESS"]
+draft_sentinel_result = "DENY"
+signed_persistent_registry_status = "PENDING_RUNTIME_IMPLEMENTATION"
+registry_helper_authorization_effect = "NONE"
+strict_canonical_json_required = true
+duplicate_keys_nan_infinity_or_malformed_json_result = "DENY"
+release_archive_duplicate_traversal_symlink_or_special_member_result = "DENY"
+release_source_lstat_containment_and_no_symlink_required = true
+release_source_symlink_or_nonregular_member_result = "DENY"
+
+[authority_change_contract]
+action_class = "VALIDITY_PROFILE_AUTHORITY_CHANGE"
+risk_class = "B4_AUTHORITY_MUTATION"
+validity_mode = "ONE_TIME_REAL_CAPITAL"
+level_b_signature_required = true
+independent_second_factor_required = true
+owner_selected_single_use_window_required = true
+canonical_payload_binds_window_and_absolute_timestamps = true
+durable_single_use_consumption_required = true
+durable_registry_shape = "CALLER_SUPPLIED_GLOBAL_CLOSED_APPEND_ONLY_SHAPE_ONLY"
+durable_registry_id = "validity-profile-authority-global-v1"
+durable_registry_scope = "GLOBAL_ACROSS_OWNER_EPOCHS"
+durable_registry_complete_history_required = true
+durable_registry_genesis_base_sequence = 0
+durable_registry_genesis_owner_epoch = 0
+durable_registry_empty_genesis_canonicalization = "SORTED_KEYS_COMPACT_UTF8_JSON_V1"
+durable_registry_empty_genesis_sha256 = "00d45207979fc16245c40b9c850d7cad99b664e4678a2f100350ebae15705c34"
+durable_registry_genesis_caller_selectable = false
+empty_registry_requires_pinned_genesis_and_zero_owner_head = true
+record_owner_epoch_monotonic_and_latest_head_exact_required = true
+proposal_owner_epoch_not_before_latest_record_owner_epoch_required = true
+consumption_indexes_global_across_owner_epochs = true
+owner_epoch_scoped_registry_reset_result = "DENY"
+durable_sequence_and_cas_required = true
+atomic_unique_parent_consumption_required = true
+independent_parent_profile_and_manifest_consumption_required = true
+hidden_history_prefix_result = "DENY"
+same_parent_branch_result = "DENY"
+new_profile_and_configuration_hash_required = true
+canonical_payload_binds_previous_configuration_sha256 = true
+previous_configuration_derived_from_exact_prior_manifest_bytes_and_record = true
+new_configuration_must_differ_from_previous_configuration = true
+old_profile_and_operating_manifest_invalidated = true
+old_operating_manifest_reuse_result = "DENY"
+separate_new_operating_manifest_required = true
+operating_manifest_canonical_exact_bytes_required = true
+operating_manifest_canonical_pure_posix_versioned_ref_required = true
+operating_manifest_caller_supplied_registry_and_prior_exact_byte_shape_required = true
+operating_manifest_shape_proves_registry_trust_currentness_or_completeness = false
+operating_manifest_strict_sequence_and_supersedes_chain_required = true
+operating_manifest_identity_digest_key = ["MANIFEST_REF", "MANIFEST_VERSION", "MANIFEST_SEQUENCE"]
+operating_manifest_identity_digest_conflict_or_replay_result = "DENY"
+prior_configuration_reuse_result = "DENY"
+operating_manifest_bindings = ["MANIFEST_REF", "MANIFEST_VERSION", "MANIFEST_SEQUENCE", "MANIFEST_SHA256", "SUPERSEDES_REF", "SUPERSEDES_VERSION", "SUPERSEDES_SEQUENCE", "SUPERSEDES_SHA256", "CHANGE_ACTION_ID", "CHANGE_PAYLOAD_SHA256", "PROFILE_SHA256", "CONFIGURATION_SHA256", "EFFECTIVE_FROM", "EXPIRES_AT"]
+malformed_or_old_operating_manifest_result = "DENY"
+registry_shape_validator_success_result = "NON_AUTHORIZING_B4_REGISTRY_SHAPE_VALID"
+registry_shape_validator_proves_current_or_fresh_checkpoint = false
+registry_shape_validator_proves_persistence_or_atomicity = false
+authority_readiness_requires_independently_trusted_current_registry_checkpoint = true
+self_declared_registry_or_canonical_genesis_readiness_result = "DENY_B4_CURRENT_REGISTRY_CHECKPOINT_OR_RUNTIME_TRUST_UNAVAILABLE"
+consumption_shape_proves_durable_consumption = false
+runtime_trust_root_status = "PENDING_PM-DEC-007"
+validator_authorization_effect = "NONE"
+
+[protective_overlay_contract]
+owner_envelope_mutable = false
+overlay_id_required = true
+overlay_immutable_and_versioned = true
+effective_authority = "RESTRICTIVE_INTERSECTION"
+action_specific_vector_required = true
+complete_immutable_owner_epoch_history_required = true
+caller_supplied_incomplete_history_result = "DENY"
+late_ack_restores_authority = false
+automatic_rebound_allowed = false
+new_owner_epoch_required_for_relaxation = true
+pure_helper_is_trust_root = false
+
+[absolute_time_binding]
+timestamps = ["EFFECTIVE_FROM", "REVIEW_DUE_AT", "EXPIRES_AT", "COMMIT_AT", "EVALUATED_AT", "REVOCATION_SNAPSHOT_AT", "FIRST_DURABLE_UNKNOWN_AT", "ESCALATION_DUE_AT", "ESCALATION_DISPATCHED_AT", "ESCALATION_ACK_AT"]
+operating_interval_equals_owner_selected_ttl = true
+single_use_interval_equals_owner_selected_window = true
+review_due_equals_expiry_minus_review_lead = true
+positive_operating_interval_required = true
+operating_review_cutoff_order = "EFFECTIVE_FROM <= EVALUATED_AT <= COMMIT_AT < REVIEW_DUE_AT < EXPIRES_AT"
+review_due_equality_or_post_cutoff_result = "DENY"
+commit_not_before_effective_from = true
+commit_guard_required = true
+revocation_freshness_required = true
+causal_revocation_order = "REVOCATION_SNAPSHOT_AT <= EVALUATED_AT <= COMMIT_AT < EXPIRES_AT"
+revocation_age_measurement = "COMMIT_AT_MINUS_REVOCATION_SNAPSHOT_AT"
+protective_intervals_strictly_positive = true
+causal_escalation_order_required = true
+unknown_dispatch_and_ack_not_after_evaluation_or_now = true
+overflow_or_mismatch_result = "DENY"
+
+[active_evidence_contract]
+active_schema_must_be_separate_exact_bytes = true
+draft_schema_in_memory_mutation_allowed = false
+active_schema_status = "NOT_IMPLEMENTED"
+deterministic_evidence_evaluator_status = "NOT_IMPLEMENTED"
+verified_requires_censored_and_unknown_outcomes = true
+verified_requires_competing_risks = true
+verified_requires_tail_quantile_and_one_sided_confidence = true
+verified_requires_estimator_clustering_and_effective_sample = true
+verified_requires_sealed_recent_stress_and_forward_windows = true
+verified_requires_holdout_access_history_and_provenance = true
+sealed_windows_not_after_as_of_now_or_expiry = true
+holdout_access_not_after_as_of_or_now = true
+owner_bound_minimum_sample_and_window_threshold_binding_required = true
+implicit_or_default_numeric_minimum_allowed = false
+actual_counts_must_meet_owner_bound_minima = true
+closed_liquidity_volatility_and_degraded_taxonomies_required = true
+unresolved_regime_or_degraded_scope_result = "DENY"
+closed_holdout_access_purposes = ["FINAL_FORWARD_CONFIRMATION"]
+owner_bound_exact_provenance_refs_required = true
+shape_validator_success_result = "NON_AUTHORIZING_DECLARED_EVIDENCE_SHAPE_CAUSALITY_VALID"
+shape_validator_proves_estimator_correctness = false
+shape_validator_proves_statistical_truth = false
+shape_validator_proves_owner_authority = false
+future_statistical_evaluator_required = true
+complete_shape_authorization_effect = "NONE"
+active_lookup_without_runtime_trust_root_result = "DENY_ACTIVE_SCHEMA_OR_RUNTIME_EVIDENCE_UNAVAILABLE"
+
+[semantic_scope_binding]
+exact_byte_hash_before_parse_required = true
+lifecycle_and_freshness_required = true
+scope_fields = ["VENUE", "ENVIRONMENT", "MARKET", "STAGE", "RISK", "API_OR_PROTOCOL_VERSION", "ACCOUNT_MODE", "ORDER_TYPE", "TIF", "SESSION", "LIQUIDITY_REGIME", "VOLATILITY_REGIME", "DEGRADED_STATE", "CALIBRATION_STRATUM_ID", "CALIBRATION_STRATUM_SHA256", "RISK_POLICY_ID", "RISK_POLICY_VERSION", "RISK_POLICY_SHA256"]
+approved_bitget_risk_policy_id = "bitget-btc-v1"
+approved_bitget_risk_policy_version = 1
+approved_bitget_risk_policy_sha256 = "4f34d45ac058bec6d5ce1ecc05dc242572a917bd6e2f6769ff53b7115f4b72e8"
+approved_bitget_risk_policy_source_path = "governance/risk-policy.toml"
+approved_policy_exact_source_bytes_required = true
+caller_selected_expected_policy_sha_allowed = false
+approved_policy_required_semantics = ["POLICY_ID_VERSION_SHA256", "BITGET", "USDT_MARGINED_FUTURES", "BTCUSDT_ONLY", "LIMIT_ONLY", "LIVE_DISABLED"]
+bitget_limit_only_independent_of_caller_policy_id = true
+venue_mechanics_default = "REJECT_ALL"
+venue_mechanics_matrix = ["BITGET:PAPER_SIMULATOR|BITGET_TESTNET|BITGET_PRODUCTION:BITGET_USDT_FUTURES:BITGET_API_V2:ONE_WAY_MODE:BITGET_24X7:LIMIT_GTC|LIMIT_IOC|LIMIT_FOK|LIMIT_POST_ONLY", "MOEX:FUTURE_BLOCKED"]
+unknown_or_mixed_venue_mechanics_result = "DENY"
+capability_and_policy_scope_mismatch_result = "DENY"
+cross_bitget_moex_result = "DENY"
+market_while_limit_only_result = "DENY"
+moex_status = "FUTURE_BLOCKED"
+
+[sunset_reconciliation_contract]
+new_risk_cutoff = "EARLIEST_MANDATORY_VALIDITY_CUTOFF_MINUS_CANCEL_RECONCILIATION_BUFFER"
+mandatory_cutoffs = ["APPROVAL", "EVIDENCE", "CAPABILITY", "RISK_POLICY", "RUNTIME_PROTECTION"]
+exact_order_identity_and_expiry_required = true
+order_expiry_not_after_earliest_cutoff_minus_buffer_required = true
+shared_feasibility_and_strict_sunset_helper_required = true
+completion_requires_terminal_order_outcomes = true
+completion_requires_fill_trade_watermark = true
+completion_requires_position_and_balance_reconciliation = true
+completion_requires_child_order_reconciliation = true
+completion_requires_durable_reservation_release_or_transfer_proof = true
+zero_open_orders_alone_is_terminal_proof = false
+legacy_working_order_helper_can_reconcile = false
+legacy_cancel_zero_open_and_generic_venue_reconciliation_result = "RECONCILIATION_REQUIRED_NO_ZERO_EFFECT_PROMISE"
+strict_sunset_validator_required_for_reconciled_shape = true
+unknown_or_possible_fill_result = "RECONCILIATION_REQUIRED"
+late_escalation_ack_restores_authority = false
+
+[cross_risk_and_history]
+comparable_family_required = true
+simultaneously_active_required = true
+canonical_exact_scope_fields = ["VENUE", "ENVIRONMENT", "MARKET", "APPROVAL_TIER", "VALIDITY_MODE", "CAPABILITY_ID_VERSION_SHA256", "RISK_POLICY_ID_VERSION_SHA256", "CALIBRATION_STRATUM_ID_SHA256", "API_OR_PROTOCOL_VERSION", "ACCOUNT_MODE", "ORDER_TYPE", "TIF", "SESSION", "LIQUIDITY_REGIME", "VOLATILITY_REGIME", "DEGRADED_STATE"]
+active_comparison_requires_resolved_scope = true
+active_ineligible_sentinels = ["UNRESOLVED*", "*_DENY", "PENDING*", "NOT_IMPLEMENTED*"]
+zero_capability_or_calibration_hash_result = "DENY"
+draft_scope_plus_caller_active_history_result = "DENY"
+caller_supplied_family_label_establishes_comparability = false
+simultaneous_active_derived_from_history = true
+caller_supplied_simultaneously_active_boolean_allowed = false
+compatibility_matrix = ["B1_LIMITED_PILOT->B2_EXISTING_PRODUCTION:OPERATING"]
+noncapital_or_single_use_comparison_result = "DENY"
+b2_may_be_weaker_than_b1 = false
+higher_risk_action_set_must_be_subset = true
+higher_risk_directional_vector_must_be_no_weaker = true
+action_specific_vector_required = true
+complete_immutable_owner_epoch_history_required = true
+history_registry_id = "validity-profile-family-history-v1"
+contiguous_history_from_base_sequence_zero_required = true
+history_shape_proves_runtime_active_or_trust = false
+omitted_history_or_union_vector_result = "DENY"
+validator_authorization_effect = "NONE"
+
+[integrity]
+canonicalization = "SORTED_KEYS_COMPACT_UTF8_JSON_V1"
+decision_payload_sha256 = "67900eed38a931e8755473415332b42b5266e05e412bd9fa2d3bd31397a4742e"

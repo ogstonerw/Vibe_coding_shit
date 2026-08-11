@@ -1,0 +1,47 @@
+policy_id = "tradebot-factory-approvals-v1"
+version = 1
+
+protected_paths = [
+  "governance/**",
+  "**/execution/**",
+  "**/risk/**",
+  "**/exchange/**",
+  "**/*live*",
+  ".github/workflows/**"
+]
+
+owner_only_changes = [
+  "enable_live_trading",
+  "change_risk_cap",
+  "change_leverage_bounds",
+  "change_margin_mode",
+  "expand_symbol_allowlist",
+  "add_or_rotate_production_credentials",
+  "disable_or_bypass_quality_gate"
+]
+
+[merge_gates]
+specification_approved = true
+acceptance_contract_present = true
+architecture_reviewed = true
+unit_tests_pass = true
+integration_tests_pass = true
+self_check_pass = true
+code_review_pass = true
+security_review_pass = true
+risk_review_pass = true
+release_verifier_pass = true
+
+[execution_stage_gates]
+dry_run_default = true
+paper_trading_before_live = true
+owner_approval_before_limited_live = true
+owner_approval_before_full_live = true
+automatic_promotion_to_live = false
+
+[evidence]
+exact_commands_required = true
+test_output_summary_required = true
+acceptance_traceability_required = true
+unresolved_risks_required = true
+

@@ -26,7 +26,7 @@ TG_OWNER_ID_2=второй_user_id  # опционально
 ### 3. Пример настройки
 
 ```env
-TGBOT_TOKEN=8251192150:AAFJwcM-R8Nxe0YObqIt_YmOFxKZ-qkLAH8
+TGBOT_TOKEN=<REDACTED>
 TG_OWNER_ID=728834902
 TG_OWNER_ID_2=123456789  # ID второго пользователя
 ```

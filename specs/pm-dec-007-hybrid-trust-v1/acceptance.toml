@@ -1,0 +1,30 @@
+work_item_id = "PM-DEC-007-HYBRID-TRUST-V1"
+status = "PLANNED_NON_AUTHORIZING"
+parent_frozen_manifest = "docs/FROZEN_CORE_V11.sha256"
+parent_frozen_manifest_sha256 = "46f20183230d84f6fdaba9ccc63e8e504afcd2be77c4447c66a14f5a9be5390f"
+live_trading_enabled = false
+eligible_for_real_capital_authorization = false
+
+[[criteria]]
+id = "PM-AC-059"
+requirements = ["PM-REQ-094"]
+description = "The closed PM-DEC-007 v1 record validates only the owner-selected hybrid architecture and fixed non-authorizing safety state. Exact parent/governance hashes and record integrity are mandatory. Mutation to RESOLVED, implementation complete, eligible/live/Pilot/Production, removal/addition of a field, alternate model, or changed parent/governance binding denies."
+evidence = "exact record; top-level and nested missing/extra-field mutations; model/status/eligibility/live/Pilot/Production mutations; parent manifest, PM-DEC-003 v1 and governance hash mutations; record digest mutation"
+implementation_status = "PARTIAL_NON_AUTHORIZING_VALIDATORS"
+current_evidence_limit = "Architecture selection is recorded, but no cryptographic, attestation, checkpoint, clock, recovery, numeric or runtime implementation exists."
+
+[[criteria]]
+id = "PM-AC-060"
+requirements = ["PM-REQ-094", "PM-REQ-095"]
+description = "The closed typed hybrid factor shape requires a physical hardware signing-key primary and separate-device confirmation over two identical opaque bytes values whose locally recomputed SHA-256 equals both factor payload digests. The exact §8.2 factor/trust-set/owner-epoch/global-sequence/manifest/action/scope/limits/artifact/configuration/time fields and strict types are mandatory; additional fields and coercion deny. Every factor/trust-root/failure/key/device/session/admin/recovery dimension that is designated distinct must differ. Missing/extra/malformed data, any shared independence dimension, any binding mismatch, nonpositive sequence, unequal/non-bytes payloads, digest mismatch, invalid timestamp/order, or caller truth/validity/currentness/independence/status claims deny. A positive sequence and arbitrary ordered interval remain shape only and do not prove no replay, owner-approved TTL, freshness, ACTIVE evidence or stage. Shape success remains non-authorizing."
+evidence = "valid opaque-byte shape; each shared independence dimension; each unequal binding; missing/extra/malformed field; bool/int coercion; wrong factor class; non-bytes/unequal payload and digest mismatch; nonpositive and old-but-positive sequence; strict UTC/order boundaries; arbitrary interval; forged boolean and string truth/status/stage/evidence claims"
+implementation_status = "PARTIAL_NON_AUTHORIZING_VALIDATORS"
+current_evidence_limit = "Shape validation cannot verify real signatures, attestation, pinning, device independence or factor registration."
+
+[[criteria]]
+id = "PM-AC-061"
+requirements = ["PM-REQ-096"]
+description = "No caller-supplied checkpoint has a successful shape or authority result in this addendum. Empty, malformed, apparently complete, self-declared current/trusted/durable/complete, old-but-well-formed, cached-genesis, truncated, exact-replay, forked, wrong-root or replacement/old-epoch checkpoint claims all return DENY_PM_DEC_007_TRUSTED_CHECKPOINT_UNAVAILABLE; the stateless helper does not claim it can distinguish true freshness from replay. Authority readiness always returns DENY_PM_DEC_007_RUNTIME_TRUST_INCOMPLETE and never calls a supplied adapter spy. Future runtime acceptance requires §8.3 root lifecycle/revocation, three-way domain independence, trusted-clock and DISPATCH_CLAIMED CAS/outbox bindings, but is not implemented or passed here. Arbitrary durations/status strings never become owner numeric, stage or evidence authority. Pilot, Production, live, real-capital and MOEX remain blocked."
+evidence = "empty/malformed/apparently complete/self-declared/stale/cached-genesis/truncated/exact-replay/forked/wrong-root/replacement-old-epoch claims all denied; valid decision+factor shapes and arbitrary ordered intervals/status strings still denied by readiness; fail-on-call adapter spy remains untouched; frozen v11, PM-DEC-003 v1 and live-disabled invariants"
+implementation_status = "PARTIAL_NON_AUTHORIZING_VALIDATORS"
+current_evidence_limit = "No independently trusted current checkpoint service, persistent registry, trusted clock, revocation verifier or runtime authority evaluator exists."
