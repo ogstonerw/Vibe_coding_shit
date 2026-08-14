@@ -5,7 +5,7 @@ id = "FACTORY-001"
 title = "Daily autonomous development control plane"
 goal = "Plan one bounded Owner-approved development task per day without granting write-agent or trading authority."
 status = "OWNER_APPROVED"
-approved_capabilities = ["registry", "deterministic_preflight", "task_selection", "execution_plan", "owner_report", "daily_scheduler", "token_context"]
+approved_capabilities = ["registry", "deterministic_preflight", "task_selection", "execution_plan", "owner_report", "daily_scheduler", "token_context", "github_history_witness"]
 
 [[tasks]]
 id = "FACTORY-001A"
@@ -16,7 +16,7 @@ priority = 1
 estimated_minutes = 90
 spec_path = "specs/factory-001a/spec.md"
 acceptance_path = "specs/factory-001a/acceptance.toml"
-capabilities = ["registry", "deterministic_preflight", "task_selection", "execution_plan", "owner_report", "daily_scheduler", "token_context"]
+capabilities = ["registry", "deterministic_preflight", "task_selection", "execution_plan", "owner_report", "daily_scheduler", "token_context", "github_history_witness"]
 owner_gate_reasons = []
 is_new_product_idea = false
 mandatory_context = ["AGENTS.md", "specs/factory-001a/spec.md", "specs/factory-001a/acceptance.toml", "factory/daily_run.toml"]
@@ -60,3 +60,9 @@ id = "FACTORY-DEC-003"
 subject_id = "FACTORY-001A"
 status = "OWNER_APPROVED"
 summary = "PM-DEC-007 V1 is historical; operational V2 uses active core V12 without changing PM semantics."
+
+[[owner_decisions]]
+id = "FACTORY-DEC-004"
+subject_id = "FACTORY-001A"
+status = "OWNER_APPROVED"
+summary = "Approve only five FACTORY-001A release-blocking hardening corrections; FACTORY-001B, product, trading, and capital authority remain excluded."

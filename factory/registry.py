@@ -78,7 +78,7 @@ def _safe_relative(path: str, location: str) -> None:
         raise RegistryError(f"{location} must remain repository-relative")
 
 
-def load_registry(path: Path) -> Registry:
+def load_registry(path: Path, *, root: Path | None = None) -> Registry:
     try:
         with path.open("rb") as handle:
             raw = tomllib.load(handle)
@@ -142,6 +142,9 @@ def load_registry(path: Path) -> Registry:
                 skip_context=_text_tuple(item, "skip_context", location),
             )
         )
+        for field in ("mandatory_context", "relevant_context", "frozen_context"):
+            for context_path in getattr(tasks[-1], field):
+                _safe_relative(context_path, f"{location}.{field}")
 
     dependencies: list[Dependency] = []
     for index, item in enumerate(raw.get("dependencies", [])):
@@ -184,7 +187,7 @@ def load_registry(path: Path) -> Registry:
         )
 
     registry = Registry(1, tuple(epics), tuple(tasks), tuple(dependencies), tuple(decisions), tuple(runs))
-    validate_registry(registry)
+    validate_registry(registry, root=root)
     return registry
 
 
@@ -215,7 +218,7 @@ def _check_dependency_cycles(registry: Registry) -> None:
         visit(task_id)
 
 
-def validate_registry(registry: Registry) -> None:
+def validate_registry(registry: Registry, *, root: Path | None = None) -> None:
     epic_ids = [item.id for item in registry.epics]
     task_ids = [item.id for item in registry.tasks]
     decision_ids = [item.id for item in registry.owner_decisions]
@@ -225,6 +228,7 @@ def validate_registry(registry: Registry) -> None:
     _unique(decision_ids, "Owner Decision")
     _unique(run_ids, "Run")
     epic_set = set(epic_ids)
+    epic_by_id = {epic.id: epic for epic in registry.epics}
     task_set = set(task_ids)
     subject_set = epic_set | task_set
 
@@ -236,6 +240,40 @@ def validate_registry(registry: Registry) -> None:
             raise RegistryError(f"unknown Task status: {task.status}")
         if task.epic_id not in epic_set:
             raise RegistryError(f"task {task.id} references missing Epic {task.epic_id}")
+        if task.status == "READY":
+            epic = epic_by_id[task.epic_id]
+            if epic.status != "OWNER_APPROVED":
+                raise RegistryError(
+                    f"READY task {task.id} requires OWNER_APPROVED Epic {epic.id}"
+                )
+            extra_capabilities = sorted(set(task.capabilities) - set(epic.approved_capabilities))
+            if extra_capabilities:
+                raise RegistryError(
+                    f"READY task {task.id} exceeds Epic {epic.id} approved capabilities: "
+                    f"{extra_capabilities}"
+                )
+            if not task.spec_path or not task.acceptance_path:
+                raise RegistryError(f"READY task {task.id} requires spec and acceptance contracts")
+            if root is not None:
+                referenced_paths = (
+                    ("spec", task.spec_path),
+                    ("acceptance", task.acceptance_path),
+                    *(("mandatory_context", item) for item in task.mandatory_context),
+                    *(("relevant_context", item) for item in task.relevant_context),
+                    *(("frozen_context", item) for item in task.frozen_context),
+                )
+                for label, relative in referenced_paths:
+                    candidate = (root.resolve() / relative).resolve()
+                    try:
+                        candidate.relative_to(root.resolve())
+                    except ValueError as exc:
+                        raise RegistryError(
+                            f"READY task {task.id} {label} escapes repository: {relative}"
+                        ) from exc
+                    if not candidate.is_file():
+                        raise RegistryError(
+                            f"READY task {task.id} missing {label}: {relative}"
+                        )
         unknown_gates = set(task.owner_gate_reasons) - OWNER_GATE_CATEGORIES
         if unknown_gates:
             raise RegistryError(f"task {task.id} has unknown Owner gates: {sorted(unknown_gates)}")

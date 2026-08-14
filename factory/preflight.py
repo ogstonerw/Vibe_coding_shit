@@ -16,6 +16,7 @@ from .models import (
     Task,
 )
 from .repository import disallowed_dirty_paths, probe_repository
+from .registry import RegistryError, validate_registry
 
 
 def _result(
@@ -48,6 +49,41 @@ def _contracts(root: Path, task: Task) -> tuple[str, ...]:
     return tuple(errors)
 
 
+def _context_evidence(root: Path, task: Task) -> tuple[str, ...]:
+    errors: list[str] = []
+    for field, values in (
+        ("mandatory_context", task.mandatory_context),
+        ("relevant_context", task.relevant_context),
+        ("frozen_context", task.frozen_context),
+    ):
+        for relative in values:
+            try:
+                path = safe_repo_path(root, relative)
+            except ValueError as exc:
+                errors.append(str(exc))
+                continue
+            if not path.is_file():
+                errors.append(f"{task.id} missing {field}: {relative}")
+    return tuple(errors)
+
+
+def _ready_authority_errors(registry: Registry, task: Task) -> tuple[str, ...]:
+    try:
+        epic = registry.epic(task.epic_id)
+    except StopIteration:
+        return (f"READY task {task.id} references missing Epic {task.epic_id}",)
+    errors: list[str] = []
+    if epic.status != "OWNER_APPROVED":
+        errors.append(f"READY task {task.id} requires OWNER_APPROVED Epic {epic.id}")
+    extra_capabilities = sorted(set(task.capabilities) - set(epic.approved_capabilities))
+    if extra_capabilities:
+        errors.append(
+            f"READY task {task.id} exceeds Epic {epic.id} approved capabilities: "
+            f"{extra_capabilities}"
+        )
+    return tuple(errors)
+
+
 def _dependency_blockers(registry: Registry, task: Task) -> tuple[str, ...]:
     blockers: list[str] = []
     for dependency in registry.dependencies_for(task.id):
@@ -62,11 +98,60 @@ def run_preflight(
     config: DailyConfig,
     root: Path,
     run_date: date,
-    *,
-    repository_state: RepositoryState | None = None,
-    integrity_issues: tuple[str, ...] | None = None,
 ) -> PreflightResult:
+    """Run production preflight using only canonical repository and integrity probes."""
+
+    return _evaluate_preflight(
+        registry,
+        config,
+        root,
+        run_date,
+        repository_state=probe_repository(root),
+        integrity_issues=verify_integrity(root, config),
+    )
+
+
+def _run_preflight_for_test(
+    registry: Registry,
+    config: DailyConfig,
+    root: Path,
+    run_date: date,
+    *,
+    repository_state: RepositoryState,
+    integrity_issues: tuple[str, ...],
+) -> PreflightResult:
+    """Private deterministic boundary for tests with explicit probe evidence."""
+
+    return _evaluate_preflight(
+        registry,
+        config,
+        root,
+        run_date,
+        repository_state=repository_state,
+        integrity_issues=integrity_issues,
+    )
+
+
+def _evaluate_preflight(
+    registry: Registry,
+    config: DailyConfig,
+    root: Path,
+    run_date: date,
+    *,
+    repository_state: RepositoryState,
+    integrity_issues: tuple[str, ...],
+) -> PreflightResult:
+    """Evaluate already-probed evidence behind private production/test boundaries."""
+
     checks: list[CheckResult] = []
+
+    try:
+        validate_registry(registry, root=root)
+    except RegistryError as exc:
+        detail = str(exc)
+        checks.append(CheckResult("registry_valid", False, detail))
+        return _result("BLOCKED", checks, blockers=(detail,))
+    checks.append(CheckResult("registry_valid", True, "pass"))
 
     active = tuple(run.id for run in registry.runs if run.status in ACTIVE_RUN_STATUSES)
     checks.append(CheckResult("single_active_run", not active, "none" if not active else ", ".join(active)))
@@ -93,8 +178,6 @@ def run_preflight(
     if unresolved:
         return _result("NEEDS_OWNER", checks, decisions=unresolved)
 
-    if integrity_issues is None:
-        integrity_issues = verify_integrity(root, config)
     checks.append(
         CheckResult(
             "governance_and_frozen_evidence",
@@ -105,8 +188,7 @@ def run_preflight(
     if integrity_issues:
         return _result("BLOCKED", checks, blockers=integrity_issues)
 
-    state = repository_state if repository_state is not None else probe_repository(root)
-    dirty = disallowed_dirty_paths(state, config.allowed_dirty_prefixes)
+    dirty = disallowed_dirty_paths(repository_state, config.allowed_dirty_prefixes)
     checks.append(
         CheckResult(
             "repository_state",
@@ -141,18 +223,26 @@ def run_preflight(
 
     blocked_candidates: list[str] = []
     for task in ready:
+        authority_errors = _ready_authority_errors(registry, task)
+        if authority_errors:
+            checks.append(CheckResult("ready_authority", False, "; ".join(authority_errors)))
+            return _result("BLOCKED", checks, blockers=authority_errors)
         if task.owner_gate_reasons:
             reasons = tuple(f"{task.id}: {reason}" for reason in task.owner_gate_reasons)
             checks.append(CheckResult("owner_decision_gate", False, "; ".join(reasons)))
             return _result("NEEDS_OWNER", checks, decisions=reasons)
         contract_errors = _contracts(root, task)
         if contract_errors:
-            blocked_candidates.extend(contract_errors)
-            continue
+            checks.append(CheckResult("task_contract", False, "; ".join(contract_errors)))
+            return _result("BLOCKED", checks, blockers=contract_errors)
+        evidence_errors = _context_evidence(root, task)
+        if evidence_errors:
+            checks.append(CheckResult("task_context_evidence", False, "; ".join(evidence_errors)))
+            return _result("BLOCKED", checks, blockers=evidence_errors)
         dependency_errors = _dependency_blockers(registry, task)
         if dependency_errors:
-            blocked_candidates.extend(dependency_errors)
-            continue
+            checks.append(CheckResult("dependencies_done", False, "; ".join(dependency_errors)))
+            return _result("BLOCKED", checks, blockers=dependency_errors)
         if task.estimated_minutes > config.max_run_time_minutes:
             blocked_candidates.append(
                 f"{task.id} estimate {task.estimated_minutes} exceeds {config.max_run_time_minutes} minutes"
@@ -161,6 +251,7 @@ def run_preflight(
         checks.extend(
             (
                 CheckResult("task_contract", True, f"{task.spec_path}; {task.acceptance_path}"),
+                CheckResult("task_context_evidence", True, task.id),
                 CheckResult("dependencies_done", True, task.id),
                 CheckResult(
                     "runtime_budget",

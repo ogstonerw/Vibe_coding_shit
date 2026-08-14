@@ -21,7 +21,7 @@ evidence = "Tests cover the success path and reject invalid or post-terminal tra
 [[criteria]]
 id = "FACTORY-AC-004"
 title = "Only READY tasks are selectable"
-evidence = "Selection is stable by priority then ID and ignores every non-READY status."
+evidence = "Selection is stable by priority then ID, ignores every non-READY status, and a READY label alone cannot bypass Epic/capability/dependency/contract/evidence authority."
 
 [[criteria]]
 id = "FACTORY-AC-005"
@@ -31,12 +31,12 @@ evidence = "Tests block incomplete dependencies and any existing active run."
 [[criteria]]
 id = "FACTORY-AC-006"
 title = "Contracts, repository state, and evidence are required"
-evidence = "Missing spec/acceptance, disallowed repository changes, manifest mismatch, governance mismatch, or uncertain Git state blocks selection."
+evidence = "Missing spec/acceptance or referenced context evidence, disallowed repository changes, manifest mismatch, governance mismatch, or uncertain Git state blocks selection. NUL-delimited Git status parsing checks both source and destination of rename/copy records without shell splitting, so an outside-to-artifacts rename remains disallowed. Public production paths use only canonical probes."
 
 [[criteria]]
 id = "FACTORY-AC-007"
 title = "Runtime and daily task limits are enforced"
-evidence = "Tests block estimates above 90 minutes and a second selected task on the same Moscow date."
+evidence = "Tests block estimates above 90 minutes, a second local owner on the same durably claimed Moscow date, and any qualifying prior GitHub workflow run started on that Moscow date."
 
 [[criteria]]
 id = "FACTORY-AC-008"
@@ -51,14 +51,39 @@ evidence = "A gated task becomes effectively NEEDS_OWNER and no execution plan i
 [[criteria]]
 id = "FACTORY-AC-010"
 title = "Dry-run emits a plan and complete Owner Report without coding"
-evidence = "Tests verify every required report field, atomic artifacts, AI_USAGE=0, and absence of agent/network/trading calls."
+evidence = "Tests verify every required report field, atomic artifacts, AI_USAGE=0, and absence of agent/trading calls. The only network call is the separately tested read-only GitHub workflow-history witness."
 
 [[criteria]]
 id = "FACTORY-AC-011"
 title = "Scheduler and limits are immutable and safe"
-evidence = "Workflow has manual trigger, 07:00 UTC cron, read-only contents, dry-run only, no LLM secrets, and configured limits/authorities."
+evidence = "Workflow has manual trigger, 07:00 UTC cron, same-repo/ref concurrency, actions:read plus contents:read and no write permission, full-SHA actions, non-persistent checkout credentials, dry-run only, API witness before selection, optional post-run cache transport, no LLM secrets, and configured limits/authorities."
 
 [[criteria]]
 id = "FACTORY-AC-012"
 title = "Context and routing remain cost-aware guidance"
 evidence = "Plan separates MANDATORY, RELEVANT, FROZEN, and SKIP context and recommends HIGH/MEDIUM/LOW routes without implementing an LLM router."
+
+[[criteria]]
+id = "FACTORY-AC-013"
+title = "The local run lock has exclusive ownership"
+evidence = "Tests prove the public production entry owns the canonical factory/artifacts OS lock across claim and selection; public lock/claim helpers and both CLIs expose no alternate namespace; alternate namespaces remain private test seams; A continuously owns a persistent locked handle; separate-process B cannot acquire or release it; the path is never removed on normal release; B acquires afterward; content has no authority; old-holder cleanup cannot delete/release a replacement holder; and POSIX/Windows abstractions are nonblocking and fail closed."
+
+[[criteria]]
+id = "FACTORY-AC-014"
+title = "The Moscow production date is durably consumed before selection"
+evidence = "Local separate-process tests prove immutable same-date ownership and malformed-state denial. Production-shaped GitHub tests prove strict branch-only environment identity; exact GITHUB_WORKFLOW_REF repository/path/ref binding; canonical active metadata resolution to a positive numeric workflow ID; numeric-ID-only runs queries; candidate path invariance for foreign-full, foreign-short, legitimate-short, missing, and non-string representations; exact workflow_id/repository/head_branch checks; zero-prior availability; all started outcomes and schedule/manual cross-trigger consumption; previous-date/nonproduction exclusion; rerun denial before API; complete current-run witnessing; API/schema/metadata/contradiction failure; exhaustive bounded pagination; and witness-before-claim ordering. Cache state is explicitly non-authoritative."
+
+[[criteria]]
+id = "FACTORY-AC-015"
+title = "READY status cannot self-authorize work"
+evidence = "Registry and preflight tests reject a missing or non-OWNER_APPROVED Epic, capabilities outside the Epic approval, invalid/incomplete dependencies, and missing contract or referenced context evidence before selection."
+
+[[criteria]]
+id = "FACTORY-AC-016"
+title = "Production trust evidence cannot be injected by callers"
+evidence = "Public execute_daily_run, lower-level lock/claim helpers, and daily/claim CLIs accept no registry/config/output substitutions or repository_state/integrity_issues overrides. Tests reject fabricated kwargs and removed CLI flags without writing outside factory/artifacts, require production to resolve factory/registry.toml, factory/daily_run.toml, and factory/artifacts, enforce the exact singleton dirty prefix factory/artifacts/, invoke canonical Git and integrity validators, and write no execution plan when any authority input fails."
+
+[[criteria]]
+id = "FACTORY-AC-017"
+title = "Workflow dependencies are immutable and credential-minimal"
+evidence = "Tests require every actions/* occurrence in both workflows to use the Owner-reviewed full SHA, checkout persist-credentials=false, daily workflow actions:read plus contents:read only, quality workflow contents:read only, and no push/write behavior."

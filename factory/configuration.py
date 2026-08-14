@@ -56,8 +56,10 @@ def load_daily_config(path: Path) -> DailyConfig:
     if repository.get("allow_dirty") is not False:
         raise ConfigurationError("repository.allow_dirty must remain false")
     prefixes = repository.get("allowed_dirty_prefixes", [])
-    if not isinstance(prefixes, list) or any(not isinstance(item, str) or not item for item in prefixes):
-        raise ConfigurationError("allowed_dirty_prefixes must be non-empty strings")
+    if prefixes != ["factory/artifacts/"]:
+        raise ConfigurationError(
+            'repository.allowed_dirty_prefixes must remain exactly ["factory/artifacts/"]'
+        )
     integrity = raw.get("integrity", {})
     if integrity.get("canonicalization") != "UTF8_LF_TEXT_RAW_BINARY_V1":
         raise ConfigurationError("unsupported integrity canonicalization")

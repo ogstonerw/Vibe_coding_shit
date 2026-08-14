@@ -26,3 +26,12 @@
 - Resolution: PM-DEC-007 V1 is preserved as historical. PM-DEC-007 V2 is the active operational bundle and verifies active core V12.
 - Reason: the approved agent architecture added mandatory `game_ux_designer` and `pro_trader_ux` roles to core V12.
 - PM semantics and authority remain unchanged. Paper, Live, agents, commits, pushes, pull requests, and merge remain blocked.
+
+## FACTORY-DEC-004 — FACTORY-001A release-blocking hardening only
+
+- Date: 2026-08-11
+- Status: OWNER_APPROVED
+- Decision: correct only the five reviewed FACTORY-001A release blockers: lock ownership, durable daily history, `READY` authority, production trust-boundary injection, and workflow action pinning.
+- Release state: FACTORY-001A remains `REVIEW` until the required independent reviews and release verification pass.
+- Explicit exclusions: this decision grants no FACTORY-001B, Product Master Spec, coding-agent execution, trading-code, credential, Paper, Live, capital, commit, push, pull-request, merge, or risk-policy authority.
+- Frozen evidence: no frozen manifest is changed by this decision.
