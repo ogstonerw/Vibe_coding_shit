@@ -1,0 +1,68 @@
+schema_version = 1
+
+[[epics]]
+id = "FACTORY-001"
+title = "Daily autonomous development control plane"
+goal = "Plan one bounded Owner-approved development task per day without granting write-agent or trading authority."
+status = "OWNER_APPROVED"
+approved_capabilities = ["registry", "deterministic_preflight", "task_selection", "execution_plan", "owner_report", "daily_scheduler", "token_context", "github_history_witness"]
+
+[[tasks]]
+id = "FACTORY-001A"
+epic_id = "FACTORY-001"
+title = "Deterministic daily planning control plane"
+status = "REVIEW"
+priority = 1
+estimated_minutes = 90
+spec_path = "specs/factory-001a/spec.md"
+acceptance_path = "specs/factory-001a/acceptance.toml"
+capabilities = ["registry", "deterministic_preflight", "task_selection", "execution_plan", "owner_report", "daily_scheduler", "token_context", "github_history_witness"]
+owner_gate_reasons = []
+is_new_product_idea = false
+mandatory_context = ["AGENTS.md", "specs/factory-001a/spec.md", "specs/factory-001a/acceptance.toml", "factory/daily_run.toml"]
+relevant_context = ["factory/pipeline.toml", "docs/owner/CURRENT_STATE.md"]
+frozen_context = ["docs/FROZEN_CORE_V12.sha256", "docs/FROZEN_PM_DEC_007_HYBRID_V2.sha256"]
+skip_context = ["historical reviews", "ZIP snapshot contents", "trading execution code"]
+
+[[tasks]]
+id = "FACTORY-001B"
+epic_id = "FACTORY-001"
+title = "Controlled coding-agent execution"
+status = "PROPOSED"
+priority = 2
+estimated_minutes = 90
+capabilities = []
+owner_gate_reasons = ["external_service", "governance"]
+is_new_product_idea = true
+mandatory_context = []
+relevant_context = []
+frozen_context = ["docs/FROZEN_CORE_V12.sha256"]
+skip_context = ["trading execution code"]
+
+[[dependencies]]
+task_id = "FACTORY-001B"
+depends_on = "FACTORY-001A"
+
+[[owner_decisions]]
+id = "FACTORY-DEC-001"
+subject_id = "FACTORY-001A"
+status = "OWNER_APPROVED"
+summary = "Controlled V12 re-freeze and FACTORY-001A are approved."
+
+[[owner_decisions]]
+id = "FACTORY-DEC-002"
+subject_id = "FACTORY-001B"
+status = "NEEDS_OWNER"
+summary = "Automatic Codex invocation, writer execution, commit, push, PR, and merge remain unauthorized."
+
+[[owner_decisions]]
+id = "FACTORY-DEC-003"
+subject_id = "FACTORY-001A"
+status = "OWNER_APPROVED"
+summary = "PM-DEC-007 V1 is historical; operational V2 uses active core V12 without changing PM semantics."
+
+[[owner_decisions]]
+id = "FACTORY-DEC-004"
+subject_id = "FACTORY-001A"
+status = "OWNER_APPROVED"
+summary = "Approve only five FACTORY-001A release-blocking hardening corrections; FACTORY-001B, product, trading, and capital authority remain excluded."

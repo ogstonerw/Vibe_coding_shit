@@ -34,3 +34,6 @@ signals_history.json
 
 # Private local Telegram Desktop exports
 /private/telegram_exports/
+
+# Deterministic FACTORY-001A run artifacts
+/factory/artifacts/
