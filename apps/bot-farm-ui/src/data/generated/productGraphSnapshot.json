@@ -1,0 +1,139 @@
+{
+  "authority": {
+    "capital_authority": false,
+    "environments": [
+      {
+        "label": "Paper",
+        "locked": true,
+        "reason": "Paper requires a future explicit Owner gate and proven prerequisites.",
+        "status": "LOCKED",
+        "subject": "PAPER"
+      },
+      {
+        "label": "Limited Live",
+        "locked": true,
+        "reason": "Limited Live requires a future explicit Owner Live Gate.",
+        "status": "LOCKED",
+        "subject": "LIMITED_LIVE"
+      },
+      {
+        "label": "Live",
+        "locked": true,
+        "reason": "Live requires a future explicit Owner Live Gate.",
+        "status": "LOCKED",
+        "subject": "LIVE"
+      }
+    ]
+  },
+  "development": {
+    "current_wave_id": "W0",
+    "next_wave_id": "W1",
+    "waves": [
+      {
+        "display_state": "DONE",
+        "id": "W0",
+        "status": "DONE",
+        "title": "Development Foundation"
+      },
+      {
+        "display_state": "NEXT",
+        "id": "W1",
+        "status": "PLANNED",
+        "title": "Product OS"
+      },
+      {
+        "display_state": "PLANNED",
+        "id": "W2",
+        "status": "PLANNED",
+        "title": "Knowledge Platform"
+      },
+      {
+        "display_state": "PLANNED",
+        "id": "W3",
+        "status": "PLANNED",
+        "title": "Bot & Strategy Core"
+      },
+      {
+        "display_state": "PLANNED",
+        "id": "W4",
+        "status": "PLANNED",
+        "title": "Research Intelligence"
+      },
+      {
+        "display_state": "PLANNED",
+        "id": "W5",
+        "status": "PLANNED",
+        "title": "Proving Ground"
+      },
+      {
+        "display_state": "PLANNED",
+        "id": "W6",
+        "status": "PLANNED",
+        "title": "Risk & Release"
+      },
+      {
+        "display_state": "LOCKED",
+        "id": "W7",
+        "status": "LOCKED",
+        "title": "Paper Trading"
+      },
+      {
+        "display_state": "LOCKED",
+        "id": "W8",
+        "status": "LOCKED",
+        "title": "Limited Live"
+      },
+      {
+        "display_state": "LOCKED",
+        "id": "W9",
+        "status": "LOCKED",
+        "title": "Portfolio OS"
+      },
+      {
+        "display_state": "LOCKED",
+        "id": "W10",
+        "status": "LOCKED",
+        "title": "Operations Center"
+      },
+      {
+        "display_state": "LOCKED",
+        "id": "W11",
+        "status": "LOCKED",
+        "title": "Evolution Engine"
+      },
+      {
+        "display_state": "LOCKED",
+        "id": "W12",
+        "status": "LOCKED",
+        "title": "Self-Improving Trading Organization"
+      }
+    ]
+  },
+  "owner_decisions_required": [
+    {
+      "id": "LOCK-FACTORY-001B",
+      "reason": "Controlled coding-agent execution requires a separate Owner decision.",
+      "status": "NEEDS_OWNER",
+      "subject": "FACTORY-001B"
+    }
+  ],
+  "product": {
+    "name": "AI Trading Operating System",
+    "north_star": "AI Trading Operating System, в которой один Owner управляет виртуальной организацией ИИ-агентов, самостоятельно исследующей рынки, принимающей знания из разных источников, создающей и обучающей индивидуальных торговых агентов, разрабатывающей стратегии, доказывающей их качество, выпускающей контролируемые версии, эксплуатирующей их под жёсткими risk/authority gates и непрерывно предлагающей эволюцию продукта и стратегий."
+  },
+  "schema_version": 1,
+  "source": {
+    "classification": "NON_OPERATIONAL_PRODUCT_GRAPH_BOOTSTRAP",
+    "generated_from": "docs/product/PRODUCT_GRAPH_BOOTSTRAP.toml",
+    "name": "PRODUCT_GRAPH_BOOTSTRAP",
+    "operational": false,
+    "projection": "READ_ONLY",
+    "writable_runtime_truth": false
+  },
+  "summary": {
+    "domain_count": 21,
+    "epic_count": 14,
+    "locked_object_count": 23,
+    "wave_count": 13
+  }
+}
