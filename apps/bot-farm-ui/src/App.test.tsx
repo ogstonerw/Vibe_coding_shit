@@ -24,16 +24,15 @@ describe("Bot Farm UI", () => {
       name: productGraphSnapshot.product.name,
     });
     const ownerHq = productHeading.closest("section");
-    const foundation = productGraphSnapshot.development.waves.find(
+    const foundation = productGraphSnapshot.development.waves.find((wave) => wave.id === "W0");
+    const currentWave = productGraphSnapshot.development.waves.find(
       (wave) => wave.id === productGraphSnapshot.development.current_wave_id,
-    );
-    const nextWave = productGraphSnapshot.development.waves.find(
-      (wave) => wave.id === productGraphSnapshot.development.next_wave_id,
     );
 
     expect(ownerHq).not.toBeNull();
     expect(within(ownerHq!).getByText(`${foundation?.id} · ${foundation?.title}`)).toBeInTheDocument();
-    expect(within(ownerHq!).getByText(`${nextWave?.id} · ${nextWave?.title}`)).toBeInTheDocument();
+    expect(within(ownerHq!).getByText(`${currentWave?.id} · ${currentWave?.title}`)).toBeInTheDocument();
+    expect(within(ownerHq!).getByText("No Owner decisions required.")).toBeInTheDocument();
     expect(within(ownerHq!).getByText("READ_ONLY")).toBeInTheDocument();
   });
 
