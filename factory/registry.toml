@@ -3,15 +3,15 @@ schema_version = 1
 [[epics]]
 id = "FACTORY-001"
 title = "Daily autonomous development control plane"
-goal = "Plan one bounded Owner-approved development task per day without granting write-agent or trading authority."
+goal = "Plan and, only under a separately Owner-approved Work Unit, execute one bounded development task without granting trading authority."
 status = "OWNER_APPROVED"
-approved_capabilities = ["registry", "deterministic_preflight", "task_selection", "execution_plan", "owner_report", "daily_scheduler", "token_context", "github_history_witness"]
+approved_capabilities = ["registry", "deterministic_preflight", "task_selection", "execution_plan", "owner_report", "daily_scheduler", "token_context", "github_history_witness", "controlled_execution", "work_unit_contract", "context_compiler", "agent_router", "execution_evidence"]
 
 [[tasks]]
 id = "FACTORY-001A"
 epic_id = "FACTORY-001"
 title = "Deterministic daily planning control plane"
-status = "REVIEW"
+status = "DONE"
 priority = 1
 estimated_minutes = 90
 spec_path = "specs/factory-001a/spec.md"
@@ -28,16 +28,18 @@ skip_context = ["historical reviews", "ZIP snapshot contents", "trading executio
 id = "FACTORY-001B"
 epic_id = "FACTORY-001"
 title = "Controlled coding-agent execution"
-status = "PROPOSED"
+status = "READY"
 priority = 2
 estimated_minutes = 90
-capabilities = []
-owner_gate_reasons = ["external_service", "governance"]
-is_new_product_idea = true
-mandatory_context = []
-relevant_context = []
-frozen_context = ["docs/FROZEN_CORE_V12.sha256"]
-skip_context = ["trading execution code"]
+spec_path = "specs/factory-001b/spec.md"
+acceptance_path = "specs/factory-001b/acceptance.toml"
+capabilities = ["controlled_execution", "work_unit_contract", "context_compiler", "agent_router", "execution_evidence"]
+owner_gate_reasons = []
+is_new_product_idea = false
+mandatory_context = ["AGENTS.md", "specs/factory-001b/spec.md", "specs/factory-001b/acceptance.toml", "specs/factory-001b/work-unit.toml", "factory/daily_run.toml"]
+relevant_context = ["factory/models.py", "factory/registry.py", "factory/preflight.py", "factory/daily_run.py", "factory/planning.py", "factory/repository.py"]
+frozen_context = ["docs/FROZEN_CORE_V12.sha256", "docs/FROZEN_PM_DEC_007_HYBRID_V2.sha256"]
+skip_context = ["trading execution code", "Bot Farm visual implementation", "frozen archives"]
 
 [[dependencies]]
 task_id = "FACTORY-001B"
@@ -52,8 +54,8 @@ summary = "Controlled V12 re-freeze and FACTORY-001A are approved."
 [[owner_decisions]]
 id = "FACTORY-DEC-002"
 subject_id = "FACTORY-001B"
-status = "NEEDS_OWNER"
-summary = "Automatic Codex invocation, writer execution, commit, push, PR, and merge remain unauthorized."
+status = "SUPERSEDED"
+summary = "Historical FACTORY-001B Owner gate superseded by FACTORY-DEC-005 on 2026-08-31."
 
 [[owner_decisions]]
 id = "FACTORY-DEC-003"
@@ -66,3 +68,9 @@ id = "FACTORY-DEC-004"
 subject_id = "FACTORY-001A"
 status = "OWNER_APPROVED"
 summary = "Approve only five FACTORY-001A release-blocking hardening corrections; FACTORY-001B, product, trading, and capital authority remain excluded."
+
+[[owner_decisions]]
+id = "FACTORY-DEC-005"
+subject_id = "FACTORY-001B"
+status = "OWNER_APPROVED"
+summary = "Owner authorized FACTORY-001B repository-local PRODUCT_CHANGE_LEVEL_A execution and one local candidate commit on 2026-08-31; push, PR, merge, product approval, credentials, trading, Paper, Live, and capital remain locked."

@@ -1,0 +1,135 @@
+work_item = "FACTORY-001B"
+target_stage = "CONTROLLED_GOAL_MODE"
+financial_semantics_changed = false
+live_trading = false
+capital_authority = false
+
+[[criteria]]
+id = "FACTORY-001B-AC-001"
+title = "Eligible Level A Work Unit enters execution"
+evidence = "Focused test proves READY Task, OWNER_APPROVED Epic, completed dependencies, canonical preflight, and configured fake adapter reach ACTIVE."
+
+[[criteria]]
+id = "FACTORY-001B-AC-002"
+title = "Level B needs Owner"
+evidence = "Focused test proves PRODUCT_CHANGE_LEVEL_B returns NEEDS_OWNER before adapter execution."
+
+[[criteria]]
+id = "FACTORY-001B-AC-003"
+title = "Level C needs Owner"
+evidence = "Focused test proves PRODUCT_CHANGE_LEVEL_C returns NEEDS_OWNER before adapter execution."
+
+[[criteria]]
+id = "FACTORY-001B-AC-004"
+title = "Unapproved Epic is denied"
+evidence = "Focused test proves a non-OWNER_APPROVED parent Epic blocks execution."
+
+[[criteria]]
+id = "FACTORY-001B-AC-005"
+title = "Non-READY Task is denied"
+evidence = "Focused test proves any Task state other than READY blocks execution."
+
+[[criteria]]
+id = "FACTORY-001B-AC-006"
+title = "Unsatisfied dependency is denied"
+evidence = "Focused test proves dependency state other than DONE blocks execution."
+
+[[criteria]]
+id = "FACTORY-001B-AC-007"
+title = "Acceptance criteria are mandatory"
+evidence = "Contract loader rejects an empty acceptance_criteria list."
+
+[[criteria]]
+id = "FACTORY-001B-AC-008"
+title = "Allowed paths are mandatory"
+evidence = "Contract loader rejects an empty allowed_paths list."
+
+[[criteria]]
+id = "FACTORY-001B-AC-009"
+title = "Out-of-scope writer changes fail closed"
+evidence = "Focused test changes a Git-visible path outside allowed_paths and proves PASS is impossible."
+
+[[criteria]]
+id = "FACTORY-001B-AC-010"
+title = "Sensitive paths fail closed"
+evidence = "Contract and execution checks deny built-in sensitive and explicitly forbidden paths."
+
+[[criteria]]
+id = "FACTORY-001B-AC-011"
+title = "Only one writer owns the worktree"
+evidence = "Cross-process lock test proves a second execution owner cannot acquire the persistent FACTORY lock."
+
+[[criteria]]
+id = "FACTORY-001B-AC-012"
+title = "Canonical preflight cannot be overridden"
+evidence = "Public executor rejects fabricated probe parameters and always calls canonical Git/integrity checks."
+
+[[criteria]]
+id = "FACTORY-001B-AC-013"
+title = "SKIP context is excluded"
+evidence = "Context manifest records SKIP identity but never reads or includes its content."
+
+[[criteria]]
+id = "FACTORY-001B-AC-014"
+title = "Context byte budget is enforced"
+evidence = "Compilation and concrete expansion requests fail closed when UTF-8 bytes exceed context_budget."
+
+[[criteria]]
+id = "FACTORY-001B-AC-015"
+title = "Correction loop maximum is two"
+evidence = "Contract validation and orchestration prevent a third correction loop."
+
+[[criteria]]
+id = "FACTORY-001B-AC-016"
+title = "Reviewer routing is minimal"
+evidence = "NORMAL routing selects only requested roles and at most two reviewers."
+
+[[criteria]]
+id = "FACTORY-001B-AC-017"
+title = "Unavailable optional specialist does not cause fallback"
+evidence = "Focused test records one unavailable optional role and zero fallback selection."
+
+[[criteria]]
+id = "FACTORY-001B-AC-018"
+title = "Test failure blocks PASS"
+evidence = "A nonzero required test result remains FAIL after the correction budget is exhausted."
+
+[[criteria]]
+id = "FACTORY-001B-AC-019"
+title = "Blocking review blocks PASS"
+evidence = "A blocking required-review verdict remains BLOCKED after the correction budget is exhausted."
+
+[[criteria]]
+id = "FACTORY-001B-AC-020"
+title = "PASS produces durable evidence"
+evidence = "Successful fake execution atomically writes context, diff, tests, reviews, result, and evidence references."
+
+[[criteria]]
+id = "FACTORY-001B-AC-021"
+title = "Owner Report is generated"
+evidence = "Owner Report contains attempted work, changes, tests, reviews, status, blockers, decisions, and next eligible work."
+
+[[criteria]]
+id = "FACTORY-001B-AC-022"
+title = "No automatic commit"
+evidence = "Focused test proves HEAD is unchanged by the executor."
+
+[[criteria]]
+id = "FACTORY-001B-AC-023"
+title = "No push"
+evidence = "Implementation contains no push path and focused test uses a repository without a remote."
+
+[[criteria]]
+id = "FACTORY-001B-AC-024"
+title = "No pull request"
+evidence = "Implementation contains no PR client or command."
+
+[[criteria]]
+id = "FACTORY-001B-AC-025"
+title = "No trading or exchange execution"
+evidence = "Factory import and command tests deny trading/exchange paths and integrations."
+
+[[criteria]]
+id = "FACTORY-001B-AC-026"
+title = "Paper, Live, and capital remain locked"
+evidence = "Canonical configuration remains paper_authority=false and live_authority=false; result authority records capital=false."
