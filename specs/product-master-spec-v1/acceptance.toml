@@ -1,0 +1,70 @@
+schema_version = 1
+work_item_id = "PRODUCT-MASTER-SPEC-V1"
+artifact_class = "DOCUMENTATION_ARCHITECTURE"
+capital_authority = false
+paper_authority = false
+limited_live_authority = false
+live_authority = false
+max_correction_loops = 3
+exceptional_correction_loop_3_scope = "PRODUCT_GRAPH_VALIDATOR_AND_TESTS_ONLY"
+required_writer_count = 1
+
+[[criteria]]
+id = "PMSV1-AC-001"
+description = "Exact North Star and product cycle are present."
+evidence = "docs/product/PRODUCT_MASTER_SPEC.md"
+
+[[criteria]]
+id = "PMSV1-AC-002"
+description = "Three pipelines, canonical ownership and typed handoffs are distinct."
+evidence = "docs/product/PRODUCT_MASTER_SPEC.md"
+
+[[criteria]]
+id = "PMSV1-AC-003"
+description = "Every required Product Galaxy domain has purpose, inputs, outputs, entities, AI roles, Owner interaction, dependencies, evidence, extensibility and authority."
+evidence = "docs/product/PRODUCT_MASTER_SPEC.md"
+
+[[criteria]]
+id = "PMSV1-AC-004"
+description = "One-Owner 30-second HQ and two-views-one-truth contracts are explicit."
+evidence = "docs/product/PRODUCT_MASTER_SPEC.md"
+
+[[criteria]]
+id = "PMSV1-AC-005"
+description = "AI workers, bots, model routing, knowledge, Telegram modes, learning, memory, versioning, lifecycle and state axes are explicit."
+evidence = "docs/product/PRODUCT_MASTER_SPEC.md"
+
+[[criteria]]
+id = "PMSV1-AC-006"
+description = "Evidence, research, proving, microstructure, risk, release, portfolio, operations and controlled evolution are specified without implementation or performance claims."
+evidence = "docs/product/PRODUCT_MASTER_SPEC.md"
+
+[[criteria]]
+id = "PMSV1-AC-007"
+description = "Every W0-W12 Wave has goal, capabilities, dependencies, DONE definition, authority impact, risks, non-goals and outcome."
+evidence = "docs/product/MASTER_ROADMAP.md"
+
+[[criteria]]
+id = "PMSV1-AC-008"
+description = "Current, next, future, locked, factory cadence, prioritization and Unknown Frontier are explicit."
+evidence = "docs/product/MASTER_ROADMAP.md"
+
+[[criteria]]
+id = "PMSV1-AC-009"
+description = "Bootstrap is non-operational, deterministic, parseable, uniquely identified, reference-resolved and acyclic with coherent W0-W12."
+evidence = "python3 scripts/check_product_graph_bootstrap.py"
+
+[[criteria]]
+id = "PMSV1-AC-010"
+description = "FACTORY-001B is locked and needs Owner; FACTORY-001C-E, Paper, Limited Live, Live and capital remain locked/false."
+evidence = "docs/product/PRODUCT_GRAPH_BOOTSTRAP.toml"
+
+[[criteria]]
+id = "PMSV1-AC-011"
+description = "All DONE graph objects have evidence references and FACTORY-001A points to the accepted exact HEAD."
+evidence = "python3 -m unittest tests.test_product_graph_bootstrap -v"
+
+[[criteria]]
+id = "PMSV1-AC-012"
+description = "Required repository checks and independent final reviews pass with no unresolved blocking findings."
+evidence = "final task evidence"
