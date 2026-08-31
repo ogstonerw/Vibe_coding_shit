@@ -1,0 +1,103 @@
+artifact_purpose = "NON_AUTHORIZING_VALIDITY_PROFILE_DRAFT"
+schema_id = "https://tradebot.local/schemas/non-authorizing-validity-profile-draft-v1.json"
+schema_version = 1
+schema_sha256 = "9fcecd5ac1e1ea0b20ff7b7a3b7c5076cad5b84e36beb75977060a20217b7296"
+profile_id = "bitget-pilot-draft"
+profile_version = 1
+profile_sequence = 1
+profile_status = "DRAFT"
+canonicalization = "SORTED_KEYS_COMPACT_UTF8_JSON_EXCLUDING_PROFILE_PAYLOAD_SHA256_AND_OWNER_AUTHORITY_V1"
+profile_payload_sha256 = "27853d20184dd7eed9787309266e5a342d301393ee9b32d1269e027e381fdc2d"
+supersedes_ref = "UNRESOLVED:NO_PRIOR_AUTHORIZING_PROFILE"
+supersedes_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+supersedes_sequence = 0
+authorization_result = "DENY"
+eligible_for_authorization = false
+live_trading_enabled = false
+decision_ref = "decisions/PM-DEC-003-v2.toml"
+decision_sha256 = "34e2733a2f30e1a860338fcb30129b3ebe92ebb585ccd86d253e30c6efc832cc"
+capability_evidence_status = "ABSENT_DENY"
+valid_from = "2030-01-01T00:00:00Z"
+review_due_at = "2030-01-02T00:00:00Z"
+expires_at = "2030-01-03T00:00:00Z"
+
+[exact_key]
+venue_id = "BITGET"
+venue_environment = "BITGET_PRODUCTION"
+market_id = "BITGET_USDT_FUTURES"
+capital_stage = "PILOT_LIMITED_LIVE"
+approval_tier = "LEVEL_B"
+validity_mode = "TIME_BOXED_REAL_CAPITAL"
+action_class = "PILOT_OPERATING_SCOPE"
+risk_class = "B1_LIMITED_PILOT"
+venue_capability_profile_id = "UNRESOLVED_NONAUTHORIZING_CAPABILITY"
+venue_capability_profile_version = 1
+venue_capability_profile_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+risk_policy_id = "bitget-btc-v1"
+risk_policy_version = 1
+risk_policy_sha256 = "4f34d45ac058bec6d5ce1ecc05dc242572a917bd6e2f6769ff53b7115f4b72e8"
+calibration_stratum_id = "UNRESOLVED_NONAUTHORIZING_STRATUM"
+calibration_stratum_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+api_or_protocol_version = "BITGET_API_V2"
+account_mode = "ONE_WAY_MODE"
+order_type = "LIMIT"
+time_in_force = "GTC"
+session_id = "BITGET_24X7"
+liquidity_regime = "UNRESOLVED_DENY"
+volatility_regime = "UNRESOLVED_DENY"
+degraded_state = "UNRESOLVED_DENY"
+
+[owner_hard_bounds]
+status = "UNRESOLVED"
+[owner_hard_bounds.values]
+
+[calibration_recommendation]
+status = "UNRESOLVED"
+[calibration_recommendation.values]
+
+[owner_selected_effective_values]
+status = "UNRESOLVED"
+[owner_selected_effective_values.values]
+
+[owner_authority]
+status = "ABSENT_DENY"
+manifest_ref = "UNRESOLVED:OWNER_AUTHORITY_MANIFEST"
+manifest_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+manifest_version = 0
+manifest_sequence = 0
+canonical_owner_payload_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+canonical_payload_required_fields = ["profile_id", "profile_version", "profile_payload_sha256", "owner_hard_bounds", "owner_selected_effective_values"]
+calibration_is_owner_authority = false
+missing_mismatch_or_replay_result = "DENY"
+
+[evidence]
+status = "ABSENT"
+authorization_effect = "NONE"
+manifest_ref = "UNRESOLVED:EVIDENCE_MANIFEST"
+manifest_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+issuer_ref = "UNRESOLVED:EVIDENCE_ISSUER"
+as_of = "1970-01-01T00:00:00Z"
+freshness_status = "UNRESOLVED_DENY"
+stratified = true
+censored_outcomes_retained = true
+tail_uncertainty_method = "PREREGISTERED_ONE_SIDED_BOUND"
+holdout_tuning_allowed = false
+evidence_refs = []
+
+[lifecycle]
+state = "DRAFT"
+terminal_reactivation_allowed = false
+
+[lookup_policy]
+exactly_one_active_match_required = true
+wildcards_allowed = false
+cross_venue_risk_stage_fallback_allowed = false
+zero_or_multiple_match_result = "DENY"
+
+[safety]
+recommendation_can_authorize = false
+automatic_relaxation_allowed = false
+automatic_rebound_allowed = false
+missing_owner_values_result = "DENY"
+infeasible_ttl_buffer_guard_result = "DENY"
+moex_without_dedicated_profile_result = "DENY"

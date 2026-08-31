@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradebot.local/schemas/non-authorizing-portfolio-mandate-draft-v1.json",
+  "title": "Non-authorizing Portfolio Mandate Draft Envelope v1",
+  "description": "This schema can describe a draft only. It cannot emit or imply real-capital authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_purpose",
+    "schema_version",
+    "mandate_id",
+    "mandate_version",
+    "status",
+    "authorization_result",
+    "semantic_validator_required",
+    "normative_overlay_status",
+    "permitted_non_capital_lifecycle",
+    "owner_approval_model",
+    "non_capital_approval",
+    "real_capital_approval",
+    "real_capital_approval_eligible",
+    "real_capital_approval_blocked_until",
+    "resolved_decision_refs",
+    "partially_resolved_decision_refs",
+    "historical_decision_refs",
+    "validity_model",
+    "validity_profile_schema_ref",
+    "validity_profile_instance_refs",
+    "validity_profile_lookup",
+    "calibration_authorization_effect",
+    "level_a_validity_mode",
+    "level_b_allowed_validity_modes",
+    "numeric_validity_profile_status",
+    "real_capital_validity_eligible",
+    "approval_lifecycle_model",
+    "single_use_action_lifecycle_model",
+    "dispatch_linearization_state",
+    "transactional_epoch_reservation_outbox_binding_required",
+    "post_configuration_mutation_state",
+    "separate_operating_manifest_for_new_configuration_required",
+    "reconciliation_default",
+    "trusted_clock_model",
+    "owner_identity_ref",
+    "issued_at",
+    "effective_from",
+    "review_due_at",
+    "expires_at",
+    "base_currency",
+    "live_trading_enabled",
+    "goal_order",
+    "policy_refs",
+    "scopes",
+    "capital_books",
+    "risk_hierarchy",
+    "non_waivable_invariants",
+    "approval_manifest_ref",
+    "revocation_state",
+    "unresolved_decisions"
+  ],
+  "$defs": {
+    "status": {
+      "enum": ["ACTIVE", "TARGET", "FUTURE", "SHADOW_ONLY", "BLOCKED", "RETIRED"]
+    },
+    "stage": {
+      "enum": ["RESEARCH", "REPLAY", "DRY_RUN", "PAPER", "PILOT_LIMITED_LIVE", "PRODUCTION_LIVE"]
+    },
+    "capital_book_name": {
+      "enum": [
+        "RESEARCH_PAPER",
+        "PILOT",
+        "PRODUCTION",
+        "OPERATIONAL_MARGIN_RESERVE",
+        "PROTECTED_RESERVE",
+        "DISTRIBUTION_PAYABLE"
+      ]
+    },
+    "policy_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "policy_id", "version", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "policy_id": {"type": "string", "minLength": 1},
+        "version": {"type": "integer", "minimum": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_id",
+        "status",
+        "stage",
+        "venue",
+        "market",
+        "instruments",
+        "horizons",
+        "authorization_effect",
+        "execution_boundary",
+        "capital_book",
+        "credential_profile_ref",
+        "trading_endpoint_access",
+        "real_capital_authority",
+        "activation_gate"
+      ],
+      "properties": {
+        "scope_id": {"type": "string", "minLength": 1},
+        "status": {"$ref": "#/$defs/status"},
+        "stage": {"$ref": "#/$defs/stage"},
+        "venue": {"type": "string", "minLength": 1},
+        "market": {"type": "string", "minLength": 1},
+        "instruments": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "horizons": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "authorization_effect": {"const": "DENY_REAL_ORDERS"},
+        "execution_boundary": {"enum": ["RESEARCH", "REPLAY", "DRY_RUN_ADAPTER", "PAPER_SIMULATOR"]},
+        "capital_book": {"const": "RESEARCH_PAPER"},
+        "credential_profile_ref": {"const": "NO_REAL_ORDER_CREDENTIAL"},
+        "trading_endpoint_access": {"const": false},
+        "real_capital_authority": {"const": false},
+        "activation_gate": {"type": "string", "minLength": 1}
+      }
+    },
+    "capital_book": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "status", "real_trading_authority"],
+      "properties": {
+        "name": {"$ref": "#/$defs/capital_book_name"},
+        "status": {"$ref": "#/$defs/status"},
+        "real_trading_authority": {"const": false}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_id", "owner", "gate", "fail_closed_default"],
+      "properties": {
+        "decision_id": {"type": "string", "pattern": "^PM-DEC-[0-9]{3}$"},
+        "owner": {"const": "OWNER"},
+        "gate": {"type": "string", "minLength": 1},
+        "fail_closed_default": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "properties": {
+    "artifact_purpose": {"const": "NON_AUTHORIZING_DRAFT_EXAMPLE"},
+    "schema_version": {"const": 1},
+    "mandate_id": {"type": "string", "pattern": "^[A-Z0-9-]+$"},
+    "mandate_version": {"type": "integer", "minimum": 1},
+    "status": {"const": "BLOCKED"},
+    "authorization_result": {"const": "DENY"},
+    "semantic_validator_required": {"const": true},
+    "normative_overlay_status": {"const": "ACTIVE_NON_CAPITAL"},
+    "permitted_non_capital_lifecycle": {"const": ["DEVELOPMENT", "RESEARCH", "REPLAY", "DRY_RUN", "PAPER"]},
+    "owner_approval_model": {"const": "TWO_TIER"},
+    "non_capital_approval": {"const": "VERSIONED_OWNER_DECISION_RECORD"},
+    "real_capital_approval": {"const": "CRYPTOGRAPHIC_SIGNATURE_PLUS_INDEPENDENT_SECOND_CONFIRMATION"},
+    "real_capital_approval_eligible": {"const": false},
+    "real_capital_approval_blocked_until": {"const": "PM-DEC-007"},
+    "resolved_decision_refs": {"const": ["decisions/PM-DEC-001.toml", "decisions/PM-DEC-002.toml"]},
+    "partially_resolved_decision_refs": {"const": ["decisions/PM-DEC-003-v2.toml"]},
+    "historical_decision_refs": {"const": ["decisions/PM-DEC-003.toml"]},
+    "validity_model": {"const": "EXACT_VENUE_RISK_STAGE_PROFILE"},
+    "validity_profile_schema_ref": {"const": "validity-profiles/validity-profile.schema.json"},
+    "validity_profile_instance_refs": {"const": ["validity-profiles/bitget-pilot-draft-v1.toml"]},
+    "validity_profile_lookup": {"const": "EXACTLY_ONE_ACTIVE_MATCH_NO_CROSS_VENUE_RISK_STAGE_FALLBACK"},
+    "calibration_authorization_effect": {"const": "NONE"},
+    "level_a_validity_mode": {"const": "LONG_LIVED_NON_CAPITAL"},
+    "level_b_allowed_validity_modes": {"const": ["TIME_BOXED_REAL_CAPITAL", "ONE_TIME_REAL_CAPITAL"]},
+    "numeric_validity_profile_status": {"const": "OWNER_INPUT_REQUIRED"},
+    "real_capital_validity_eligible": {"const": false},
+    "approval_lifecycle_model": {"const": "CLOSED_SEPARATE_APPROVAL_STATE_MACHINE"},
+    "single_use_action_lifecycle_model": {"const": "CLOSED_SEPARATE_ACTION_STATE_MACHINE"},
+    "dispatch_linearization_state": {"const": "DISPATCH_CLAIMED"},
+    "transactional_epoch_reservation_outbox_binding_required": {"const": true},
+    "post_configuration_mutation_state": {"const": "PENDING_OPERATING_AUTHORIZATION_OR_BLOCKED_NO_NEW_RISK"},
+    "separate_operating_manifest_for_new_configuration_required": {"const": true},
+    "reconciliation_default": {"const": "READ_CANCEL_LEDGER_REPAIR_ONLY"},
+    "trusted_clock_model": {"const": "UTC_WALL_PLUS_MONOTONIC_PLUS_PERSISTENT_LAST_SEEN"},
+    "owner_identity_ref": {"const": "OWNER_REF:PENDING_PM-DEC-007"},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "effective_from": {"const": "UNRESOLVED:PM-DEC-003"},
+    "review_due_at": {"const": "UNRESOLVED:PM-DEC-003"},
+    "expires_at": {"const": "UNRESOLVED:PM-DEC-003"},
+    "supersedes": {"type": "string"},
+    "base_currency": {"const": "RUB"},
+    "live_trading_enabled": {"const": false},
+    "goal_order": {
+      "const": ["POLICY_INTEGRITY", "SURVIVAL", "LIQUIDITY_RESERVES", "RUB_GEOMETRIC_GROWTH", "SETTLED_DISTRIBUTABLE_CASH", "EVIDENCE_QUALITY"]
+    },
+    "policy_refs": {"type": "array", "items": {"$ref": "#/$defs/policy_ref"}, "minItems": 2, "uniqueItems": true},
+    "scopes": {"type": "array", "items": {"$ref": "#/$defs/scope"}, "minItems": 1},
+    "capital_books": {"type": "array", "items": {"$ref": "#/$defs/capital_book"}, "minItems": 6, "maxItems": 6},
+    "risk_hierarchy": {
+      "const": ["OWNER_HARD_CAP", "PROTECTION_STATE", "ADAPTIVE_ONLY_DOWN", "PORTFOLIO_ALLOCATOR", "STRATEGY_BOT_CAP", "ORDER_INTENT"]
+    },
+    "non_waivable_invariants": {
+      "const": ["UNKNOWN_STATE", "INCOMPLETE_RECONCILIATION", "STALE_MANDATORY_DATA", "AUTH_FAILURE", "MISSING_IDEMPOTENCY", "POLICY_HASH_MISMATCH"]
+    },
+    "approval_manifest_ref": {"const": "UNRESOLVED:PM-DEC-007"},
+    "revocation_state": {"const": "NOT_APPROVED"},
+    "unresolved_decisions": {"type": "array", "items": {"$ref": "#/$defs/decision"}, "minItems": 12, "maxItems": 12}
+  }
+}

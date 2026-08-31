@@ -1,0 +1,109 @@
+schema_version = 1
+id = "FACTORY-001B-WU-001"
+task_id = "FACTORY-001B"
+epic_id = "FACTORY-001"
+goal = "Implement the smallest auditable controlled coding-agent execution boundary."
+status = "READY"
+authority_level = "PRODUCT_CHANGE_LEVEL_A"
+work_size = "NORMAL"
+allowed_paths = [
+  "factory/work_units.py",
+  "factory/execution.py",
+  "factory/registry.toml",
+  "specs/factory-001b/",
+  "tests/test_factory_execution.py",
+]
+forbidden_paths = [
+  ".github/",
+  "governance/",
+  "docs/FROZEN_CORE_V12.sha256",
+  "docs/FROZEN_PM_DEC_007_HYBRID_V2.sha256",
+  "risk/",
+  "adapters/",
+  "tradebot_mvp/",
+]
+mandatory_context = [
+  "AGENTS.md",
+  "docs/product/PRODUCT_MASTER_SPEC.md",
+  "docs/product/MASTER_ROADMAP.md",
+  "specs/factory-001a/spec.md",
+  "specs/factory-001a/acceptance.toml",
+  "factory/registry.toml",
+  "factory/daily_run.toml",
+]
+relevant_context = [
+  "factory/models.py",
+  "factory/registry.py",
+  "factory/preflight.py",
+  "factory/daily_run.py",
+  "factory/planning.py",
+  "factory/repository.py",
+  "tests/test_factory_daily_run.py",
+]
+frozen_context = [
+  "docs/FROZEN_CORE_V12.sha256",
+  "docs/FROZEN_PM_DEC_007_HYBRID_V2.sha256",
+]
+skip_context = [
+  "apps/",
+  "bot/",
+  "tradebot_mvp/",
+  "adapters/",
+  "docs/archive/",
+]
+acceptance_criteria = [
+  "FACTORY-001B-AC-001",
+  "FACTORY-001B-AC-002",
+  "FACTORY-001B-AC-003",
+  "FACTORY-001B-AC-004",
+  "FACTORY-001B-AC-005",
+  "FACTORY-001B-AC-006",
+  "FACTORY-001B-AC-007",
+  "FACTORY-001B-AC-008",
+  "FACTORY-001B-AC-009",
+  "FACTORY-001B-AC-010",
+  "FACTORY-001B-AC-011",
+  "FACTORY-001B-AC-012",
+  "FACTORY-001B-AC-013",
+  "FACTORY-001B-AC-014",
+  "FACTORY-001B-AC-015",
+  "FACTORY-001B-AC-016",
+  "FACTORY-001B-AC-017",
+  "FACTORY-001B-AC-018",
+  "FACTORY-001B-AC-019",
+  "FACTORY-001B-AC-020",
+  "FACTORY-001B-AC-021",
+  "FACTORY-001B-AC-022",
+  "FACTORY-001B-AC-023",
+  "FACTORY-001B-AC-024",
+  "FACTORY-001B-AC-025",
+  "FACTORY-001B-AC-026",
+]
+required_reviews = ["security_reviewer", "code_reviewer"]
+optional_reviews = []
+reasoning_budget = "HIGH"
+context_budget = 220000
+review_budget = 2
+max_correction_loops = 2
+dependencies = ["FACTORY-001A"]
+evidence_requirements = [
+  "work_unit_contract",
+  "preflight_result",
+  "context_manifest",
+  "execution_result",
+  "diff_summary",
+  "test_results",
+  "review_results",
+  "final_verdict",
+  "owner_report",
+]
+
+[[required_tests]]
+id = "factory_001b_focused"
+argv = ["python", "-m", "unittest", "tests.test_factory_execution", "-v"]
+timeout_seconds = 180
+
+[[required_tests]]
+id = "factory_001a_regression"
+argv = ["python", "-m", "unittest", "tests.test_factory_daily_run", "tests.test_factory_freeze", "tests.test_factory_github_history", "tests.test_install_codex_config", "-v"]
+timeout_seconds = 300

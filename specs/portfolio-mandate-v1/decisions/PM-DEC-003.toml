@@ -1,0 +1,337 @@
+decision_id = "PM-DEC-003"
+decision_version = 1
+status = "PARTIALLY_RESOLVED_NUMERIC_PROFILE_PENDING"
+selected_option = 3
+decided_by_ref = "OWNER"
+decision_evidence_ref = "conversation:2026-07-17:PM-DEC-003:answer-3"
+recorded_at = "2026-07-17T00:00:00Z"
+decision_type = "DIFFERENTIATED_VALIDITY_MODEL"
+numeric_validity_profile_status = "OWNER_INPUT_REQUIRED"
+eligible_for_real_capital_authorization = false
+live_trading_enabled = false
+baseline_snapshot_archive = "portfolio-mandate-v0.5.zip"
+baseline_snapshot_authoritative = false
+baseline_snapshot_trust_anchor_status = "PENDING_PM-DEC-007"
+artifact_ratification_eligible = false
+
+[[artifact_hashes]]
+path = "specs/portfolio-mandate-v1/spec.md"
+sha256 = "cf9b9d8cad9b6f96800b7b79427ae8a12b5581c7f0b896c5b4e539dad6f5578a"
+
+[[artifact_hashes]]
+path = "specs/portfolio-mandate-v1/acceptance.toml"
+sha256 = "289ffdfe500236174287ae004e3b6611ecd0945dbcdbf0faea6f02d412469a4f"
+
+[[artifact_hashes]]
+path = "governance/approval-policy.toml"
+sha256 = "9be5ef3804dd8a35681526e9b154d50c0162ba610101dcbabd00ce29996a8708"
+
+[[artifact_hashes]]
+path = "governance/risk-policy.toml"
+sha256 = "4f34d45ac058bec6d5ce1ecc05dc242572a917bd6e2f6769ff53b7115f4b72e8"
+
+[level_a_non_capital]
+validity_mode = "LONG_LIVED_NON_CAPITAL"
+applies_to = ["DEVELOPMENT", "RESEARCH", "REPLAY", "DRY_RUN", "PAPER"]
+exact_version_hash_scope_binding_required = true
+calendar_review_interval = "OWNER_INPUT_REQUIRED"
+real_capital_authority = false
+automatic_renewal_allowed = false
+review_refreshes_evidence_or_holdout = false
+
+[level_b_real_capital]
+allowed_validity_modes = ["TIME_BOXED_REAL_CAPITAL", "ONE_TIME_REAL_CAPITAL"]
+numeric_ttl_profile = "OWNER_INPUT_REQUIRED"
+automatic_or_retroactive_renewal_allowed = false
+commit_time_recheck_required = true
+algorithmic_orders_inside_active_scope_require_new_owner_signature = false
+algorithmic_orders_still_require_all_runtime_gates = true
+eligible_for_authorization = false
+
+time_boxed_scope_types = ["PILOT_OPERATING_SCOPE", "PRODUCTION_OPERATING_SCOPE"]
+cash_single_use_action_types = ["REAL_BOOK_TRANSFER", "DISTRIBUTION"]
+configuration_single_use_action_types = [
+  "REAL_ACCOUNT_OR_CREDENTIAL_CHANGE",
+  "REAL_SCOPE_EXPANSION",
+  "HARD_LIMIT_INCREASE",
+  "LEVERAGE_OR_MARGIN_CHANGE",
+]
+
+[temporal_contract]
+timezone = "UTC"
+valid_interval = "effective_from <= evaluation_time < expires_at"
+review_due_boundary_result_level_a = "REVIEW_REQUIRED_NO_NEW_BASELINE_OR_EVIDENCE_ADMISSION"
+review_due_boundary_result_level_b = "DENY_NEW_OR_INCREASE_RISK"
+expiry_boundary_result = "EXPIRED_DENY"
+untrusted_or_unavailable_clock_result = "DENY"
+timestamp_ordering_required = "issued_at <= effective_from <= review_due_at < expires_at"
+
+[trusted_clock]
+required_sources = ["UTC_WALL_CLOCK", "MONOTONIC_ELAPSED_CLOCK", "PERSISTENT_LAST_SEEN_CHECKPOINT"]
+wall_clock_rollback_result = "DENY"
+boot_or_reboot_ambiguity_result = "DENY"
+missing_or_conflicting_checkpoint_result = "DENY"
+excessive_skew_result = "DENY"
+skew_tolerance = "OWNER_INPUT_REQUIRED"
+
+[approval_lifecycle]
+states = [
+  "DRAFT",
+  "PENDING_EFFECTIVE",
+  "ACTIVE",
+  "REVIEW_REQUIRED",
+  "SUSPENDED",
+  "EXPIRED",
+  "REVOKED",
+  "SUPERSEDED",
+  "INVALIDATED",
+]
+allowed_transitions = [
+  "DRAFT->PENDING_EFFECTIVE",
+  "DRAFT->SUSPENDED",
+  "DRAFT->REVOKED",
+  "DRAFT->INVALIDATED",
+  "PENDING_EFFECTIVE->ACTIVE",
+  "PENDING_EFFECTIVE->SUSPENDED",
+  "PENDING_EFFECTIVE->EXPIRED",
+  "PENDING_EFFECTIVE->REVOKED",
+  "PENDING_EFFECTIVE->SUPERSEDED",
+  "PENDING_EFFECTIVE->INVALIDATED",
+  "ACTIVE->REVIEW_REQUIRED",
+  "ACTIVE->SUSPENDED",
+  "ACTIVE->EXPIRED",
+  "ACTIVE->REVOKED",
+  "ACTIVE->SUPERSEDED",
+  "ACTIVE->INVALIDATED",
+  "REVIEW_REQUIRED->SUSPENDED",
+  "REVIEW_REQUIRED->EXPIRED",
+  "REVIEW_REQUIRED->REVOKED",
+  "REVIEW_REQUIRED->SUPERSEDED",
+  "REVIEW_REQUIRED->INVALIDATED",
+  "SUSPENDED->EXPIRED",
+  "SUSPENDED->REVOKED",
+  "SUSPENDED->SUPERSEDED",
+  "SUSPENDED->INVALIDATED",
+]
+terminal_states = ["EXPIRED", "REVOKED", "SUPERSEDED", "INVALIDATED"]
+unknown_or_conflicting_state_result = "DENY"
+unlisted_transition_result = "DENY"
+action_state_in_approval_lifecycle_result = "DENY"
+terminal_reactivation_allowed = false
+
+[action_lifecycle]
+states = [
+  "PENDING",
+  "RESERVED",
+  "DISPATCH_CLAIMED",
+  "IN_FLIGHT",
+  "RECONCILIATION_REQUIRED",
+  "CONSUMED",
+  "CANCELLED_NO_EFFECT",
+  "BLOCKED_NO_NEW_RISK",
+]
+allowed_transitions = [
+  "PENDING->RESERVED",
+  "PENDING->BLOCKED_NO_NEW_RISK",
+  "RESERVED->DISPATCH_CLAIMED",
+  "RESERVED->CANCELLED_NO_EFFECT",
+  "RESERVED->BLOCKED_NO_NEW_RISK",
+  "DISPATCH_CLAIMED->IN_FLIGHT",
+  "DISPATCH_CLAIMED->RECONCILIATION_REQUIRED",
+  "IN_FLIGHT->CONSUMED",
+  "IN_FLIGHT->CANCELLED_NO_EFFECT",
+  "IN_FLIGHT->RECONCILIATION_REQUIRED",
+  "RECONCILIATION_REQUIRED->CONSUMED",
+  "RECONCILIATION_REQUIRED->CANCELLED_NO_EFFECT",
+]
+terminal_states = ["CONSUMED", "CANCELLED_NO_EFFECT"]
+unknown_or_conflicting_state_result = "DENY"
+unlisted_transition_result = "DENY"
+approval_state_in_action_lifecycle_result = "DENY"
+reconciliation_may_remain_without_transition = true
+
+[single_use]
+required_bindings = [
+  "action_id",
+  "canonical_action_payload_sha256",
+  "idempotency_key_ref",
+  "account_ref",
+  "capital_book",
+  "typed_amount_or_limits",
+  "expires_at",
+  "approval_version_sequence",
+  "revocation_version_epoch",
+  "reservation_generation",
+  "fencing_token",
+]
+durable_atomic_reservation_required = true
+reservation_generation_strictly_monotonic = true
+dispatch_linearization_state = "DISPATCH_CLAIMED"
+claim_transaction_bindings = [
+  "REVOCATION_VERSION_EPOCH",
+  "APPROVAL_VERSION_SEQUENCE",
+  "RESERVATION_GENERATION",
+  "FENCING_TOKEN",
+  "TRANSACTIONAL_OUTBOX_DISPATCH_CLAIM",
+]
+durable_transaction_or_cas_required = true
+stale_fencing_token_result = "DENY"
+revocation_before_claim_result = "NO_ADAPTER_CALL_BLOCKED_NO_NEW_RISK"
+unknown_after_claim_state = "RECONCILIATION_REQUIRED"
+zero_external_side_effect_promised_after_claim = false
+safe_release_requires_durable_no_dispatch_proof = true
+successful_commit_state = "CONSUMED"
+duplicate_success_result = "RETURN_STORED_OUTCOME_NO_NEW_SIDE_EFFECT"
+unknown_or_lost_ack_state = "RECONCILIATION_REQUIRED"
+allowed_reconciliation_outcomes = ["CONSUMED", "CANCELLED_NO_EFFECT", "RECONCILIATION_REQUIRED"]
+blind_retry_allowed = false
+
+[configuration_mutation]
+consumed_action_types = [
+  "REAL_ACCOUNT_OR_CREDENTIAL_CHANGE",
+  "REAL_SCOPE_EXPANSION",
+  "HARD_LIMIT_INCREASE",
+  "LEVERAGE_OR_MARGIN_CHANGE",
+]
+resulting_configuration_states = ["PENDING_OPERATING_AUTHORIZATION", "BLOCKED_NO_NEW_RISK"]
+new_configuration_hash_and_version_required = true
+inherits_old_operating_approval = false
+separate_time_boxed_operating_manifest_required = true
+new_manifest_bound_to_new_configuration_hash_required = true
+orders_before_new_manifest_result = "DENY"
+
+[reconciliation]
+default_allowed_operations = ["READ", "CANCEL_ATTEMPT", "LEDGER_AUDIT_REPAIR"]
+trading_side_effect_default = "DENY"
+protective_trade_requirements = [
+  "PREAPPROVED_PROTECTIVE_POLICY",
+  "TYPED_PRE_AND_POST_EXPOSURE_PROOF",
+  "DIMENSION_SPECIFIC_NON_INCREASE_COMPARISON",
+  "NO_SIGN_FLIP",
+  "VENUE_CAPABILITY_CONFIRMED",
+]
+owner_approved_exposure_dimensions = [
+  "ABSOLUTE_EXPOSURE",
+  "NET_EXPOSURE",
+  "GROSS_EXPOSURE",
+  "CONTINGENT_EXPOSURE",
+  "MARGIN_EXPOSURE",
+  "STRESS_EXPOSURE",
+]
+pre_and_post_values_required_for_every_applicable_dimension = true
+required_metric_bindings = [
+  "METRIC_ID",
+  "UNIT",
+  "CURRENCY",
+  "VALUATION_TIMESTAMP",
+  "HORIZON",
+  "NETTING_SET",
+  "CONVENTION",
+]
+scalar_risk_magnitudes_nonnegative = true
+signed_net_comparison = "ABS_POST_LE_ABS_PRE"
+signed_net_sign_crossing_result = "DENY_EXCEPT_EXACT_ZERO"
+nonnegative_scalar_dimensions = [
+  "ABSOLUTE_EXPOSURE",
+  "GROSS_EXPOSURE",
+  "CONTINGENT_EXPOSURE",
+  "MARGIN_EXPOSURE",
+]
+nonnegative_scalar_comparison = "POST_LE_PRE"
+stress_scenario_set_and_hash_exact_match_required = true
+stress_comparison = "COMPONENTWISE_POST_LE_PRE_OR_OWNER_APPROVED_CONSERVATIVE_SCALAR_FUNCTIONAL"
+missing_scenario_or_dimension_result = "DENY"
+unknown_ambiguous_or_incomparable_exposure_result = "DENY"
+sign_flip_result = "DENY"
+missing_venue_capability_result = "DENY"
+
+[working_order_sunset]
+applies_to = ["RISK_INCREASING_RESTING_ORDER", "RISK_INCREASING_OPEN_ORDER", "RISK_INCREASING_CONDITIONAL_ORDER"]
+venue_enforced_tif_or_expiry_required = true
+latest_expiry = "APPROVAL_EXPIRES_AT_MINUS_OWNER_APPROVED_CANCEL_RECONCILIATION_BUFFER"
+gtc_without_bounded_venue_expiry_result = "DENY"
+deadline_state = "NO_NEW_RISK"
+deadline_actions = ["CANCEL_ALL_OPENING_AND_CONDITIONAL_ORDERS", "RECONCILE_VENUE_STATE"]
+revocation_action = "IMMEDIATE_CANCEL_ALL_OPENING_AND_CONDITIONAL_ORDERS"
+cancel_pending_unknown_lost_ack_halt_or_restart_state = "RECONCILIATION_REQUIRED"
+contingent_exposure_and_reservation_retained_until_verified_terminal_outcome = true
+zero_external_side_effect_promised_after_cancel_request = false
+verified_protective_reduce_only_path_may_continue = true
+new_or_increasing_risk_during_sunset_result = "DENY"
+completion_requires_zero_remaining_opening_or_conditional_orders = true
+
+[automatic_invalidation]
+triggers = [
+  "ACCOUNT_OR_CREDENTIAL_IDENTITY_REF_CHANGE",
+  "STAGE_OR_CAPITAL_BOOK_CHANGE",
+  "VENUE_MARKET_OR_INSTRUMENT_CHANGE",
+  "STRATEGY_OR_BOT_CHANGE",
+  "LIMIT_OR_PAYLOAD_CHANGE",
+  "OWNER_TRUST_OR_SECOND_FACTOR_BINDING_CHANGE",
+  "POLICY_SPEC_ACCEPTANCE_MANDATE_BUILD_OR_DATASET_HASH_CHANGE",
+  "PARAMETER_BENCHMARK_DATA_COST_OR_FILL_MODEL_CHANGE",
+  "CAPACITY_VENUE_API_MECHANICS_CHANGE",
+  "EVIDENCE_DRIFT_THRESHOLD_BREACH",
+]
+result = "INVALIDATED_DENY"
+new_approval_refreshes_evidence_or_viewed_holdout = false
+
+[revocation]
+append_only = true
+terminal = true
+unavailable_stale_or_conflicting_lookup_result = "DENY"
+restoration_requires_new_version_and_higher_sequence = true
+freshness_limit = "OWNER_INPUT_REQUIRED"
+
+[supersession]
+new_immutable_version_required = true
+higher_monotonic_sequence_required = true
+supersedes_ref_required = true
+old_version_terminal = true
+rollback_reactivates_old_version = false
+expansion_requires_full_activation = true
+emergency_restriction_applies_immediately = true
+
+[open_exposure]
+expiry_revocation_suspension_or_invalidation_result = "NO_NEW_OR_INCREASE_RISK"
+uncontrolled_market_exit_authorized = false
+verified_reduce_only_protection_and_reconciliation_may_continue = true
+protective_trade_requires_dimension_specific_typed_pre_post_proof_and_venue_capability = true
+unknown_ambiguous_missing_or_incomparable_exposure_proof_result = "DENY"
+restoring_new_risk_requires_new_version_and_full_gate = true
+
+[independent_validity]
+objects = ["MANDATE", "OWNER_APPROVAL", "EVIDENCE", "VENUE_CAPABILITY", "RUNTIME_PROTECTION"]
+one_object_renews_another = false
+effective_result = "MOST_RESTRICTIVE_INTERSECTION"
+
+[pending_owner_values]
+level_a_review_interval = "UNRESOLVED"
+pilot_operating_ttl = "UNRESOLVED"
+production_operating_ttl = "UNRESOLVED"
+real_account_or_credential_change_window = "UNRESOLVED"
+hard_limit_leverage_or_margin_change_window = "UNRESOLVED"
+transfer_or_distribution_window = "UNRESOLVED"
+single_use_activation_window = "UNRESOLVED"
+clock_skew_tolerance = "UNRESOLVED"
+revocation_snapshot_max_age = "UNRESOLVED"
+review_lead_time = "UNRESOLVED"
+reconciliation_timeout = "UNRESOLVED"
+working_order_cancel_reconciliation_buffer = "UNRESOLVED"
+
+[safety]
+missing_numeric_profile_result = "DENY_REAL_CAPITAL"
+expired_result = "DENY_NEW_OR_INCREASE_RISK"
+revoked_result = "DENY_NEW_OR_INCREASE_RISK"
+superseded_result = "DENY_NEW_OR_INCREASE_RISK"
+consumed_replay_result = "DENY_NEW_SIDE_EFFECT"
+unknown_state_result = "DENY"
+preclaim_revocation_adapter_call_result = "DENY_NO_ADAPTER_CALL"
+postclaim_unknown_result = "RECONCILIATION_REQUIRED_NO_ZERO_EFFECT_CLAIM"
+configuration_consumed_operating_authority_result = "DENY_PENDING_SEPARATE_TIME_BOXED_MANIFEST"
+changes_governance_risk_policy = false
+ratified_real_capital_manifest = false
+
+[integrity]
+canonicalization = "SORTED_KEYS_COMPACT_UTF8_JSON_V1"
+decision_payload_sha256 = "c65632f41126e7a9acf026c49e22bf7d3684d4c0972d955cf851f7ac87ebd256"

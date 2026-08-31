@@ -1,0 +1,34 @@
+schema_version = 1
+timezone = "Europe/Moscow"
+max_tasks_per_day = 1
+max_parallel_writers = 1
+max_correction_loops = 2
+max_run_time_minutes = 90
+auto_merge = false
+auto_product_approval = false
+paper_authority = false
+live_authority = false
+
+[repository]
+allow_dirty = false
+allowed_dirty_prefixes = ["factory/artifacts/"]
+
+[integrity]
+canonicalization = "UTF8_LF_TEXT_RAW_BINARY_V1"
+active_core_manifest = "docs/FROZEN_CORE_V12.sha256"
+active_core_manifest_sha256 = "c58ce36af3d0b993cb45650f8ba7ff7392cc5a23fe50e72c42733c40ef800233"
+pm_dec_007_manifest = "docs/FROZEN_PM_DEC_007_HYBRID_V2.sha256"
+pm_dec_007_manifest_sha256 = "5ab164a66278816dfc849c1117f2ec41f0f6642faef78049deaa368e9597fe7a"
+
+[[integrity.governance]]
+path = "governance/approval-policy.toml"
+sha256 = "9be5ef3804dd8a35681526e9b154d50c0162ba610101dcbabd00ce29996a8708"
+
+[[integrity.governance]]
+path = "governance/risk-policy.toml"
+sha256 = "4f34d45ac058bec6d5ce1ecc05dc242572a917bd6e2f6769ff53b7115f4b72e8"
+
+[routing]
+high = ["architecture", "product", "risk"]
+medium = ["bounded_implementation"]
+low = ["summary", "deterministic_support"]

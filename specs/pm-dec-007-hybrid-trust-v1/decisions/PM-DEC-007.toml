@@ -1,0 +1,168 @@
+decision_id = "PM-DEC-007"
+decision_version = 1
+status = "PARTIALLY_RESOLVED_ARCHITECTURE_ONLY"
+selected_option = 1
+selected_model = "HYBRID_PHYSICAL_KEY_PLUS_SEPARATE_DEVICE"
+decision_type = "LEVEL_B_RUNTIME_TRUST_CONTOUR"
+decided_by_ref = "OWNER"
+decision_evidence_ref = "conversation:2026-07-24:PM-DEC-007:hybrid-selection"
+recorded_at = "2026-07-24T10:07:27Z"
+authorization_effect = "NONE"
+implementation_status = "NOT_IMPLEMENTED"
+eligible_for_real_capital_authorization = false
+artifact_ratification_eligible = false
+real_capital_authority = false
+pilot_status = "BLOCKED"
+production_status = "BLOCKED"
+live_trading_enabled = false
+moex_status = "FUTURE_BLOCKED"
+changes_governance_policies = false
+numeric_validity_profile_status = "OWNER_INPUT_REQUIRED"
+parent_frozen_manifest_ref = "docs/FROZEN_CORE_V11.sha256"
+parent_frozen_manifest_sha256 = "46f20183230d84f6fdaba9ccc63e8e504afcd2be77c4447c66a14f5a9be5390f"
+
+[primary_factor]
+role = "PRIMARY_CRYPTOGRAPHIC_SIGNATURE"
+factor_class = "PHYSICAL_HARDWARE_SIGNING_KEY"
+pinned_trust_root_required = true
+concrete_trust_root_ref = "UNRESOLVED"
+key_material_ref = "UNRESOLVED"
+carrier_provider_profile = "UNRESOLVED"
+algorithm_profile = "UNRESOLVED"
+
+[independent_confirmation]
+role = "INDEPENDENT_SECOND_CONFIRMATION"
+factor_class = "SEPARATE_DEVICE_CONFIRMATION"
+pinned_trust_root_required = true
+independently_verifiable_evidence_required = true
+concrete_trust_root_ref = "UNRESOLVED"
+key_material_ref = "UNRESOLVED"
+carrier_provider_profile = "UNRESOLVED"
+attestation_profile = "UNRESOLVED"
+
+[factor_independence]
+required_distinct_bindings = [
+  "TRUST_ROOT_ID",
+  "FAILURE_DOMAIN_ID",
+  "KEY_MATERIAL_ID",
+  "DEVICE_ID",
+  "SESSION_ID",
+  "ADMIN_DOMAIN_ID",
+  "RECOVERY_PATH_ID",
+]
+same_owner_identity_allowed = true
+shared_binding_counts_as_independent = false
+independence_must_be_derived_from_pinned_profile = true
+caller_declared_independence_authoritative = false
+
+[same_payload_binding]
+same_exact_payload_bytes_required = true
+same_payload_sha256_required = true
+required_equal_bindings = [
+  "TRUST_SET_ID",
+  "OWNER_IDENTITY_REF",
+  "OWNER_TRUST_EPOCH",
+  "GLOBAL_SEQUENCE_NAMESPACE_ID",
+  "MANIFEST_ID",
+  "MANIFEST_VERSION",
+  "MONOTONIC_SEQUENCE",
+  "ACTION_CLASS",
+  "PAYLOAD_SHA256",
+  "SCOPE_SHA256",
+  "LIMITS_SHA256",
+  "ARTIFACT_SET_SHA256",
+  "CONFIGURATION_SHA256",
+  "EFFECTIVE_FROM",
+  "REVIEW_DUE_AT",
+  "EXPIRES_AT",
+]
+level_b_canonicalization_profile = "UNRESOLVED"
+caller_validity_booleans_authoritative = false
+
+[factor_lifecycle]
+loss_or_compromise_result = "SUSPEND_OR_REVOKE_TRUST_SET_DENY_NEW_AUTHORITY"
+one_factor_only_recovery_allowed = false
+shared_recovery_backend_allowed = false
+replacement_requires_new_root_and_factor_ids = true
+replacement_requires_new_owner_trust_epoch = true
+replacement_requires_greater_monotonic_sequence = true
+old_roots_terminally_revoked = true
+old_manifest_reactivation_allowed = false
+exact_recovery_ceremony = "UNRESOLVED_OWNER_INPUT_REQUIRED"
+
+[current_checkpoint]
+registry_mode = "INDEPENDENTLY_TRUSTED_APPEND_ONLY"
+current_checkpoint_required = true
+independent_checkpoint_trust_root_required = true
+exact_registry_scope_genesis_head_binding_required = true
+contiguous_sequence_and_supersedes_digest_required = true
+root_lifecycle_and_revocation_epoch_binding_required = true
+owner_trust_epoch_and_trust_set_binding_required = true
+commit_time_dispatch_claim_cas_outbox_binding_required = true
+zero_adapter_call_on_preclaim_change_or_unavailability = true
+postclaim_uncertainty_result = "RECONCILIATION_REQUIRED_NO_BLIND_RETRY"
+required_distinct_from_both_factors = [
+  "TRUST_ROOT_ID",
+  "FAILURE_DOMAIN_ID",
+  "ADMIN_DOMAIN_ID",
+  "RECOVERY_PATH_ID",
+  "RUNTIME_HOST_DOMAIN_ID",
+]
+caller_supplied_or_self_declared_head_authoritative = false
+shape_proves_currentness_freshness_or_persistence = false
+runtime_implementation_status = "UNRESOLVED"
+
+[unresolved_dependencies]
+items = [
+  "CRYPTOGRAPHIC_ALGORITHM_PROFILE",
+  "LEVEL_B_CANONICALIZATION_PROFILE",
+  "CONCRETE_CARRIERS_PROVIDERS_AND_PINNED_ROOTS",
+  "ENROLLMENT_AND_ATTESTATION_PROTOCOL",
+  "ROTATION_REVOCATION_COMPROMISE_AND_RECOVERY_PROTOCOL",
+  "TRUSTED_CLOCK",
+  "OWNER_NUMERIC_TTL_AND_FRESHNESS_VALUES",
+  "RUNTIME_CRYPTOGRAPHIC_AND_ATTESTATION_VERIFIER",
+  "DURABLE_APPEND_ONLY_REGISTRY_AND_CURRENT_CHECKPOINT_VERIFIER",
+]
+
+[safety]
+shape_success_authorization_effect = "NONE"
+incomplete_runtime_result = "DENY_PM_DEC_007_RUNTIME_TRUST_INCOMPLETE"
+live_real_capital_result = "BLOCKED"
+moex_result = "FUTURE_BLOCKED"
+physical_or_separate_device_labels_prove_independence = false
+caller_booleans_prove_validity_or_currentness = false
+pure_validator_is_trust_root = false
+
+[[artifact_hashes]]
+path = "specs/pm-dec-007-hybrid-trust-v1/spec.md"
+sha256 = "faf45536b935d58ddd71d22b14c9a29ecb93d2951d5e58001d42c15640aa0ef5"
+
+[[artifact_hashes]]
+path = "specs/pm-dec-007-hybrid-trust-v1/acceptance.toml"
+sha256 = "04975d5c1c5fdfdbb2f11b087870bd1c6c27f1d433f510b88f213abfd01ff553"
+
+[[artifact_hashes]]
+path = "docs/FROZEN_CORE_V11.sha256"
+sha256 = "46f20183230d84f6fdaba9ccc63e8e504afcd2be77c4447c66a14f5a9be5390f"
+
+[[artifact_hashes]]
+path = "governance/approval-policy.toml"
+sha256 = "9be5ef3804dd8a35681526e9b154d50c0162ba610101dcbabd00ce29996a8708"
+
+[[artifact_hashes]]
+path = "governance/risk-policy.toml"
+sha256 = "4f34d45ac058bec6d5ce1ecc05dc242572a917bd6e2f6769ff53b7115f4b72e8"
+
+[[artifact_hashes]]
+path = "specs/portfolio-mandate-v1/decisions/PM-DEC-002.toml"
+sha256 = "eec0aa8d667b18be160e8b5ac98e1e6bcc3a7ec4037993a8bc57f1b36492af7b"
+
+[[artifact_hashes]]
+path = "specs/portfolio-mandate-v1/decisions/PM-DEC-003.toml"
+sha256 = "618dd1da08fb6a8f7f0631fa6824bea1cc527d071e035b20b9250bcd374789ce"
+
+[integrity]
+canonicalization = "SORTED_KEYS_COMPACT_UTF8_JSON_V1_NON_AUTHORIZING_DECISION_RECORD_ONLY"
+decision_payload_sha256 = "766edbe430a551a62cbfa20682aadcb50f137ec684c060a84f30989a0da0a447"
+level_b_manifest_canonicalization_ratified = false

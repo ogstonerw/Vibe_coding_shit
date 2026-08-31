@@ -1,0 +1,7 @@
+---
+description: Core trading-bot engineering and safety rules
+alwaysApply: true
+---
+
+Read and follow `AGENTS.md`, `governance/approval-policy.toml`, the active work-item `spec.md`, and `acceptance.toml` before editing. Treat governance as owner-locked. Never enable live trading or request/read real secrets. Work on one task ID at a time, add tests, run `python3 scripts/self_check.py`, and report exact evidence. Cursor does not automatically reproduce Codex subagent orchestration; use the role files in `config/codex/agents/` as separate review prompts when needed.
+

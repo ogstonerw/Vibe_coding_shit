@@ -1,0 +1,64 @@
+[features]
+multi_agent = true
+
+[agents]
+max_threads = 4
+max_depth = 1
+job_max_runtime_seconds = 1800
+interrupt_message = true
+
+[agents.requirements_analyst]
+description = "Turns a bot idea into unambiguous, testable requirements and exposes conflicts."
+config_file = "./agents/requirements_analyst.toml"
+
+[agents.quant_researcher]
+description = "Reviews market-data, backtest, signal, and statistical-validity requirements without promising returns."
+config_file = "./agents/quant_researcher.toml"
+
+[agents.system_architect]
+description = "Designs deterministic boundaries, state machines, data contracts, and failure handling."
+config_file = "./agents/system_architect.toml"
+
+[agents.game_ux_designer]
+description = "Designs and reviews scalable, accessible, non-generic game UI/UX and visual systems."
+config_file = "./agents/game_ux_designer.toml"
+
+[agents.pro_trader_ux]
+description = "Reviews bot-operator UX for decision speed, evidence, risk clarity, and multi-bot scale."
+config_file = "./agents/pro_trader_ux.toml"
+
+[agents.implementer]
+description = "Implements one bounded task from an approved plan and adds focused tests."
+config_file = "./agents/implementer.toml"
+
+[agents.test_engineer]
+description = "Builds adversarial tests, replay scenarios, and failure-injection coverage."
+config_file = "./agents/test_engineer.toml"
+
+[agents.code_reviewer]
+description = "Finds high-confidence correctness, concurrency, maintainability, and regression defects."
+config_file = "./agents/code_reviewer.toml"
+
+[agents.security_reviewer]
+description = "Reviews secrets, permissions, dependency, input, and supply-chain attack surfaces."
+config_file = "./agents/security_reviewer.toml"
+
+[agents.risk_reviewer]
+description = "Checks every execution path against the immutable risk policy and fail-closed invariants."
+config_file = "./agents/risk_reviewer.toml"
+
+[agents.release_verifier]
+description = "Produces the final evidence-based PASS, FAIL, or BLOCKED release decision."
+config_file = "./agents/release_verifier.toml"
+
+[agents.institutional_portfolio_reviewer]
+description = "Audits the investment mandate, aggregate portfolio risk, capital structure, and owner-control boundaries."
+config_file = "./agents/institutional_portfolio_reviewer.toml"
+
+[agents.quant_methodology_reviewer]
+description = "Independently validates research protocols, evidence, accounting, selection bias, and model risk."
+config_file = "./agents/quant_methodology_reviewer.toml"
+
+[agents.market_microstructure_reviewer]
+description = "Audits order lifecycle, fill realism, venue mechanics, capacity, margin topology, and execution risk."
+config_file = "./agents/market_microstructure_reviewer.toml"

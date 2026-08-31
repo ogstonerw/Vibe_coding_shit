@@ -1,0 +1,810 @@
+schema_version = 1
+artifact_id = "PRODUCT-GRAPH-BOOTSTRAP-V1"
+title = "AI Trading Operating System Product Graph Bootstrap"
+classification = "NON_OPERATIONAL_PRODUCT_GRAPH_BOOTSTRAP"
+operational = false
+writable_runtime_truth = false
+created_on = "2026-08-24"
+current_software_factory_runtime_registry = "factory/registry.toml"
+future_product_graph_runtime_truth = "UNASSIGNED_UNTIL_W1_MIGRATION"
+semantics_source = "docs/product/PRODUCT_MASTER_SPEC.md"
+sequence_source = "docs/product/MASTER_ROADMAP.md"
+migration_target = "W1_CANONICAL_PRODUCT_GRAPH"
+migration_rule = "MIGRATE_OR_INGEST_ONCE_THEN_RETIRE_AS_WRITABLE_INPUT"
+
+[product]
+id = "PRODUCT-AITOS"
+name = "AI Trading Operating System"
+owner_model = "ONE_OWNER"
+status = "ACTIVE"
+north_star = "AI Trading Operating System, в которой один Owner управляет виртуальной организацией ИИ-агентов, самостоятельно исследующей рынки, принимающей знания из разных источников, создающей и обучающей индивидуальных торговых агентов, разрабатывающей стратегии, доказывающей их качество, выпускающей контролируемые версии, эксплуатирующей их под жёсткими risk/authority gates и непрерывно предлагающей эволюцию продукта и стратегий."
+cycle = ["OWNER_INTENT", "KNOWLEDGE", "RESEARCH", "HYPOTHESIS", "STRATEGY", "BOT", "PROVE", "RELEASE", "OPERATE", "OBSERVE", "LEARN", "EVOLVE"]
+
+[baseline]
+id = "BASELINE-FACTORY-001A-ACCEPTED"
+status = "DONE"
+git_head = "bd0027c316087a11193ca6662c27861adc87030f"
+source_branch = "feature/factory-001a-control-plane"
+evidence_refs = ["git:bd0027c316087a11193ca6662c27861adc87030f", "factory:FACTORY-001A", "owner-direction:FACTORY-001A-accepted"]
+note = "Current Owner direction accepts FACTORY-001A; existing runtime registry text is not changed by this bootstrap."
+
+[authority]
+capital_authority = false
+paper_authority = false
+limited_live_authority = false
+live_authority = false
+current_factory_stage = "FACTORY-001A"
+current_product_change_scope = "DOCUMENTATION_ONLY"
+product_change_levels = ["PRODUCT_CHANGE_LEVEL_A", "PRODUCT_CHANGE_LEVEL_B", "PRODUCT_CHANGE_LEVEL_C"]
+capital_mandate_level_namespace = "SEPARATE_FROM_PRODUCT_CHANGE_LEVELS"
+
+[bootstrap_policy]
+dependency_graph_must_be_acyclic = true
+dependency_references_must_resolve = true
+ids_must_be_globally_unique = true
+done_objects_require_evidence = true
+duplicate_runtime_registry_prohibited = true
+ui_is_projection_only = true
+
+[dependency_semantics]
+default_dependency_type = "READINESS"
+allowed_dependency_types = ["SCHEMA_INTERFACE", "READINESS", "ARTIFACT_EVIDENCE", "OPERATIONAL_SERVICE", "AUTHORITY"]
+allowed_kinds = ["WAVE", "EPIC", "CAPABILITY", "TASK", "WORK_UNIT", "AUTHORITY_GATE", "CROSS_SCOPE"]
+note = "The kind field identifies endpoint graph scope; CROSS_SCOPE is required when endpoint collections differ. dependency_type identifies blocking semantics."
+
+[[locks]]
+id = "LOCK-FACTORY-001B"
+subject = "FACTORY-001B"
+status = "NEEDS_OWNER"
+locked = true
+reason = "Controlled coding-agent execution requires a separate Owner decision."
+
+[[locks]]
+id = "LOCK-FACTORY-001C"
+subject = "FACTORY-001C"
+status = "LOCKED"
+locked = true
+reason = "Three controlled Work Units per day are not active."
+
+[[locks]]
+id = "LOCK-FACTORY-001D"
+subject = "FACTORY-001D"
+status = "LOCKED"
+locked = true
+reason = "Controlled Git delivery is not active."
+
+[[locks]]
+id = "LOCK-FACTORY-001E"
+subject = "FACTORY-001E"
+status = "LOCKED"
+locked = true
+reason = "Real-time Owner UI is not active."
+
+[[locks]]
+id = "LOCK-PAPER"
+subject = "PAPER"
+status = "LOCKED"
+locked = true
+reason = "Paper requires a future explicit Owner gate and proven prerequisites."
+
+[[locks]]
+id = "LOCK-LIMITED-LIVE"
+subject = "LIMITED_LIVE"
+status = "LOCKED"
+locked = true
+reason = "Limited Live requires a future explicit Owner Live Gate."
+
+[[locks]]
+id = "LOCK-LIVE"
+subject = "LIVE"
+status = "LOCKED"
+locked = true
+reason = "Live requires a future explicit Owner Live Gate."
+
+[[locks]]
+id = "LOCK-CAPITAL-AUTHORITY"
+subject = "CAPITAL_AUTHORITY"
+status = "LOCKED"
+locked = true
+reason = "Capital authority is false."
+
+[[authority_gates]]
+id = "GATE-PAPER-OWNER"
+subject = "PAPER"
+status = "LOCKED"
+locked = true
+owner_required = true
+grants_authority = false
+
+[[authority_gates]]
+id = "GATE-LIMITED-LIVE-OWNER"
+subject = "LIMITED_LIVE"
+status = "LOCKED"
+locked = true
+owner_required = true
+grants_authority = false
+
+[[authority_gates]]
+id = "GATE-LIVE-OWNER"
+subject = "LIVE"
+status = "LOCKED"
+locked = true
+owner_required = true
+grants_authority = false
+
+[[factory_autonomy]]
+id = "FACTORY-001A"
+title = "Deterministic planning baseline"
+status = "DONE"
+locked = false
+evidence_refs = ["git:bd0027c316087a11193ca6662c27861adc87030f", "factory:FACTORY-001A"]
+
+[[factory_autonomy]]
+id = "FACTORY-001B"
+title = "Controlled coding-agent execution"
+status = "NEEDS_OWNER"
+locked = true
+
+[[factory_autonomy]]
+id = "FACTORY-001C"
+title = "Three controlled Work Units per day"
+status = "LOCKED"
+locked = true
+
+[[factory_autonomy]]
+id = "FACTORY-001D"
+title = "Controlled Git delivery"
+status = "LOCKED"
+locked = true
+
+[[factory_autonomy]]
+id = "FACTORY-001E"
+title = "Real-time Owner UI"
+status = "LOCKED"
+locked = true
+
+[[domains]]
+id = "DOM-OWNER-HQ"
+title = "Owner HQ"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W1"]
+
+[[domains]]
+id = "DOM-PRODUCT-GALAXY"
+title = "Product Galaxy / Living Roadmap"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W1"]
+
+[[domains]]
+id = "DOM-SOFTWARE-FACTORY"
+title = "Software Factory"
+status = "ACTIVE"
+current_authority = "FACTORY_001A_ONLY"
+wave_ids = ["W0", "W1"]
+
+[[domains]]
+id = "DOM-AI-ORGANIZATION"
+title = "AI Organization"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W1", "W3", "W12"]
+
+[[domains]]
+id = "DOM-KNOWLEDGE-UNIVERSE"
+title = "Agent Academy / Knowledge Universe"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W2"]
+
+[[domains]]
+id = "DOM-RESEARCH-CAMPUS"
+title = "Research Campus"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W4"]
+
+[[domains]]
+id = "DOM-STRATEGY-LAB"
+title = "Strategy Lab"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W3", "W4"]
+
+[[domains]]
+id = "DOM-TRADING-AGENT-FACTORY"
+title = "Trading Agent Factory"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W3"]
+
+[[domains]]
+id = "DOM-BOT-PARK"
+title = "Bot Park"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W1", "W3"]
+
+[[domains]]
+id = "DOM-BACKTEST-LAB"
+title = "Backtest Lab"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W5"]
+
+[[domains]]
+id = "DOM-REPLAY-HANGAR"
+title = "Replay Hangar"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W5"]
+
+[[domains]]
+id = "DOM-SIMULATION-ARENA"
+title = "Simulation Arena"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W5"]
+
+[[domains]]
+id = "DOM-RISK-TOWER"
+title = "Risk Tower"
+status = "PLANNED"
+current_authority = "OFFLINE_MANDATE_AUTHORING_SPEC_ONLY_CAPITAL_LOCKED"
+wave_ids = ["W3", "W6"]
+
+[[domains]]
+id = "DOM-RELEASE-HQ"
+title = "Release HQ"
+status = "PLANNED"
+current_authority = "OFFLINE_RELEASE_SPEC_ONLY"
+wave_ids = ["W6"]
+
+[[domains]]
+id = "DOM-PORTFOLIO-HQ"
+title = "Portfolio HQ"
+status = "LOCKED"
+current_authority = "CAPITAL_LOCKED"
+wave_ids = ["W9"]
+
+[[domains]]
+id = "DOM-OPERATIONS-CENTER"
+title = "Operations Center"
+status = "LOCKED"
+current_authority = "CAPITAL_LOCKED"
+wave_ids = ["W6", "W7", "W10"]
+
+[[domains]]
+id = "DOM-MARKET-DATA-HUB"
+title = "Market & Data Hub"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W2", "W4", "W5"]
+
+[[domains]]
+id = "DOM-KNOWLEDGE-GRAPH"
+title = "Knowledge Graph"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W2"]
+
+[[domains]]
+id = "DOM-EXPERIENCE-MEMORY"
+title = "Experience / Memory System"
+status = "PLANNED"
+current_authority = "SPECIFICATION_ONLY"
+wave_ids = ["W3", "W11"]
+
+[[domains]]
+id = "DOM-EVOLUTION-ENGINE"
+title = "Evolution Engine"
+status = "LOCKED"
+current_authority = "PROPOSAL_ONLY"
+wave_ids = ["W11", "W12"]
+
+[[domains]]
+id = "DOM-UNKNOWN-FRONTIER"
+title = "Unknown Frontier"
+status = "UNKNOWN_FRONTIER"
+current_authority = "NO_AUTHORITY"
+wave_ids = []
+
+[[waves]]
+id = "W0"
+number = 0
+title = "Development Foundation"
+status = "DONE"
+authority_state = "FACTORY_001A_ONLY"
+evidence_refs = ["git:bd0027c316087a11193ca6662c27861adc87030f", "factory:FACTORY-001A"]
+
+[[waves]]
+id = "W1"
+number = 1
+title = "Product OS"
+status = "PLANNED"
+authority_state = "DOCUMENTATION_AND_APPROVED_OFFLINE_WORK_ONLY"
+
+[[waves]]
+id = "W2"
+number = 2
+title = "Knowledge Platform"
+status = "PLANNED"
+authority_state = "OFFLINE_ONLY"
+
+[[waves]]
+id = "W3"
+number = 3
+title = "Bot & Strategy Core"
+status = "PLANNED"
+authority_state = "OFFLINE_ONLY"
+
+[[waves]]
+id = "W4"
+number = 4
+title = "Research Intelligence"
+status = "PLANNED"
+authority_state = "OFFLINE_ONLY"
+
+[[waves]]
+id = "W5"
+number = 5
+title = "Proving Ground"
+status = "PLANNED"
+authority_state = "OFFLINE_ONLY"
+
+[[waves]]
+id = "W6"
+number = 6
+title = "Risk & Release"
+status = "PLANNED"
+authority_state = "RELEASED_OFFLINE_MAXIMUM"
+
+[[waves]]
+id = "W7"
+number = 7
+title = "Paper Trading"
+status = "LOCKED"
+authority_state = "NEEDS_OWNER"
+
+[[waves]]
+id = "W8"
+number = 8
+title = "Limited Live"
+status = "LOCKED"
+authority_state = "NEEDS_OWNER_LIVE_GATE"
+
+[[waves]]
+id = "W9"
+number = 9
+title = "Portfolio OS"
+status = "LOCKED"
+authority_state = "SHADOW_ONLY_UNTIL_SEPARATE_OWNER_GATE"
+
+[[waves]]
+id = "W10"
+number = 10
+title = "Operations Center"
+status = "LOCKED"
+authority_state = "ENVIRONMENT_SCOPED_AND_SEPARATELY_GATED"
+
+[[waves]]
+id = "W11"
+number = 11
+title = "Evolution Engine"
+status = "LOCKED"
+authority_state = "PROPOSAL_ONLY_BY_DEFAULT"
+
+[[waves]]
+id = "W12"
+number = 12
+title = "Self-Improving Trading Organization"
+status = "LOCKED"
+authority_state = "NO_IMPLICIT_AUTHORITY"
+
+[[epics]]
+id = "EPIC-W0-FACTORY-BASELINE"
+wave_id = "W0"
+title = "Accepted FACTORY-001A baseline"
+status = "DONE"
+domain_ids = ["DOM-SOFTWARE-FACTORY"]
+evidence_refs = ["git:bd0027c316087a11193ca6662c27861adc87030f", "factory:FACTORY-001A"]
+
+[[epics]]
+id = "EPIC-W1-CANONICAL-PRODUCT-GRAPH"
+wave_id = "W1"
+title = "Canonical Product Graph and migration"
+status = "PLANNED"
+domain_ids = ["DOM-PRODUCT-GALAXY", "DOM-SOFTWARE-FACTORY"]
+
+[[epics]]
+id = "EPIC-W1-OWNER-HQ"
+wave_id = "W1"
+title = "Owner HQ and shared dual-view read model"
+status = "PLANNED"
+domain_ids = ["DOM-OWNER-HQ", "DOM-BOT-PARK", "DOM-AI-ORGANIZATION"]
+
+[[epics]]
+id = "EPIC-W2-KNOWLEDGE-PLATFORM"
+wave_id = "W2"
+title = "Provenance-bearing per-bot knowledge"
+status = "PLANNED"
+domain_ids = ["DOM-KNOWLEDGE-UNIVERSE", "DOM-KNOWLEDGE-GRAPH", "DOM-MARKET-DATA-HUB"]
+
+[[epics]]
+id = "EPIC-W3-BOT-STRATEGY-CORE"
+wave_id = "W3"
+title = "Immutable bot and strategy composition"
+status = "PLANNED"
+domain_ids = ["DOM-TRADING-AGENT-FACTORY", "DOM-STRATEGY-LAB", "DOM-BOT-PARK", "DOM-EXPERIENCE-MEMORY", "DOM-RISK-TOWER"]
+
+[[epics]]
+id = "EPIC-W4-RESEARCH-INTELLIGENCE"
+wave_id = "W4"
+title = "Typed reproducible research lifecycle"
+status = "PLANNED"
+domain_ids = ["DOM-RESEARCH-CAMPUS", "DOM-STRATEGY-LAB", "DOM-MARKET-DATA-HUB"]
+
+[[epics]]
+id = "EPIC-W5-PROVING-GROUND"
+wave_id = "W5"
+title = "Backtest replay simulation and independent methodology"
+status = "PLANNED"
+domain_ids = ["DOM-BACKTEST-LAB", "DOM-REPLAY-HANGAR", "DOM-SIMULATION-ARENA", "DOM-MARKET-DATA-HUB"]
+
+[[epics]]
+id = "EPIC-W6-RISK-RELEASE"
+wave_id = "W6"
+title = "Risk evidence release rollback and bounded operations safety"
+status = "PLANNED"
+domain_ids = ["DOM-RISK-TOWER", "DOM-RELEASE-HQ", "DOM-OPERATIONS-CENTER"]
+
+[[epics]]
+id = "EPIC-W7-PAPER"
+wave_id = "W7"
+title = "Owner-gated Paper trading"
+status = "LOCKED"
+domain_ids = ["DOM-OPERATIONS-CENTER", "DOM-RISK-TOWER", "DOM-RELEASE-HQ"]
+
+[[epics]]
+id = "EPIC-W8-LIMITED-LIVE"
+wave_id = "W8"
+title = "Owner-gated Limited Live"
+status = "LOCKED"
+domain_ids = ["DOM-OPERATIONS-CENTER", "DOM-RISK-TOWER", "DOM-RELEASE-HQ"]
+
+[[epics]]
+id = "EPIC-W9-PORTFOLIO-SHADOW"
+wave_id = "W9"
+title = "Shadow-first multi-bot Portfolio OS"
+status = "LOCKED"
+domain_ids = ["DOM-PORTFOLIO-HQ", "DOM-RISK-TOWER", "DOM-OPERATIONS-CENTER"]
+
+[[epics]]
+id = "EPIC-W10-OPERATIONS-SCALE"
+wave_id = "W10"
+title = "Scaled professional Operations Center"
+status = "LOCKED"
+domain_ids = ["DOM-OPERATIONS-CENTER", "DOM-OWNER-HQ", "DOM-BOT-PARK"]
+
+[[epics]]
+id = "EPIC-W11-EVOLUTION"
+wave_id = "W11"
+title = "Experience to governed candidate evolution"
+status = "LOCKED"
+domain_ids = ["DOM-EVOLUTION-ENGINE", "DOM-EXPERIENCE-MEMORY", "DOM-RESEARCH-CAMPUS"]
+
+[[epics]]
+id = "EPIC-W12-ORGANIZATIONAL-LEARNING"
+wave_id = "W12"
+title = "Controlled self-improving trading organization"
+status = "LOCKED"
+domain_ids = ["DOM-AI-ORGANIZATION", "DOM-EVOLUTION-ENGINE", "DOM-OWNER-HQ"]
+
+[[capabilities]]
+id = "CAP-W0-DETERMINISTIC-PLANNING"
+epic_id = "EPIC-W0-FACTORY-BASELINE"
+title = "Deterministic governed planning baseline"
+status = "DONE"
+evidence_refs = ["git:bd0027c316087a11193ca6662c27861adc87030f", "factory:FACTORY-001A"]
+
+[[capabilities]]
+id = "CAP-W1-GRAPH-MIGRATION"
+epic_id = "EPIC-W1-CANONICAL-PRODUCT-GRAPH"
+title = "Bootstrap and factory-registry migration to one canonical graph"
+status = "PLANNED"
+
+[[capabilities]]
+id = "CAP-W1-DUAL-VIEW-OWNER-HQ"
+epic_id = "EPIC-W1-OWNER-HQ"
+title = "30-second Owner HQ and one-truth dual views"
+status = "PLANNED"
+
+[[capabilities]]
+id = "CAP-W2-KNOWLEDGE-PROVENANCE"
+epic_id = "EPIC-W2-KNOWLEDGE-PLATFORM"
+title = "Per-bot knowledge profiles and signal provenance"
+status = "PLANNED"
+
+[[capabilities]]
+id = "CAP-W3-IMMUTABLE-BOT-VERSION"
+epic_id = "EPIC-W3-BOT-STRATEGY-CORE"
+title = "Immutable BotVersion component binding"
+status = "PLANNED"
+
+[[capabilities]]
+id = "CAP-W3-RISK-MANDATE-AUTHORING"
+epic_id = "EPIC-W3-BOT-STRATEGY-CORE"
+title = "Immutable risk mandate authoring from approved Owner policy without verdict authority"
+status = "PLANNED"
+
+[[capabilities]]
+id = "CAP-W4-RESEARCH-PROTOCOL"
+epic_id = "EPIC-W4-RESEARCH-INTELLIGENCE"
+title = "Preregistered reproducible research and experiment registry"
+status = "PLANNED"
+
+[[capabilities]]
+id = "CAP-W5-SEPARATED-PROVING"
+epic_id = "EPIC-W5-PROVING-GROUND"
+title = "Non-substitutable proving evidence"
+status = "PLANNED"
+
+[[capabilities]]
+id = "CAP-W6-OFFLINE-RELEASE-ROLLBACK"
+epic_id = "EPIC-W6-RISK-RELEASE"
+title = "Evidence-gated offline release and rollback"
+status = "PLANNED"
+
+[[capabilities]]
+id = "CAP-W6-BOUNDED-OPS-SAFETY"
+epic_id = "EPIC-W6-RISK-RELEASE"
+title = "Bounded operations-safety observation prerequisite"
+status = "PLANNED"
+
+[[capabilities]]
+id = "CAP-W7-PAPER-ENVIRONMENT"
+epic_id = "EPIC-W7-PAPER"
+title = "Owner-gated Paper environment"
+status = "LOCKED"
+
+[[capabilities]]
+id = "CAP-W8-LIMITED-LIVE-ENVIRONMENT"
+epic_id = "EPIC-W8-LIMITED-LIVE"
+title = "Owner-gated bounded capital environment"
+status = "LOCKED"
+
+[[capabilities]]
+id = "CAP-W9-SHADOW-PORTFOLIO"
+epic_id = "EPIC-W9-PORTFOLIO-SHADOW"
+title = "Multi-bot shadow allocation and aggregate evidence"
+status = "LOCKED"
+
+[[capabilities]]
+id = "CAP-W10-FLEET-OPERATIONS"
+epic_id = "EPIC-W10-OPERATIONS-SCALE"
+title = "Fleet-scale operations and incident triage"
+status = "LOCKED"
+
+[[capabilities]]
+id = "CAP-W11-CONTROLLED-EVOLUTION"
+epic_id = "EPIC-W11-EVOLUTION"
+title = "Experience-to-candidate evolution"
+status = "LOCKED"
+
+[[capabilities]]
+id = "CAP-W12-ORGANIZATION-LEARNING"
+epic_id = "EPIC-W12-ORGANIZATIONAL-LEARNING"
+title = "Controlled organizational learning"
+status = "LOCKED"
+
+[[tasks]]
+id = "TASK-W1-DESIGN-CANONICAL-GRAPH"
+capability_id = "CAP-W1-GRAPH-MIGRATION"
+title = "Specify canonical Product Graph ownership migration and retirement"
+status = "PLANNED"
+acceptance_contract_required = true
+non_operational = true
+
+[[tasks]]
+id = "TASK-W1-DESIGN-OWNER-HQ"
+capability_id = "CAP-W1-DUAL-VIEW-OWNER-HQ"
+title = "Specify and prove Owner HQ read model and cross-view context"
+status = "PLANNED"
+acceptance_contract_required = true
+non_operational = true
+
+[[work_units]]
+id = "WU-W1-GRAPH-MIGRATION-CONTRACT"
+task_id = "TASK-W1-DESIGN-CANONICAL-GRAPH"
+title = "Create a bounded approved migration contract before implementation"
+status = "PLANNED"
+requires_previous_pass = true
+non_operational = true
+
+[[work_units]]
+id = "WU-W1-OWNER-HQ-ACCEPTANCE"
+task_id = "TASK-W1-DESIGN-OWNER-HQ"
+title = "Create 30-second and 5/20/100/500-bot acceptance scenarios"
+status = "PLANNED"
+requires_previous_pass = true
+non_operational = true
+
+[[dependencies]]
+id = "DEP-W1-W0"
+source_id = "W1"
+depends_on = "W0"
+kind = "WAVE"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-W2-W1"
+source_id = "W2"
+depends_on = "W1"
+kind = "WAVE"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-W3-W2"
+source_id = "W3"
+depends_on = "W2"
+kind = "WAVE"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-W4-W3"
+source_id = "W4"
+depends_on = "W3"
+kind = "WAVE"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-W5-W4"
+source_id = "W5"
+depends_on = "W4"
+kind = "WAVE"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-W6-W5"
+source_id = "W6"
+depends_on = "W5"
+kind = "WAVE"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-W7-W6"
+source_id = "W7"
+depends_on = "W6"
+kind = "WAVE"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-W8-W7"
+source_id = "W8"
+depends_on = "W7"
+kind = "WAVE"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-W9-W8"
+source_id = "W9"
+depends_on = "W8"
+kind = "WAVE"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-W10-W9"
+source_id = "W10"
+depends_on = "W9"
+kind = "WAVE"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-W11-W10"
+source_id = "W11"
+depends_on = "W10"
+kind = "WAVE"
+dependency_type = "OPERATIONAL_SERVICE"
+
+[[dependencies]]
+id = "DEP-W12-W11"
+source_id = "W12"
+depends_on = "W11"
+kind = "WAVE"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-EPIC-W1-GRAPH-BASELINE"
+source_id = "EPIC-W1-CANONICAL-PRODUCT-GRAPH"
+depends_on = "EPIC-W0-FACTORY-BASELINE"
+kind = "EPIC"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-EPIC-W1-HQ-GRAPH"
+source_id = "EPIC-W1-OWNER-HQ"
+depends_on = "EPIC-W1-CANONICAL-PRODUCT-GRAPH"
+kind = "EPIC"
+dependency_type = "OPERATIONAL_SERVICE"
+
+[[dependencies]]
+id = "DEP-CAP-W7-OPS-SAFETY"
+source_id = "CAP-W7-PAPER-ENVIRONMENT"
+depends_on = "CAP-W6-BOUNDED-OPS-SAFETY"
+kind = "CAPABILITY"
+dependency_type = "OPERATIONAL_SERVICE"
+
+[[dependencies]]
+id = "DEP-CAP-W7-OFFLINE-RELEASE"
+source_id = "CAP-W7-PAPER-ENVIRONMENT"
+depends_on = "CAP-W6-OFFLINE-RELEASE-ROLLBACK"
+kind = "CAPABILITY"
+dependency_type = "ARTIFACT_EVIDENCE"
+
+[[dependencies]]
+id = "DEP-CAP-W9-PAPER"
+source_id = "CAP-W9-SHADOW-PORTFOLIO"
+depends_on = "CAP-W7-PAPER-ENVIRONMENT"
+kind = "CAPABILITY"
+dependency_type = "ARTIFACT_EVIDENCE"
+
+[[dependencies]]
+id = "DEP-CAP-W10-OPS-SAFETY"
+source_id = "CAP-W10-FLEET-OPERATIONS"
+depends_on = "CAP-W6-BOUNDED-OPS-SAFETY"
+kind = "CAPABILITY"
+dependency_type = "OPERATIONAL_SERVICE"
+
+[[dependencies]]
+id = "DEP-WU-HQ-GRAPH"
+source_id = "WU-W1-OWNER-HQ-ACCEPTANCE"
+depends_on = "WU-W1-GRAPH-MIGRATION-CONTRACT"
+kind = "WORK_UNIT"
+dependency_type = "READINESS"
+
+[[dependencies]]
+id = "DEP-CAP-W7-PAPER-OWNER-GATE"
+source_id = "CAP-W7-PAPER-ENVIRONMENT"
+depends_on = "GATE-PAPER-OWNER"
+kind = "CROSS_SCOPE"
+dependency_type = "AUTHORITY"
+
+[[dependencies]]
+id = "DEP-CAP-W8-PAPER-EVIDENCE"
+source_id = "CAP-W8-LIMITED-LIVE-ENVIRONMENT"
+depends_on = "CAP-W7-PAPER-ENVIRONMENT"
+kind = "CAPABILITY"
+dependency_type = "ARTIFACT_EVIDENCE"
+
+[[dependencies]]
+id = "DEP-CAP-W8-OWNER-GATE"
+source_id = "CAP-W8-LIMITED-LIVE-ENVIRONMENT"
+depends_on = "GATE-LIMITED-LIVE-OWNER"
+kind = "CROSS_SCOPE"
+dependency_type = "AUTHORITY"
+
+[[unknown_frontier]]
+id = "FRONTIER-MARKETS-VENUES"
+title = "Future markets venues brokers asset classes and jurisdictional constraints"
+status = "UNKNOWN_FRONTIER"
+
+[[unknown_frontier]]
+id = "FRONTIER-CAUSAL-LEARNING"
+title = "Causal and off-policy learning with endogenous experience"
+status = "UNKNOWN_FRONTIER"
+
+[[unknown_frontier]]
+id = "FRONTIER-MODEL-PORTABILITY"
+title = "Provider-independent model reproducibility portability and fine-tuning economics"
+status = "UNKNOWN_FRONTIER"
+
+[[unknown_frontier]]
+id = "FRONTIER-RUNTIME-ADAPTATION"
+title = "Evidence and bounds for future runtime parameter adaptation"
+status = "UNKNOWN_FRONTIER"
+
+[[unknown_frontier]]
+id = "FRONTIER-PORTFOLIO-OPTIMIZATION"
+title = "Portfolio optimization capacity and strategy conflict methods"
+status = "UNKNOWN_FRONTIER"

@@ -1,0 +1,36 @@
+TRADEBOT AGENT FACTORY v0.21 — OFFLINE MVP RELEASE REPORT
+Date: 2026-07-24
+
+RELEASE VERDICT
+PASS — NON-LIVE OFFLINE_SIMULATION MVP SNAPSHOT ONLY
+
+PACKAGE
+9e14933ea84e6f1f9901f148a34d020dac03f405425cef0d21ab62fd99395d16  tradebot-agent-factory-v0.21.zip
+
+MVP MANIFEST
+8c5b7d47c39545cbb4ac137bfed52243178a45fcebc0d8164a91ef9cc06429d3  docs/FROZEN_MVP_SLICE_01_V1.sha256
+
+VERIFIED GATES
+- ZIP: 128 safe unique members; no traversal, absolute paths, symlinks,
+  special files, bytecode/cache, SQLite state, or embedded secrets.
+- Frozen core v11: 10/10.
+- Frozen PM-DEC-007 hybrid v1: 9/9.
+- Frozen MVP slice 01 v1: 23/23.
+- Full unit-test suite: 105/105 PASS.
+- Repository self-check: PASS.
+- Python compileall: PASS.
+- Clean replay first run: 2 accepted setups and 2 simulated LIMIT intents.
+- Same-input replay: 2 duplicates and no additional setup or intent.
+- SQLite database permissions: 0600.
+- No Telegram, Bitget, network, exchange-submission, fill, or live path.
+- Runtime configuration: TEST_FIXTURE_ONLY / OFFLINE_SIMULATION.
+- Unresolved release-scope MEDIUM+ findings: NONE.
+
+AUTHORITY BOUNDARY
+- Paper trading: BLOCKED / NOT IMPLEMENTED.
+- Production: BLOCKED / NOT IMPLEMENTED.
+- Live trading: BLOCKED / DISABLED.
+- Real capital: BLOCKED / DENY.
+
+This report does not authorize exchange connectivity, order submission,
+paper/live promotion, production use, or use of real capital.

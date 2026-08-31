@@ -1,0 +1,6 @@
+# Copy to .github/CODEOWNERS and replace the placeholder with the repository owner.
+/governance/ @YOUR_GITHUB_LOGIN
+/.github/workflows/ @YOUR_GITHUB_LOGIN
+/**/execution/ @YOUR_GITHUB_LOGIN
+/**/risk/ @YOUR_GITHUB_LOGIN
+/**/exchange/ @YOUR_GITHUB_LOGIN

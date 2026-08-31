@@ -1,0 +1,10 @@
+[project]
+name = "tradebot-agent-factory"
+version = "0.1.0"
+description = "Specification-driven multi-agent development controls for trading bots"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+

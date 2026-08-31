@@ -1,0 +1,58 @@
+pipeline_id = "tradebot-development-v1"
+max_parallel_agents = 4
+max_agent_depth = 1
+single_writer = true
+
+[[stages]]
+id = "01_discovery"
+agents = ["requirements_analyst", "quant_researcher"]
+mode = "parallel_read_only"
+required_outputs = ["requirements_handoff", "quant_handoff"]
+
+[[stages]]
+id = "02_architecture"
+agents = ["system_architect"]
+mode = "sequential_read_only"
+required_outputs = ["architecture_handoff"]
+
+[[stages]]
+id = "03_specification"
+agents = ["root"]
+mode = "single_writer"
+required_outputs = ["spec.md", "plan.md", "tasks.md", "acceptance.toml"]
+
+[[stages]]
+id = "03_deep_spec_review"
+agents = ["institutional_portfolio_reviewer", "quant_methodology_reviewer", "market_microstructure_reviewer"]
+mode = "parallel_read_only_fresh_context"
+required_outputs = ["institutional_review", "methodology_review", "microstructure_review"]
+
+[[stages]]
+id = "04_implementation"
+agents = ["implementer"]
+mode = "single_writer"
+required_outputs = ["code", "focused_tests", "implementation_handoff"]
+
+[[stages]]
+id = "05_adversarial_tests"
+agents = ["test_engineer"]
+mode = "single_writer"
+required_outputs = ["tests", "test_handoff"]
+
+[[stages]]
+id = "06_independent_review"
+agents = ["code_reviewer", "security_reviewer", "risk_reviewer"]
+mode = "parallel_read_only"
+required_outputs = ["code_review", "security_review", "risk_review"]
+
+[[stages]]
+id = "06_deep_evidence_review"
+agents = ["institutional_portfolio_reviewer", "quant_methodology_reviewer", "market_microstructure_reviewer"]
+mode = "parallel_read_only_fresh_context"
+required_outputs = ["institutional_evidence_review", "methodology_evidence_review", "microstructure_evidence_review"]
+
+[[stages]]
+id = "07_release"
+agents = ["release_verifier"]
+mode = "sequential_read_only"
+required_outputs = ["release_decision"]

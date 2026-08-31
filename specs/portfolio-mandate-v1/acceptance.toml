@@ -1,0 +1,391 @@
+work_item = "PM-001"
+version = 7
+status = "draft"
+real_capital = "blocked"
+minimum_pass_rate_pct = 100
+
+[[criteria]]
+id = "PM-AC-001"
+requirements = ["PM-REQ-003", "PM-REQ-004", "PM-REQ-026"]
+description = "Non-authorizing draft schema rejects unknown fields, unknown enum values, and missing required fields; it can only produce BLOCKED/DENY with zero real authority."
+evidence = "local schema validation and negative fixtures"
+
+[[criteria]]
+id = "PM-AC-002"
+requirements = ["PM-REQ-004", "PM-REQ-026", "PM-REQ-027"]
+description = "Active overlay binds exact policy ID/version/hash; any policy byte mutation invalidates the authorization."
+evidence = "hash binding mutation test"
+
+[[criteria]]
+id = "PM-AC-003"
+requirements = ["PM-REQ-003", "PM-REQ-014", "PM-REQ-015"]
+description = "Scope resolution uses allowlist intersection and minimum caps and can never expand a source policy."
+evidence = "property tests"
+
+[[criteria]]
+id = "PM-AC-004"
+requirements = ["PM-REQ-001", "PM-REQ-003", "PM-REQ-004"]
+description = "TARGET, FUTURE, SHADOW_ONLY, BLOCKED, and unknown states cannot create real-capital permission."
+evidence = "table-driven authorization tests"
+
+[[criteria]]
+id = "PM-AC-005"
+requirements = ["PM-REQ-003", "PM-REQ-027"]
+description = "MOEX, swing, medium-term, new venue/symbol/account/book requests are denied under the Phase-1 manifest."
+evidence = "negative scope fixtures"
+
+[[criteria]]
+id = "PM-AC-006"
+requirements = ["PM-REQ-013", "PM-REQ-014"]
+description = "Every active real-capital scope requires complete owner-approved aggregate hard limits with unit, currency, horizon, and scope."
+evidence = "missing-limit validation tests"
+
+[[criteria]]
+id = "PM-AC-007"
+requirements = ["PM-REQ-015", "PM-REQ-016", "PM-REQ-017", "PM-REQ-018"]
+description = "Effective limit never exceeds owner hard cap; stale/missing/conflicting inputs reduce, freeze, or deny."
+evidence = "property and failure-mode tests"
+
+[[criteria]]
+id = "PM-AC-008"
+requirements = ["PM-REQ-015"]
+description = "Shadow allocator has no write capability to real limits, trading permission, or capital transfers."
+evidence = "capability boundary test"
+
+[[criteria]]
+id = "PM-AC-009"
+requirements = ["PM-REQ-025", "PM-REQ-026"]
+description = "Agents, committee, allocator, bot, and operator cannot raise risk, expand scope, or promote real stage."
+evidence = "authority matrix tests"
+
+[[criteria]]
+id = "PM-AC-010"
+requirements = ["PM-REQ-026", "PM-REQ-027", "PM-REQ-030"]
+description = "Expired, revoked, replayed, wrong-hash, wrong-account, wrong-stage, or wrong-instrument manifest returns DENY."
+evidence = "manifest negative fixtures"
+
+[[criteria]]
+id = "PM-AC-011"
+requirements = ["PM-REQ-018", "PM-REQ-025"]
+description = "Stage engine permits automatic movement only to equal or more restrictive states; promotion requires owner decision and all gates."
+evidence = "state transition tests"
+
+[[criteria]]
+id = "PM-AC-012"
+requirements = ["PM-REQ-021", "PM-REQ-022", "PM-REQ-024"]
+description = "Unlisted capital-book transfers are denied and internal transfers preserve total NAV without creating PnL."
+evidence = "ledger conservation tests"
+
+[[criteria]]
+id = "PM-AC-013"
+requirements = ["PM-REQ-023", "PM-REQ-024"]
+description = "Unrealized, unsettled, stale, disputed, encumbered, or unreconciled amounts never enter Distribution Payable."
+evidence = "distribution negative fixtures"
+
+[[criteria]]
+id = "PM-AC-014"
+requirements = ["PM-REQ-005", "PM-REQ-006", "PM-REQ-007", "PM-REQ-008"]
+description = "RUB NAV identity reconciles strategy PnL, execution shortfall, costs, FX, stablecoin basis, cash flows, and residual without double counting."
+evidence = "decimal accounting fixtures"
+
+[[criteria]]
+id = "PM-AC-015"
+requirements = ["PM-REQ-009", "PM-REQ-010"]
+description = "Deposits and withdrawals affect owner cash flows/MWR but cannot manufacture TWR or strategy alpha."
+evidence = "TWR/MWR cash-flow fixtures"
+
+[[criteria]]
+id = "PM-AC-016"
+requirements = ["PM-REQ-011", "PM-REQ-012"]
+description = "Benchmark is frozen before the evidence window; later replacement invalidates comparative evidence without deleting history."
+evidence = "benchmark version tests"
+
+[[criteria]]
+id = "PM-AC-017"
+requirements = ["PM-REQ-002", "PM-REQ-028", "PM-REQ-029", "PM-REQ-030"]
+description = "Evidence package preserves all baselines, experiments, exclusions, uncertainty, selection adjustment, expiry, and review date."
+evidence = "evidence manifest coverage test"
+
+[[criteria]]
+id = "PM-AC-018"
+requirements = ["PM-REQ-026", "PM-REQ-027", "PM-REQ-028"]
+description = "Audit replay restores exact policy/spec/build/dataset hashes, decision, scope, expiry, revocation, and effective authorization result."
+evidence = "decision replay test"
+
+[[criteria]]
+id = "PM-AC-019"
+requirements = ["PM-REQ-019", "PM-REQ-020"]
+description = "Capacity is a tested size-tier curve under conservative/base/adverse execution; linear extrapolation and gross-risk hiding are rejected."
+evidence = "capacity and exposure tests"
+
+[[criteria]]
+id = "PM-AC-020"
+requirements = ["PM-REQ-003", "PM-REQ-025", "PM-REQ-026"]
+description = "Current repository remains DRY_RUN/Paper-only, live=false, with no automatic promotion path."
+evidence = "static configuration and endpoint-isolation tests"
+
+[[criteria]]
+id = "PM-AC-021"
+requirements = ["PM-REQ-003", "PM-REQ-025", "PM-REQ-026"]
+description = "Cross-product of root status, revocation, scope status, stage, execution boundary, credentials, and endpoint capability cannot reach a real adapter from Research/Replay/DRY_RUN/Paper or any incomplete authorization."
+evidence = "table-driven authorization tests plus network spy with zero trading endpoint calls"
+
+[[criteria]]
+id = "PM-AC-022"
+requirements = ["PM-REQ-013", "PM-REQ-014", "PM-REQ-020", "PM-REQ-034"]
+description = "Typed gross, net, contingent, margin, and parent limits reserve positions and all open/cancel-pending/conditional intents atomically; low net cannot hide gross risk."
+evidence = "dimensional property tests and concurrent reservation fixtures"
+
+[[criteria]]
+id = "PM-AC-023"
+requirements = ["PM-REQ-021", "PM-REQ-024"]
+description = "Topology validator rejects missing/duplicate books, protected books with trading authority, Paper on a real margin pool, prohibited shared margin/credential resources, and virtual-only isolation."
+evidence = "topology negative fixtures and account-level contagion test"
+
+[[criteria]]
+id = "PM-AC-024"
+requirements = ["PM-REQ-025", "PM-REQ-026"]
+description = "Paper-to-Pilot is denied without separate entry, protective exit, profit taking, and emergency liquidation/hedge policy refs plus verified venue capabilities."
+evidence = "gap, no-fill, partial-fill, cancel-race, halt, stale trigger, unknown ACK, and venue-impairment fixtures"
+
+[[criteria]]
+id = "PM-AC-025"
+requirements = ["PM-REQ-003", "PM-REQ-026", "PM-REQ-030"]
+description = "Evidence and promotion are denied when the scope-specific venue capability profile is absent, expired, hash-mismatched, unsupported, or unknown."
+evidence = "separate crypto maintenance/funding and MOEX auction/clearing/halt/expiry fixtures"
+
+[[criteria]]
+id = "PM-AC-026"
+requirements = ["PM-REQ-019", "PM-REQ-035"]
+description = "Promotion is denied for missing/expired capacity evidence, failure of conservative hurdle, optimistic-only profitability, linear extrapolation, unknown queue uncertainty, or excessive shared-pool demand."
+evidence = "capacity promotion negative fixtures"
+
+[[criteria]]
+id = "PM-AC-027"
+requirements = ["PM-REQ-015", "PM-REQ-016", "PM-REQ-017", "PM-REQ-034"]
+description = "Min is applied only to dimensionally compatible bounds keyed by metric/scope/horizon/unit/currency/valuation basis; heterogeneous constraints are conjunctive and missing keys deny."
+evidence = "unit/type property tests and mixed-unit negative fixtures"
+
+[[criteria]]
+id = "PM-AC-028"
+requirements = ["PM-REQ-025", "PM-REQ-026"]
+description = "No actor, including owner, can waive unknown state, incomplete reconciliation, stale mandatory data, auth failure, missing idempotency, or policy/hash mismatch into new risk."
+evidence = "non-waivable invariant tests"
+
+[[criteria]]
+id = "PM-AC-029"
+requirements = ["PM-REQ-003", "PM-REQ-004", "PM-REQ-026"]
+description = "Semantic validator enforces exactly one of each book, unique scope/policy/decision identities, complete decision set, timestamp ordering, and unique monotonic mandate ID/version registry entries."
+evidence = "semantic validator and persistent registry negative fixtures"
+
+[[criteria]]
+id = "PM-AC-030"
+requirements = ["PM-REQ-026", "PM-REQ-027"]
+description = "Owner manifest verifier requires canonical signed payload, trust root, monotonic sequence, bounded TTL, temporal ordering, revocation lookup, and exact scope/hash/typed-limit binding."
+evidence = "signature, replay, expiry, revocation, mismatch, and circular-hash tests"
+
+[[criteria]]
+id = "PM-AC-031"
+requirements = ["PM-REQ-006", "PM-REQ-007", "PM-REQ-008", "PM-REQ-031"]
+description = "Signed PnL/NAV identities reconcile partial fills, a known positive commission magnitude converted to a negative signed ledger entry, funding, transfers, depeg, FX, and deliberate double-counting; residual is computed, classified, and bounded rather than editable."
+evidence = "decimal accounting fixtures with expected values and residual failures"
+
+[[criteria]]
+id = "PM-AC-032"
+requirements = ["PM-REQ-009", "PM-REQ-010", "PM-REQ-032"]
+description = "TWR/MWR/XIRR fixtures define intraday flow timing, subperiod linking, internal transfers, stale values, precision, zero/negative NAV, and no/multiple-root outcomes deterministically."
+evidence = "cash-flow fixtures with exact expected results"
+
+[[criteria]]
+id = "PM-AC-033"
+requirements = ["PM-REQ-011", "PM-REQ-012", "PM-REQ-033"]
+description = "Comparative evidence binds exact benchmark registry and window hashes; mutations to weights, source, costs, rebalancing, reference price, or window invalidate admission without deleting history."
+evidence = "benchmark payload mutation tests"
+
+[[criteria]]
+id = "PM-AC-034"
+requirements = ["PM-REQ-028", "PM-REQ-029", "PM-REQ-036"]
+description = "Overlapping setups reduce effective sample, undeclared experiments exceed the preregistered budget, and missing/post-hoc uncertainty or multiple-testing methods return BLOCKED."
+evidence = "behavioral experiment-registry and clustering fixtures"
+
+[[criteria]]
+id = "PM-AC-035"
+requirements = ["PM-REQ-030", "PM-REQ-037"]
+description = "Expired or drift-invalidated strategy, data, benchmark, and execution evidence independently blocks increase/promotion even when mandate and manifest remain valid."
+evidence = "independent evidence-expiry and downgrade fixtures"
+
+[[criteria]]
+id = "PM-AC-036"
+requirements = ["PM-REQ-005", "PM-REQ-006", "PM-REQ-038"]
+description = "FX valuation fixtures cover closed MOEX, 24/7 crypto, stale/conflicting USD/RUB, depeg, fallback, recovery, and direct-vs-cross-rate conflict; unratified profile keeps NAV indicative."
+evidence = "valuation-profile fixtures with exact source/as-of/haircut behavior"
+
+[[criteria]]
+id = "PM-AC-037"
+requirements = ["PM-REQ-003", "PM-REQ-025", "PM-REQ-039"]
+description = "The active non-capital overlay governs Development/Research/Replay/DRY_RUN/Paper while every cross-product path retains DENY_REAL_ORDERS, no endpoint access, no real credential, and RESEARCH_PAPER only."
+evidence = "decision-record validation, lifecycle conformance tests, and real-endpoint network spy"
+
+[[criteria]]
+id = "PM-AC-038"
+requirements = ["PM-REQ-025", "PM-REQ-026", "PM-REQ-027", "PM-REQ-040", "PM-REQ-041"]
+description = "A Level-A decision record is hash-bound to the exact specification, acceptance contract, applicable policies, scope, and canonical decision payload and can never authorize real capital; every Level-B action requires a valid signature and a second factor from an independent trust/failure domain bound to the same canonical payload, sequence, scope, limits, expiry, and revocation state."
+evidence = "artifact/payload mutation, promotion-confusion, same-domain-factor, missing-factor, mismatched-payload/sequence/scope/limits/TTL, replay, expiry, revocation, and copied-Level-A negative fixtures"
+
+[[criteria]]
+id = "PM-AC-039"
+requirements = ["PM-REQ-030", "PM-REQ-035", "PM-REQ-037", "PM-REQ-042"]
+description = "Owner Level-A approval cannot turn post-hoc evidence into valid evidence, mutate a preregistered threshold or benchmark after evaluation data were viewed, reuse a viewed holdout, waive evidence expiry/drift/quality gates, or promote a lifecycle stage by itself."
+evidence = "post-hoc result ratification, threshold/benchmark mutation, viewed-holdout reuse, owner-waiver, and approval-only-promotion negative fixtures"
+
+[[criteria]]
+id = "PM-AC-040"
+requirements = ["PM-REQ-043", "PM-REQ-044", "PM-REQ-045", "PM-REQ-046", "PM-REQ-059", "PM-REQ-060"]
+description = "The strictly typed validity evaluator rejects unknown/incompatible modes, None/type confusion, unratified numeric profiles, untrusted clock, UTC wall-clock rollback, monotonic/persistent-checkpoint conflict, boot ambiguity, and owner-tolerance breach; exact boundaries cover before-effective, effective, review-due, and expiry."
+evidence = "table-driven type, temporal-boundary, wall/monotonic/persistent-clock, reboot, rollback, skew, and missing-profile negative fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "Static concept-contract checks do not close runtime trusted-clock persistence or host-reboot evidence."
+
+[[criteria]]
+id = "PM-AC-041"
+requirements = ["PM-REQ-047", "PM-REQ-053", "PM-REQ-054", "PM-REQ-055", "PM-REQ-056"]
+description = "Separate closed approval/action automata reject cross-lifecycle and illegal transitions. Concurrent consumers obtain one monotonic reservation/fencing generation and one transactional/CAS DISPATCH_CLAIMED outbox winner bound to the current revocation/version epoch; stale tokens, duplicates, crash, timeout, and lost ACK cannot blind-retry."
+evidence = "transition-matrix, concurrent CAS/outbox, fencing, revocation-before/after-claim, duplicate, crash/restart, timeout, lost-ACK, safe-release-proof, and reconciliation fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "Requires a persistent transactional/CAS registry, transactional outbox, adapter spy, and concurrency/crash/restart evidence."
+
+[[criteria]]
+id = "PM-AC-042"
+requirements = ["PM-REQ-048", "PM-REQ-049", "PM-REQ-051", "PM-REQ-053", "PM-REQ-055", "PM-REQ-058"]
+description = "Bound-field mutation, stale revocation, supersession, or revocation before DISPATCH_CLAIMED yields DENY and zero NEW/INCREASING-RISK adapter side effects. After claim, no zero-external-effect promise is made. A protective exception requires bound metric identity/unit/currency/time/horizon/netting/convention, dimension-specific comparison, and no sign crossing."
+evidence = "mutation, revocation freshness, supersession rollback, pre/post-claim race with adapter spy, unknown-ACK, -10->-30 deny, -10->-5 non-authorizing shape pass, sign crossing, stress component increase, missing scenario, and incomparable-binding fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "Requires a trusted epoch registry, CAS/outbox barrier, real adapter isolation, and typed exposure/capability evidence."
+
+[[criteria]]
+id = "PM-AC-043"
+requirements = ["PM-REQ-030", "PM-REQ-037", "PM-REQ-048", "PM-REQ-050", "PM-REQ-052", "PM-REQ-058"]
+description = "Mandate, approval, evidence, venue capability, and runtime protection validity are independent. Reconciliation defaults to reads/cancel/ledger repair. Absolute/gross/contingent/margin magnitudes are nonnegative with post<=pre; signed net uses abs(post)<=abs(pre) without sign crossing except exact zero; stress vectors require exact scenario-set/hash and componentwise non-increase or an owner-approved conservative scalar functional. Missing or incomparable proof is DENY."
+evidence = "cross-validity, binding mismatch, nonnegative scalar, signed-net absolute reduction, sign crossing, stress scenario hash/component/functional, missing dimension, venue-capability, and protective-exit fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "Requires typed raw-input validators plus venue-capability and per-dimension PRE/POST exposure integration evidence."
+
+[[criteria]]
+id = "PM-AC-044"
+requirements = ["PM-REQ-046", "PM-REQ-048", "PM-REQ-057"]
+description = "Cash-like single-use actions and persistent configuration mutations are distinct. Consuming an account/scope/limit/leverage mutation leaves the new configuration PENDING_OPERATING_AUTHORIZATION or BLOCKED_NO_NEW_RISK; no order may use it until a separate time-boxed operating manifest binds the new configuration hash."
+evidence = "cash/config classification, consumed-config, old-manifest reuse, new-hash binding, and no-new-risk negative fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "Requires a versioned configuration registry and operating-manifest integration evidence."
+
+[[criteria]]
+id = "PM-AC-045"
+requirements = ["PM-REQ-046", "PM-REQ-049", "PM-REQ-050", "PM-REQ-061"]
+description = "Every risk-increasing resting/open/conditional order has venue-enforced TIF/expiry no later than approval expiry minus the owner-approved cancel/reconciliation buffer. At the deadline the system enters NO_NEW_RISK, cancels every opening/conditional order, and reconciles venue state; revocation starts cancellation immediately."
+evidence = "bounded-TIF, GTC, conditional-order expiry, deadline, revocation, cancel-all, and zero-remaining-opening-orders fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "The cancellation buffer is unresolved and runtime venue-enforced expiry/cancel-all evidence does not yet exist."
+
+[[criteria]]
+id = "PM-AC-046"
+requirements = ["PM-REQ-050", "PM-REQ-053", "PM-REQ-058", "PM-REQ-062"]
+description = "Cancel-pending/unknown/lost ACK, halt, crash, or restart retains contingent exposure and reservation in BLOCKED/RECONCILIATION_REQUIRED because a late fill remains possible; no zero-effect promise is made. Sunset completes only after verified zero remaining opening/conditional orders, while only a verified protective reduce-only path may continue."
+evidence = "GTC/conditional late-fill, cancel race, unknown/lost ACK, halt/restart, retained contingent reservation, protective-only, and zero-remaining-order fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "Requires persistent order/reservation state, venue replay, crash/restart, and late-fill integration evidence."
+
+[[criteria]]
+id = "PM-AC-047"
+requirements = ["PM-REQ-073", "PM-REQ-074", "PM-REQ-081"]
+description = "PM-DEC-003 v1 remains byte-identical to the v0.5 snapshot. Self-contained v2 supersedes its exact path and SHA-256, binds current artifacts, schema/profile/supersession identity, and the v0.6 closed snapshot member manifest rejects duplicate/path traversal or byte drift. Source traversal uses lstat, rejects symlink/nonregular members and symlink ancestors, and requires resolved containment. No mutable current alias participates in authorization."
+evidence = "snapshot byte comparison, supersedes-hash mutation, canonical payload replay, alias rejection, source symlink/escape/nonregular, and archive duplicate/traversal fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "Local immutable-artifact checks do not constitute owner identity or real-capital signature evidence."
+
+[[criteria]]
+id = "PM-AC-048"
+requirements = ["PM-REQ-063", "PM-REQ-065", "PM-REQ-066", "PM-REQ-068", "PM-REQ-076", "PM-REQ-077", "PM-REQ-079"]
+description = "Validity-profile schema is closed and exact: schema bytes/hash mismatch, signed-but-UNRESOLVED owner layers, owner provenance mismatch/replay, outside-bound effective values, unknown fields/enums, wildcard/null identities, missing/inapplicable numeric values, boolean/float/string/overflow durations, illegal lifecycle transitions, duplicate identity, and zero or multiple ACTIVE matches all deny."
+evidence = "schema, strict-type, identity uniqueness, transition-matrix, and exact-lookup negative fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "Concept fixtures do not provide the future persistent profile registry or trusted runtime clock."
+
+[[criteria]]
+id = "PM-AC-049"
+requirements = ["PM-REQ-063", "PM-REQ-064", "PM-REQ-068", "PM-REQ-080"]
+description = "Bitget and MOEX profile families are never pooled or used as fallback for one another; the full venue/environment/market/stage/tier/validity/action/risk tuple plus capability and policy identity must be coherent. Any mismatch denies, and MOEX remains FUTURE/BLOCKED without its own complete artifacts."
+evidence = "cross-venue, cross-risk, cross-stage, capability/policy mismatch, sparse-regime, and MOEX-blocked fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "No owner-approved MOEX policy, broker/API capability profile, or numeric profile exists."
+
+[[criteria]]
+id = "PM-AC-050"
+requirements = ["PM-REQ-065", "PM-REQ-067", "PM-REQ-070", "PM-REQ-075", "PM-REQ-076"]
+description = "Calibration recommendations cannot authorize. Automated recalibration may only produce a subset of previously allowed actions by shortening validity, increasing protective buffers, or suspending/invalidating; relaxation, rebound, incomparable changes, and missing owner numbers deny."
+evidence = "authorization-separation and monotone-safer property tests including attempted TTL increase, buffer decrease, rebound, and unknown comparison"
+implementation_status = "PLANNED"
+current_evidence_limit = "No owner-approved numeric hard bounds or effective values exist; every real-capital result remains DENY."
+
+[[criteria]]
+id = "PM-AC-051"
+requirements = ["PM-REQ-069", "PM-REQ-070", "PM-REQ-071"]
+description = "Calibration preserves stratification, censored/unknown outcomes, tail uncertainty, effective sample, preregistered recent/stress/forward windows, and holdout history. Sparse, stale, drifted, API/session/topology/build-changed, or tail-breached evidence only restricts, suspends, invalidates, or denies."
+evidence = "censoring, competing-risk, tail-bound, effective-sample, holdout-access, sparse-stratum, drift, expiry, and invalidation fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "Method is specified but venue telemetry datasets, preregistered numerical thresholds, and forward confirmation evidence are absent."
+
+[[criteria]]
+id = "PM-AC-052"
+requirements = ["PM-REQ-061", "PM-REQ-062", "PM-REQ-066", "PM-REQ-072", "PM-REQ-075", "PM-REQ-077", "PM-REQ-078", "PM-REQ-079"]
+description = "A profile denies unless its action-specific numeric matrix is exact, operating TTL is strictly greater than cancel/reconciliation buffer plus dispatch guard, and exact order identity/expiry is no later than the shared earliest sunset deadline across approval/evidence/capability/risk-policy/runtime-protection minus buffer. Any mandatory source may be earliest. Escalation deadline never proves no-fill or releases exposure/reservation. Missing owner values, overflow, late-fill uncertainty, or incompatible units retain DENY/RECONCILIATION_REQUIRED."
+evidence = "integer-boundary, equality/off-by-one, exact order identity/expiry, approval and non-approval earliest-source, buffer infeasibility, unknown-late-fill, missing-owner-value, and unit incompatibility fixtures"
+implementation_status = "PLANNED"
+current_evidence_limit = "Numerical owner values and runtime venue/order reconciliation evidence do not yet exist."
+
+[[criteria]]
+id = "PM-AC-053"
+requirements = ["PM-REQ-057", "PM-REQ-076", "PM-REQ-082", "PM-REQ-083"]
+description = "Validity-profile authority changes are B4 single-use actions requiring one exact Level-B signature plus independent second factor. The canonical payload binds previous_configuration_sha256 derived and verified from exact prior operating-manifest bytes plus its registry record; new_configuration_sha256 must differ from that prior configuration, and a replacement manifest reusing it denies. A caller-supplied global registry shape covers every owner epoch and has pinned protocol-genesis identity/hash plus closed contiguous record/index constraints. Its only successful helper result is NON_AUTHORIZING_B4_REGISTRY_SHAPE_VALID: shape never proves a current/fresh checkpoint, complete runtime history, persistence, atomicity or durable consumption. Actual readiness requires an independently trusted current registry checkpoint from the PM-DEC-007 runtime trust root. Because that capability is unavailable, canonical epoch-9 genesis, stale canonical genesis replayed for epoch 10, and self-declared consumed records all return DENY_B4_CURRENT_REGISTRY_CHECKPOINT_OR_RUNTIME_TRUST_UNAVAILABLE after shape checks; malformed, reset, replay and parent-reuse inputs remain denied earlier. A replacement operating manifest must be canonical exact bytes with a canonical PurePosix versioned ref, digest, bounded times and exact change/profile/configuration bindings. Caller-supplied prior-manifest registry exact-byte shape binds the next version/sequence and exact supersedes ref/version/sequence/hash chain; it does not prove registry trust, currentness or completeness. Path aliases, non-increasing/replayed sequence or one identity mapped to different digests deny. Every pure validator remains non-authorizing and is not runtime persistence or a trust root. Automated tightening remains a separate immutable restrictive overlay and cannot mutate or rebound the owner envelope."
+evidence = "prior configuration derivation from exact manifest bytes/record, mismatched previous configuration, unchanged new configuration and reused-config replacement denial; registry-shape-only success, epoch-9/epoch-10 readiness denial, self-declared consumption denial, pinned genesis mutation, registry reset, hidden prefix, cross-epoch parent reuse, duplicate parent, sequence/CAS, path alias, supersedes/identity-digest, malformed/old manifest, overlay and rebound fixtures"
+implementation_status = "PARTIAL_NON_AUTHORIZING_VALIDATORS"
+current_evidence_limit = "PM-DEC-007 trust root, dual-factor verifier, signed registry and durable single-use runtime do not exist."
+
+[[criteria]]
+id = "PM-AC-054"
+requirements = ["PM-REQ-066", "PM-REQ-072", "PM-REQ-077", "PM-REQ-084"]
+description = "For each exact action tuple, absolute effective/review/expiry/commit/revocation timestamps are deterministically bounded by the owner-selected duration vector. Operating interval is positive and effective <= evaluated <= commit < review_due < expiry is mandatory, with effective strictly before review_due; evaluation or commit equal to/after review cutoff denies. Revocation_snapshot <= evaluated and commit-time revocation age are mandatory. Unknown, dispatch and ACK timestamps must be causal and not future-dated. Mismatch, unsafe off-by-one, stale revocation, insufficient dispatch guard, overflow or inapplicable duration denies."
+evidence = "positive operating interval, effective/review ordering, evaluation/commit review-cutoff equality and post-cutoff, review-lead, dispatch guard, commit-time revocation age, future/causal event order and timestamp mutation fixtures"
+implementation_status = "PARTIAL_NON_AUTHORIZING_VALIDATORS"
+current_evidence_limit = "Trusted persistent runtime clock and owner-approved numeric profiles are absent."
+
+[[criteria]]
+id = "PM-AC-055"
+requirements = ["PM-REQ-069", "PM-REQ-071", "PM-REQ-085", "PM-REQ-086", "PM-REQ-092"]
+description = "The current pure evidence helper validates declared canonical exact-byte shape and causality only. It closes liquidity/volatility/degraded values on the profile enums, denies unresolved scope, closes holdout purpose, and requires exact owner-threshold ID/version/SHA plus owner-bound provenance refs. It checks declared censored competing-risk/tail/sample/window/access fields and owner minima without claiming estimator correctness, statistical truth, VERIFIED status, or owner authority. NON_AUTHORIZING_DECLARED_EVIDENCE_SHAPE_CAUSALITY_VALID is never ACTIVE; a future deterministic statistical evaluator and runtime trust root remain required."
+evidence = "unknown/unresolved regime and degraded values, invalid access purpose, provenance mismatch, exact threshold binding, below-minimum actual, future window/access, omission and stratum mismatch; well-formed unverified estimator still yields only the declared-shape result and ACTIVE remains unavailable"
+implementation_status = "PARTIAL_NON_AUTHORIZING_VALIDATORS"
+current_evidence_limit = "Only declared exact-byte shape/causality is checked; estimator correctness, statistical truth, venue telemetry, owner authority and the ACTIVE statistical evaluator are future work."
+
+[[criteria]]
+id = "PM-AC-056"
+requirements = ["PM-REQ-063", "PM-REQ-064", "PM-REQ-080", "PM-REQ-086", "PM-REQ-087", "PM-REQ-093"]
+description = "Profile lookup verifies exact capability bytes and semantic scope against a closed reject-all venue-mechanics matrix. Unknown venues, mixed environment/API/market/account/session, Bitget futures+CASH and unsupported order/TIF deny; MOEX stays FUTURE_BLOCKED. Risk policy validation binds directly to the immutable governance/risk-policy.toml bytes and pinned bitget-btc-v1 v1 SHA rather than a caller-selected expected hash, then checks Bitget futures, BTCUSDT-only, limit-only and live-disabled semantics. Arbitrary or mutated bytes with the same ID/version deny. Every valid shape remains non-authorizing."
+evidence = "actual governance policy bytes, caller-selected unrelated hash, same-ID/version arbitrary and mutated policy bytes, live-disabled/BTCUSDT/limit-only binding, KRAKEN, mixed venue mechanics, futures+CASH, unsupported order/TIF, MARKET denial and MOEX-blocked fixtures"
+implementation_status = "PARTIAL_NON_AUTHORIZING_VALIDATORS"
+current_evidence_limit = "Dedicated venue-capability artifacts and runtime request-regime integration do not exist."
+
+[[criteria]]
+id = "PM-AC-057"
+requirements = ["PM-REQ-050", "PM-REQ-052", "PM-REQ-061", "PM-REQ-062", "PM-REQ-088", "PM-REQ-091"]
+description = "Working-order feasibility and strict sunset share one exact order identity/expiry binding and derive the earliest new-risk cutoff among approval/evidence/capability/risk-policy/runtime-protection minus buffer. Equality is allowed and expiry one microsecond later denies regardless of which source is earliest. Only the strict sunset validator may produce a reconciled shape, requiring terminal order-ledger outcomes, complete fill/trade watermark, position/balance/child-order reconciliation and durable reservation release/transfer proof. The legacy helper remains fail-closed after cancel/revoke. Escalation overdue suspends/invalidates without releasing exposure or reconciliation; future-dated or late ACK remains blocked."
+evidence = "exact order identity, approval and each non-approval earliest source, equality/off-by-one expiry; legacy cancel/zero-open denial, strict ledger/watermark/position/balance/children/reservation proof, cancel-fill race, halt/restart, future event and late ACK fixtures"
+implementation_status = "PARTIAL_NON_AUTHORIZING_VALIDATORS"
+current_evidence_limit = "Persistent venue order/trade cursors, position reconciliation and durable escalation dispatcher are not implemented."
+
+[[criteria]]
+id = "PM-AC-058"
+requirements = ["PM-REQ-067", "PM-REQ-089", "PM-REQ-090"]
+description = "Only B1_LIMITED_PILOT -> B2_EXISTING_PRODUCTION OPERATING profiles with one canonical exact resolved venue/environment/market/API/account/order/TIF/session/capability/policy/calibration/regime scope may be compared. UNRESOLVED*, *_DENY, PENDING*, NOT_IMPLEMENTED* and all-zero capability/calibration hashes are ineligible for ACTIVE comparison, while remaining valid DRAFT sentinels. Caller family labels or caller ACTIVE history never resolve a DRAFT scope. Simultaneous ACTIVE is derived from exact profile identity/hash and non-superseded valid intervals in complete immutable contiguous owner-epoch history. Cross-venue/scope mismatch, omitted/reset history, NON_CAPITAL/SINGLE_USE, broader actions and weaker vectors deny. Success is non-authorizing and runtime ACTIVE remains unavailable."
+evidence = "resolved nonzero exact-scope B2-vs-B1 dominance; DRAFT scope plus caller ACTIVE history, unresolved/deny/pending/not-implemented identities/regimes and zero capability/calibration hash denial; cross-venue/caller-family, omitted history, inactive profile, owner-epoch reset, noncapital/single-use, action expansion and weaker-vector fixtures"
+implementation_status = "PARTIAL_NON_AUTHORIZING_VALIDATORS"
+current_evidence_limit = "Persistent profile-family registry and owner-epoch history are not implemented."

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/tradebot/release-report.schema.json",
+  "title": "Release verification report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["work_item", "decision", "target_stage", "gates", "commands", "unresolved_risks"],
+  "properties": {
+    "work_item": {"type": "string"},
+    "decision": {"enum": ["PASS", "FAIL", "BLOCKED"]},
+    "target_stage": {"enum": ["development", "dry_run", "paper", "limited_live", "live"]},
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "status", "evidence"],
+        "properties": {
+          "name": {"type": "string"},
+          "status": {"enum": ["PASS", "FAIL", "BLOCKED"]},
+          "evidence": {"type": "string"}
+        }
+      }
+    },
+    "commands": {"type": "array", "items": {"type": "string"}},
+    "unresolved_risks": {"type": "array", "items": {"type": "string"}}
+  }
+}
