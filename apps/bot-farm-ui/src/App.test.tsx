@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { AppRoutes } from "./App";
 import { FarmDataProvider } from "./app/FarmDataContext";
+import productGraphSnapshot from "./data/generated/productGraphSnapshot.json";
 
 function renderRoute(route = "/") {
   return render(
@@ -16,6 +17,54 @@ function renderRoute(route = "/") {
 }
 
 describe("Bot Farm UI", () => {
+  it("renders the Owner HQ product identity and current development state", async () => {
+    renderRoute();
+
+    const productHeading = await screen.findByRole("heading", {
+      name: productGraphSnapshot.product.name,
+    });
+    const ownerHq = productHeading.closest("section");
+    const foundation = productGraphSnapshot.development.waves.find(
+      (wave) => wave.id === productGraphSnapshot.development.current_wave_id,
+    );
+    const nextWave = productGraphSnapshot.development.waves.find(
+      (wave) => wave.id === productGraphSnapshot.development.next_wave_id,
+    );
+
+    expect(ownerHq).not.toBeNull();
+    expect(within(ownerHq!).getByText(`${foundation?.id} · ${foundation?.title}`)).toBeInTheDocument();
+    expect(within(ownerHq!).getByText(`${nextWave?.id} · ${nextWave?.title}`)).toBeInTheDocument();
+    expect(within(ownerHq!).getByText("READ_ONLY")).toBeInTheDocument();
+  });
+
+  it("renders every roadmap Wave from the generated projection", async () => {
+    renderRoute();
+
+    const roadmapHeading = await screen.findByRole("heading", { name: "Roadmap" });
+    const roadmap = roadmapHeading.closest("section");
+    expect(roadmap).not.toBeNull();
+    expect(within(roadmap!).getAllByRole("listitem")).toHaveLength(
+      productGraphSnapshot.development.waves.length,
+    );
+    for (const wave of productGraphSnapshot.development.waves) {
+      expect(within(roadmap!).getByText(wave.title)).toBeInTheDocument();
+    }
+  });
+
+  it("renders fail-closed authority from the Product Graph projection", async () => {
+    renderRoute();
+
+    const authorityHeading = await screen.findByRole("heading", { name: "Authority locks" });
+    const authorityBoard = authorityHeading.closest("section");
+    expect(authorityBoard).not.toBeNull();
+    expect(within(authorityBoard!).getByText("Capital authority · FALSE · LOCKED")).toBeInTheDocument();
+    for (const environment of productGraphSnapshot.authority.environments) {
+      const card = within(authorityBoard!).getByText(environment.label).closest("article");
+      expect(card).not.toBeNull();
+      expect(within(card!).getByText("LOCKED")).toBeInTheDocument();
+    }
+  });
+
   it("groups six NPC-bots into four expandable farm buildings", async () => {
     renderRoute();
 
