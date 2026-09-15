@@ -54,9 +54,11 @@ class ProductGraphTests(unittest.TestCase):
 
     def test_status_filtering_uses_product_master_vocabulary(self) -> None:
         planned_ids = {item.id for item in self.graph.by_status("PLANNED")}
-        self.assertIn("W1", planned_ids)
-        self.assertIn("EPIC-W1-CANONICAL-PRODUCT-GRAPH", planned_ids)
-        self.assertIn("DOM-PRODUCT-GALAXY", planned_ids)
+        active_ids = {item.id for item in self.graph.by_status("ACTIVE")}
+        self.assertIn("W2", planned_ids)
+        self.assertIn("W1", active_ids)
+        self.assertIn("EPIC-W1-CANONICAL-PRODUCT-GRAPH", active_ids)
+        self.assertIn("DOM-PRODUCT-GALAXY", active_ids)
         self.assertEqual((), self.graph.by_status("EIGHTY_PERCENT"))
 
     def test_dependency_lookup_exposes_both_directions(self) -> None:
@@ -79,8 +81,8 @@ class ProductGraphTests(unittest.TestCase):
         self.assertFalse(self.graph.capital_authority)
 
     def test_current_and_next_waves_follow_status_and_readiness(self) -> None:
-        self.assertEqual("W0", self.graph.current_wave().id)
-        self.assertEqual("W1", self.graph.next_wave().id)
+        self.assertEqual("W1", self.graph.current_wave().id)
+        self.assertIsNone(self.graph.next_wave())
 
     def test_malformed_toml_and_shape_fail_clearly(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

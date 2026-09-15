@@ -9,6 +9,12 @@ const stateLabels = {
 } as const;
 
 type DisplayState = keyof typeof stateLabels;
+type OwnerDecision = {
+  id: string;
+  reason: string;
+  status: string;
+  subject: string;
+};
 
 export function OwnerHqOverview() {
   const {
@@ -20,13 +26,14 @@ export function OwnerHqOverview() {
     source,
     summary,
   } = productGraphSnapshot;
-  const foundation = development.waves.find(
+  const ownerDecisions: readonly OwnerDecision[] = owner_decisions_required;
+  const foundation = development.waves.find((wave) => wave.id === "W0");
+  const currentWave = development.waves.find(
     (wave) => wave.id === development.current_wave_id,
   );
-  const nextWave = development.waves.find((wave) => wave.id === development.next_wave_id);
 
-  if (!foundation || !nextWave) {
-    throw new Error("Owner HQ projection is missing current or next Wave");
+  if (!foundation || !currentWave) {
+    throw new Error("Owner HQ projection is missing the foundation or current Wave");
   }
 
   const summaryItems = [
@@ -58,9 +65,9 @@ export function OwnerHqOverview() {
           <em>DONE</em>
         </article>
         <article className="stage-card stage-card--next">
-          <span>Next development Wave</span>
-          <strong>{nextWave.id} · {nextWave.title}</strong>
-          <em>NEXT · canonical status {nextWave.status}</em>
+          <span>Current development Wave</span>
+          <strong>{currentWave.id} · {currentWave.title}</strong>
+          <em>CURRENT · canonical status {currentWave.status}</em>
         </article>
         <article className="stage-card stage-card--direction">
           <span>Current Product OS direction</span>
@@ -116,11 +123,11 @@ export function OwnerHqOverview() {
           <section className="hq-board hq-attention" aria-labelledby="attention-title">
             <div className="hq-board__title">
               <div><span>OWNER</span><h2 id="attention-title">Attention</h2></div>
-              <b>{owner_decisions_required.length}</b>
+              <b>{ownerDecisions.length}</b>
             </div>
-            {owner_decisions_required.length > 0 ? (
+            {ownerDecisions.length > 0 ? (
               <ul>
-                {owner_decisions_required.map((decision) => (
+                {ownerDecisions.map((decision) => (
                   <li key={decision.id}>
                     <strong>{decision.subject}</strong>
                     <span>{decision.reason}</span>

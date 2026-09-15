@@ -35,6 +35,26 @@ class ProductGraphBootstrapTests(unittest.TestCase):
         self.assertEqual(13, len(self.data["waves"]))
         self.assertEqual(14, len(self.data["epics"]))
 
+    def test_accepted_factory_and_wave_current_state(self) -> None:
+        authority = self.data["authority"]
+        stages = {item["id"]: item for item in self.data["factory_autonomy"]}
+        waves = {item["id"]: item for item in self.data["waves"]}
+        domains = {item["id"]: item for item in self.data["domains"]}
+        lock_subjects = {item["subject"] for item in self.data["locks"]}
+
+        self.assertEqual("FACTORY-001B", authority["current_factory_stage"])
+        self.assertEqual("PRODUCT_CHANGE_LEVEL_A", authority["current_product_change_scope"])
+        self.assertEqual("DONE", stages["FACTORY-001B"]["status"])
+        self.assertFalse(stages["FACTORY-001B"]["locked"])
+        self.assertNotIn("FACTORY-001B", lock_subjects)
+        self.assertEqual("DONE", waves["W0"]["status"])
+        self.assertEqual("ACTIVE", waves["W1"]["status"])
+        self.assertEqual("PLANNED", waves["W2"]["status"])
+        self.assertEqual(
+            "FACTORY_001B_PRODUCT_CHANGE_LEVEL_A",
+            domains["DOM-SOFTWARE-FACTORY"]["current_authority"],
+        )
+
     def test_duplicate_global_id_is_rejected(self) -> None:
         data = deepcopy(self.data)
         data["domains"][1]["id"] = data["domains"][0]["id"]
@@ -127,17 +147,37 @@ class ProductGraphBootstrapTests(unittest.TestCase):
         data["waves"][0]["authority_state"] = "UNBOUNDED"
         self.assert_rejected(data, "E_AUTHORITY_INVALID")
 
-    def test_factory_001b_ready_is_rejected(self) -> None:
+    def test_factory_001b_non_done_state_is_rejected(self) -> None:
         data = deepcopy(self.data)
         stage = next(item for item in data["factory_autonomy"] if item["id"] == "FACTORY-001B")
         stage["status"] = "READY"
         self.assert_rejected(data, "E_FACTORY_STATE")
 
-    def test_factory_001b_active_is_rejected(self) -> None:
+    def test_factory_001b_relock_is_rejected(self) -> None:
         data = deepcopy(self.data)
         stage = next(item for item in data["factory_autonomy"] if item["id"] == "FACTORY-001B")
-        stage["status"] = "ACTIVE"
+        stage["locked"] = True
         self.assert_rejected(data, "E_FACTORY_STATE")
+
+    def test_required_safety_locks_cannot_be_removed_or_reversed(self) -> None:
+        for subject in (
+            "FACTORY-001C",
+            "FACTORY-001D",
+            "FACTORY-001E",
+            "PAPER",
+            "LIMITED_LIVE",
+            "LIVE",
+            "CAPITAL_AUTHORITY",
+        ):
+            with self.subTest(subject=subject, mutation="removed"):
+                data = deepcopy(self.data)
+                data["locks"] = [item for item in data["locks"] if item["subject"] != subject]
+                self.assert_rejected(data, "E_LOCK_SUBJECT_SET")
+            with self.subTest(subject=subject, mutation="unlocked"):
+                data = deepcopy(self.data)
+                lock = next(item for item in data["locks"] if item["subject"] == subject)
+                lock["locked"] = False
+                self.assert_rejected(data, "E_LOCK_STATE")
 
     def test_paper_unlock_is_rejected(self) -> None:
         data = deepcopy(self.data)
@@ -219,8 +259,8 @@ class ProductGraphBootstrapTests(unittest.TestCase):
 
     def test_factory_lock_cross_field_mismatch_is_rejected(self) -> None:
         data = deepcopy(self.data)
-        lock = next(item for item in data["locks"] if item["subject"] == "FACTORY-001B")
-        lock["status"] = "LOCKED"
+        lock = next(item for item in data["locks"] if item["subject"] == "FACTORY-001C")
+        lock["status"] = "NEEDS_OWNER"
         self.assert_rejected(data, "E_FACTORY_LOCK_MISMATCH")
 
     def test_factory_baseline_sha_drift_is_rejected(self) -> None:

@@ -49,14 +49,18 @@ class OwnerHqSnapshotExporterTests(unittest.TestCase):
             self.snapshot["source"],
         )
 
-    def test_foundation_and_next_wave_keep_canonical_statuses(self) -> None:
+    def test_foundation_and_active_wave_keep_canonical_statuses(self) -> None:
         waves = {item["id"]: item for item in self.snapshot["development"]["waves"]}
-        self.assertEqual("W0", self.snapshot["development"]["current_wave_id"])
+        self.assertEqual("W1", self.snapshot["development"]["current_wave_id"])
         self.assertEqual("DONE", waves["W0"]["status"])
         self.assertEqual("DONE", waves["W0"]["display_state"])
-        self.assertEqual("W1", self.snapshot["development"]["next_wave_id"])
-        self.assertEqual("PLANNED", waves["W1"]["status"])
-        self.assertEqual("NEXT", waves["W1"]["display_state"])
+        self.assertEqual("ACTIVE", waves["W1"]["status"])
+        self.assertEqual("CURRENT", waves["W1"]["display_state"])
+        self.assertEqual("PLANNED", waves["W2"]["status"])
+        self.assertIsNone(self.snapshot["development"]["next_wave_id"])
+
+    def test_factory_001b_no_longer_requires_owner_attention(self) -> None:
+        self.assertEqual([], self.snapshot["owner_decisions_required"])
 
     def test_authority_remains_fail_closed(self) -> None:
         environments = {

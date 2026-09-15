@@ -34,6 +34,7 @@ DOMAIN_AUTHORITY_VOCABULARY = frozenset(
     {
         "SPECIFICATION_ONLY",
         "FACTORY_001A_ONLY",
+        "FACTORY_001B_PRODUCT_CHANGE_LEVEL_A",
         "CAPITAL_LOCKED",
         "OFFLINE_MANDATE_AUTHORING_SPEC_ONLY_CAPITAL_LOCKED",
         "OFFLINE_RELEASE_SPEC_ONLY",
@@ -281,7 +282,6 @@ MANDATORY_DEPENDENCIES = {
 }
 
 REQUIRED_LOCKS = {
-    "FACTORY-001B": ("LOCK-FACTORY-001B", "NEEDS_OWNER", True),
     "FACTORY-001C": ("LOCK-FACTORY-001C", "LOCKED", True),
     "FACTORY-001D": ("LOCK-FACTORY-001D", "LOCKED", True),
     "FACTORY-001E": ("LOCK-FACTORY-001E", "LOCKED", True),
@@ -297,10 +297,15 @@ REQUIRED_GATES = {
 }
 REQUIRED_FACTORY_STAGES = {
     "FACTORY-001A": ("DONE", False),
-    "FACTORY-001B": ("NEEDS_OWNER", True),
+    "FACTORY-001B": ("DONE", False),
     "FACTORY-001C": ("LOCKED", True),
     "FACTORY-001D": ("LOCKED", True),
     "FACTORY-001E": ("LOCKED", True),
+}
+REQUIRED_CURRENT_WAVE_STATES = {
+    "W0": "DONE",
+    "W1": "ACTIVE",
+    "W2": "PLANNED",
 }
 
 
@@ -471,19 +476,19 @@ def validate_graph(data: Any) -> list[ValidationIssue]:
         ):
             if authority.get(field) is not False:
                 _issue(issues, "E_AUTHORITY_STATE", f"authority.{field}", "must be false")
-        if authority.get("current_factory_stage") != "FACTORY-001A":
+        if authority.get("current_factory_stage") != "FACTORY-001B":
             _issue(
                 issues,
                 "E_AUTHORITY_STATE",
                 "authority.current_factory_stage",
-                "must be FACTORY-001A",
+                "must be FACTORY-001B",
             )
-        if authority.get("current_product_change_scope") != "DOCUMENTATION_ONLY":
+        if authority.get("current_product_change_scope") != "PRODUCT_CHANGE_LEVEL_A":
             _issue(
                 issues,
                 "E_AUTHORITY_STATE",
                 "authority.current_product_change_scope",
-                "must be DOCUMENTATION_ONLY",
+                "must be PRODUCT_CHANGE_LEVEL_A",
             )
         levels = _validate_string_list(
             authority.get("product_change_levels"),
@@ -628,6 +633,31 @@ def validate_graph(data: Any) -> list[ValidationIssue]:
                 f"waves[{index}]",
                 f"id must be W{number}",
             )
+    waves_by_id = {
+        item.get("id"): item for item in waves if type(item.get("id")) is str
+    }
+    for wave_id, expected_status in REQUIRED_CURRENT_WAVE_STATES.items():
+        wave = waves_by_id.get(wave_id)
+        if wave is not None and wave.get("status") != expected_status:
+            _issue(
+                issues,
+                "E_CURRENT_WAVE_STATE",
+                f"waves.{wave_id}",
+                f"must be status={expected_status}",
+            )
+    software_factory = next(
+        (item for item in items("domains") if item.get("id") == "DOM-SOFTWARE-FACTORY"),
+        None,
+    )
+    if software_factory is not None and software_factory.get("current_authority") != (
+        "FACTORY_001B_PRODUCT_CHANGE_LEVEL_A"
+    ):
+        _issue(
+            issues,
+            "E_AUTHORITY_STATE",
+            "domains.DOM-SOFTWARE-FACTORY.current_authority",
+            "must be FACTORY_001B_PRODUCT_CHANGE_LEVEL_A",
+        )
 
     domain_ids = {item.get("id") for item in items("domains") if type(item.get("id")) is str}
     epic_ids = {item.get("id") for item in items("epics") if type(item.get("id")) is str}
@@ -901,7 +931,7 @@ def validate_graph(data: Any) -> list[ValidationIssue]:
                 f"factory_autonomy.{stage}",
                 f"must be status={expected_status}, locked={expected_locked}",
             )
-        if stage != "FACTORY-001A":
+        if stage in REQUIRED_LOCKS:
             lock = lock_by_subject.get(stage)
             if lock is not None and (
                 lock.get("status") != item.get("status") or lock.get("locked") is not item.get("locked")

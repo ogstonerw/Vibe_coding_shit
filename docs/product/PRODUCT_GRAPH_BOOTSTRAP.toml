@@ -33,8 +33,8 @@ capital_authority = false
 paper_authority = false
 limited_live_authority = false
 live_authority = false
-current_factory_stage = "FACTORY-001A"
-current_product_change_scope = "DOCUMENTATION_ONLY"
+current_factory_stage = "FACTORY-001B"
+current_product_change_scope = "PRODUCT_CHANGE_LEVEL_A"
 product_change_levels = ["PRODUCT_CHANGE_LEVEL_A", "PRODUCT_CHANGE_LEVEL_B", "PRODUCT_CHANGE_LEVEL_C"]
 capital_mandate_level_namespace = "SEPARATE_FROM_PRODUCT_CHANGE_LEVELS"
 
@@ -51,13 +51,6 @@ default_dependency_type = "READINESS"
 allowed_dependency_types = ["SCHEMA_INTERFACE", "READINESS", "ARTIFACT_EVIDENCE", "OPERATIONAL_SERVICE", "AUTHORITY"]
 allowed_kinds = ["WAVE", "EPIC", "CAPABILITY", "TASK", "WORK_UNIT", "AUTHORITY_GATE", "CROSS_SCOPE"]
 note = "The kind field identifies endpoint graph scope; CROSS_SCOPE is required when endpoint collections differ. dependency_type identifies blocking semantics."
-
-[[locks]]
-id = "LOCK-FACTORY-001B"
-subject = "FACTORY-001B"
-status = "NEEDS_OWNER"
-locked = true
-reason = "Controlled coding-agent execution requires a separate Owner decision."
 
 [[locks]]
 id = "LOCK-FACTORY-001C"
@@ -142,8 +135,9 @@ evidence_refs = ["git:bd0027c316087a11193ca6662c27861adc87030f", "factory:FACTOR
 [[factory_autonomy]]
 id = "FACTORY-001B"
 title = "Controlled coding-agent execution"
-status = "NEEDS_OWNER"
-locked = true
+status = "DONE"
+locked = false
+evidence_refs = ["git:87797e958d9785d3a1afa4e19fe2fecdb6d605ee", "github-actions:quality-gates:run-id-33375445639:SUCCESS", "factory:FACTORY-001B"]
 
 [[factory_autonomy]]
 id = "FACTORY-001C"
@@ -166,14 +160,14 @@ locked = true
 [[domains]]
 id = "DOM-OWNER-HQ"
 title = "Owner HQ"
-status = "PLANNED"
+status = "ACTIVE"
 current_authority = "SPECIFICATION_ONLY"
 wave_ids = ["W1"]
 
 [[domains]]
 id = "DOM-PRODUCT-GALAXY"
 title = "Product Galaxy / Living Roadmap"
-status = "PLANNED"
+status = "ACTIVE"
 current_authority = "SPECIFICATION_ONLY"
 wave_ids = ["W1"]
 
@@ -181,7 +175,7 @@ wave_ids = ["W1"]
 id = "DOM-SOFTWARE-FACTORY"
 title = "Software Factory"
 status = "ACTIVE"
-current_authority = "FACTORY_001A_ONLY"
+current_authority = "FACTORY_001B_PRODUCT_CHANGE_LEVEL_A"
 wave_ids = ["W0", "W1"]
 
 [[domains]]
@@ -322,7 +316,7 @@ evidence_refs = ["git:bd0027c316087a11193ca6662c27861adc87030f", "factory:FACTOR
 id = "W1"
 number = 1
 title = "Product OS"
-status = "PLANNED"
+status = "ACTIVE"
 authority_state = "DOCUMENTATION_AND_APPROVED_OFFLINE_WORK_ONLY"
 
 [[waves]]
@@ -414,15 +408,17 @@ evidence_refs = ["git:bd0027c316087a11193ca6662c27861adc87030f", "factory:FACTOR
 id = "EPIC-W1-CANONICAL-PRODUCT-GRAPH"
 wave_id = "W1"
 title = "Canonical Product Graph and migration"
-status = "PLANNED"
+status = "ACTIVE"
 domain_ids = ["DOM-PRODUCT-GALAXY", "DOM-SOFTWARE-FACTORY"]
+evidence_refs = ["git:35a31925a6bc54f2efa0fe3c97eaae3d65d464f5", "github-actions:quality-gates:run-id-33389190497:SUCCESS"]
 
 [[epics]]
 id = "EPIC-W1-OWNER-HQ"
 wave_id = "W1"
 title = "Owner HQ and shared dual-view read model"
-status = "PLANNED"
+status = "ACTIVE"
 domain_ids = ["DOM-OWNER-HQ", "DOM-BOT-PARK", "DOM-AI-ORGANIZATION"]
+evidence_refs = ["git:bb11c769f3b31701deda62363251d3bd3a26e44f", "github-actions:quality-gates:run-id-33393055833:SUCCESS"]
 
 [[epics]]
 id = "EPIC-W2-KNOWLEDGE-PLATFORM"
@@ -512,13 +508,15 @@ evidence_refs = ["git:bd0027c316087a11193ca6662c27861adc87030f", "factory:FACTOR
 id = "CAP-W1-GRAPH-MIGRATION"
 epic_id = "EPIC-W1-CANONICAL-PRODUCT-GRAPH"
 title = "Bootstrap and factory-registry migration to one canonical graph"
-status = "PLANNED"
+status = "ACTIVE"
+evidence_refs = ["git:35a31925a6bc54f2efa0fe3c97eaae3d65d464f5", "github-actions:quality-gates:run-id-33389190497:SUCCESS"]
 
 [[capabilities]]
 id = "CAP-W1-DUAL-VIEW-OWNER-HQ"
 epic_id = "EPIC-W1-OWNER-HQ"
 title = "30-second Owner HQ and one-truth dual views"
-status = "PLANNED"
+status = "ACTIVE"
+evidence_refs = ["git:bb11c769f3b31701deda62363251d3bd3a26e44f", "github-actions:quality-gates:run-id-33393055833:SUCCESS"]
 
 [[capabilities]]
 id = "CAP-W2-KNOWLEDGE-PROVENANCE"
@@ -602,7 +600,7 @@ status = "LOCKED"
 id = "TASK-W1-DESIGN-CANONICAL-GRAPH"
 capability_id = "CAP-W1-GRAPH-MIGRATION"
 title = "Specify canonical Product Graph ownership migration and retirement"
-status = "PLANNED"
+status = "ACTIVE"
 acceptance_contract_required = true
 non_operational = true
 
@@ -610,7 +608,7 @@ non_operational = true
 id = "TASK-W1-DESIGN-OWNER-HQ"
 capability_id = "CAP-W1-DUAL-VIEW-OWNER-HQ"
 title = "Specify and prove Owner HQ read model and cross-view context"
-status = "PLANNED"
+status = "ACTIVE"
 acceptance_contract_required = true
 non_operational = true
 

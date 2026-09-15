@@ -26,8 +26,8 @@
     ]
   },
   "development": {
-    "current_wave_id": "W0",
-    "next_wave_id": "W1",
+    "current_wave_id": "W1",
+    "next_wave_id": null,
     "waves": [
       {
         "display_state": "DONE",
@@ -36,9 +36,9 @@
         "title": "Development Foundation"
       },
       {
-        "display_state": "NEXT",
+        "display_state": "CURRENT",
         "id": "W1",
-        "status": "PLANNED",
+        "status": "ACTIVE",
         "title": "Product OS"
       },
       {
@@ -109,14 +109,7 @@
       }
     ]
   },
-  "owner_decisions_required": [
-    {
-      "id": "LOCK-FACTORY-001B",
-      "reason": "Controlled coding-agent execution requires a separate Owner decision.",
-      "status": "NEEDS_OWNER",
-      "subject": "FACTORY-001B"
-    }
-  ],
+  "owner_decisions_required": [],
   "product": {
     "name": "AI Trading Operating System",
     "north_star": "AI Trading Operating System, в которой один Owner управляет виртуальной организацией ИИ-агентов, самостоятельно исследующей рынки, принимающей знания из разных источников, создающей и обучающей индивидуальных торговых агентов, разрабатывающей стратегии, доказывающей их качество, выпускающей контролируемые версии, эксплуатирующей их под жёсткими risk/authority gates и непрерывно предлагающей эволюцию продукта и стратегий."
@@ -133,7 +126,7 @@
   "summary": {
     "domain_count": 21,
     "epic_count": 14,
-    "locked_object_count": 23,
+    "locked_object_count": 22,
     "wave_count": 13
   }
 }
